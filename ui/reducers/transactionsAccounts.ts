@@ -93,9 +93,11 @@ export const getAccountName = ({ accounts, id }) => {
     : null
 }
 
-export const transactionsSelector = state => state.get(TRANSACTIONS)
-export const accountsSelector = state => state.get(CARDS)
-export const isLoadingSelector = state => state.get(IS_LOADING)
+export const transactionsSelector = (state: typeof initialState) =>
+  state[TRANSACTIONS]
+export const accountsSelector = (state: typeof initialState) => state[CARDS]
+export const isLoadingSelector = (state: typeof initialState) =>
+  state[IS_LOADING]
 
 export const transactionsNoIntraAccountSelector = createSelector(
   transactionsSelector,

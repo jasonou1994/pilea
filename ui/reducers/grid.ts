@@ -37,6 +37,6 @@ const grid: (
 }
 export default grid
 
-export const selectedTransactionKeySelector = state => {
-  return state.get(SELECTED_TRANSACTION_KEY)
+export const selectedTransactionKeySelector = (state: typeof initialState) => {
+  return state[SELECTED_TRANSACTION_KEY]
 }

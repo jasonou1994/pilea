@@ -49,6 +49,7 @@ export default function login(state = initialState, action) {
   return newState
 }
 
-export const accessTokensSelector = state => state.get(ACCESS_TOKENS)
-export const loggedInSelector = state => state.get(LOGGED_IN)
-export const userSelector = state => state.get(USER)
+export const accessTokensSelector = (state: typeof initialState) =>
+  state[ACCESS_TOKENS]
+export const loggedInSelector = (state: typeof initialState) => state[LOGGED_IN]
+export const userSelector = (state: typeof initialState) => state[USER]

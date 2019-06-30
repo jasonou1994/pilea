@@ -62,4 +62,5 @@ const graph: (
 }
 export default graph
 
-export const graphFidelitySelector = state => state.get(GRAPH_FIDELITY)
+export const graphFidelitySelector = (state: typeof initialState) =>
+  state[GRAPH_FIDELITY]

@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import { createSelector } from 'reselect'
 import { cloneDeep, isEmpty } from 'lodash'
 import moment from 'moment'
-import transactions, * as fromTransactions from './transactions'
+import transactions, * as fromTransactions from './transactionsAccounts'
 import login, * as fromLogin from './login'
 import graph, * as fromGraph from './graph'
 import grid, * as fromGrid from './grid'
@@ -59,6 +59,7 @@ export const transactionsByDayCountCombinedSelector = createSelector(
   (transactions, days) => {
     const orderedDates = Object.keys(transactions)
       .map(date => moment(date, 'YYYY-MM-DD', true))
+      //@ts-ignore
       .sort((a, b) => b - a)
       .map(date => date.format('YYYY-MM-DD'))
 

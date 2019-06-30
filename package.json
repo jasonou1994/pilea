@@ -34,6 +34,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.0.4",
     "reselect": "^4.0.0",
+    "timm": "^1.6.1",
     "ts-node-dev": "^1.0.0-pre.40",
     "uuidv4": "^4.0.0"
   },

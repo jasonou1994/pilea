@@ -2,12 +2,11 @@ import { call, put, takeLatest } from 'redux-saga/effects'
 import moment from 'moment'
 import {
   setTransactions,
-  setAccounts,
   resetTransactions,
-  startLoadingTransactions,
-  stopLoadingTransactions,
   setLoggedIn,
   setUserInfo,
+  setCards,
+  setItems,
 } from '../actions'
 import {
   FETCH_ADD_ACCOUNT,
@@ -26,14 +25,15 @@ import {
 import { parseSSEFields } from '../utils'
 import { services } from '../services'
 import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'
+import { startLoading, stopLoading } from '../actions/loading'
 
-interface APIResponse {
+export interface APIResponse {
   success: boolean
   status: string
   error: any
 }
 
-interface AddItemResponse extends APIResponse {
+export interface AddItemResponse extends APIResponse {
   items: Array<{
     id?: number
     userId: number
@@ -43,26 +43,28 @@ interface AddItemResponse extends APIResponse {
   }>
 }
 
-interface CreateUserResponse extends APIResponse {
+export interface CreateUserResponse extends APIResponse {
   username: string
   userId: number
 }
 
-interface UserLogInResponse extends APIResponse {
+export interface UserLogInResponse extends APIResponse {
   username: string
   id: number
 }
 
-interface TransactionsRetrieveResponse extends APIResponse {
+export interface DBItem {
+  id?: number
+  userId: number
+  accessToken: string
+  lastUpdated?: string
+  alias?: string
+}
+
+export interface TransactionsRetrieveResponse extends APIResponse {
   cards: PlaidCard[]
   transactions: PlaidTransaction[]
-  items: Array<{
-    id?: number
-    userId: number
-    accessToken: string
-    lastUpdated?: string
-    alias?: string
-  }>
+  items: DBItem[]
 }
 
 function* addItem({ payload: publicToken }) {
@@ -112,8 +114,9 @@ function* fetchLogIn({ payload: { user, password } }) {
       services[API_TRANSACTIONS_RETRIEVE]
     )
 
-    yield put(setAccounts(cards))
+    yield put(setCards(cards))
     yield put(setTransactions(transactions))
+    yield put(setItems(items))
   } catch ({ error, status }) {
     console.error(status, error)
   }
@@ -127,7 +130,7 @@ function* fetchLogOut() {
     yield put(
       setUserInfo({
         userName: '',
-        userId: '',
+        userId: 0,
       })
     )
   } catch ({ error, status }) {
@@ -160,8 +163,8 @@ function* fetchCreateUser({ payload: { user, password } }) {
 }
 
 function* refreshTransactions() {
-  yield put(startLoadingTransactions())
-  yield put(resetTransactions())
+  yield put(startLoading(TRANSACTIONS))
+  yield put(resetTransactions({}))
   try {
     const start = moment()
       .subtract(2, 'year')
@@ -209,11 +212,11 @@ function* refreshTransactions() {
 
         switch (event) {
           case ITEMS: {
-            yield put(setAccounts(JSON.parse(data)))
+            yield put(setItems(JSON.parse(data) as DBItem[]))
             break
           }
           case TRANSACTIONS: {
-            yield put(setTransactions(JSON.parse(data)))
+            yield put(setTransactions(JSON.parse(data) as PlaidTransaction[]))
             break
           }
           default:
@@ -227,7 +230,7 @@ function* refreshTransactions() {
     console.error('Error in fetchTransactions:', e)
   }
 
-  yield put(stopLoadingTransactions())
+  yield put(stopLoading(TRANSACTIONS))
 }
 
 function* saga() {

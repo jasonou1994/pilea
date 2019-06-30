@@ -1,10 +1,7 @@
-import { Map, List, Set } from 'immutable'
 import { createSelector } from 'reselect'
 import {
   SET_TRANSACTIONS,
-  SET_ACCOUNTS,
   TRANSACTIONS,
-  ACCOUNTS,
   RESET_TRANSACTIONS,
   AMOUNT,
   CATEGORY,
@@ -12,26 +9,40 @@ import {
   IS_LOADING,
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
+  CARDS,
+  ITEMS,
+  SET_CARDS,
 } from '../constants'
 import { shouldKeepTransaction } from '../utils'
+import { updateIn, set } from 'timm'
+import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
+import { DBItem } from '../sagas/sagas'
+import { TransactionsActionTypes, AccountsActionTypes } from '../actions'
 
-const initialState = Map({
-  [TRANSACTIONS]: List(),
-  [ACCOUNTS]: List(),
+const initialState = {
+  [TRANSACTIONS]: [] as PlaidTransaction[],
+  [CARDS]: [] as PlaidCard[],
+  [ITEMS]: [] as DBItem[],
   [IS_LOADING]: false,
-})
+}
 
-export default function transactions(state = initialState, action) {
+const transactions: (
+  state: typeof initialState,
+  {
+    type,
+    payload,
+  }: { type: TransactionsActionTypes | AccountsActionTypes; payload }
+) => typeof initialState = (state = initialState, action) => {
   const { type, payload } = action
   let newState
 
   switch (type) {
     case SET_TRANSACTIONS: {
-      newState = state.updateIn([TRANSACTIONS], list => list.push(...payload))
+      newState = updateIn(state, [TRANSACTIONS], list => list.push(...payload))
       break
     }
-    case SET_ACCOUNTS: {
-      newState = state.updateIn([ACCOUNTS], accounts => {
+    case SET_CARDS: {
+      newState = updateIn(state, [CARDS], accounts => {
         return payload.reduce((accounts, testAccount) => {
           if (
             !accounts.find(
@@ -47,15 +58,15 @@ export default function transactions(state = initialState, action) {
       break
     }
     case RESET_TRANSACTIONS: {
-      newState = state.set(TRANSACTIONS, List())
+      newState = set(state, TRANSACTIONS, [])
       break
     }
     case START_LOADING_TRANSACTIONS: {
-      newState = state.set(IS_LOADING, true)
+      newState = set(state, IS_LOADING, true)
       break
     }
     case STOP_LOADING_TRANSACTIONS: {
-      newState = state.set(IS_LOADING, false)
+      newState = set(state, IS_LOADING, false)
       break
     }
     default: {
@@ -65,6 +76,8 @@ export default function transactions(state = initialState, action) {
 
   return newState
 }
+export default transactions
+
 export const getTypeOfAccount = ({ accounts, id }) => {
   const account = accounts.find(account => account.account_id === id)
 
@@ -81,7 +94,7 @@ export const getAccountName = ({ accounts, id }) => {
 }
 
 export const transactionsSelector = state => state.get(TRANSACTIONS)
-export const accountsSelector = state => state.get(ACCOUNTS)
+export const accountsSelector = state => state.get(CARDS)
 export const isLoadingSelector = state => state.get(IS_LOADING)
 
 export const transactionsNoIntraAccountSelector = createSelector(
@@ -106,6 +119,7 @@ export const transactionsNoIntraAccountSelector = createSelector(
 export const dailyTransactionsSelector = createSelector(
   transactionsNoIntraAccountSelector,
   transactions => {
+    // @ts-ignore
     const uniqueDates = [...new Set(transactions.map(tx => tx.date))].reduce(
       (acc, cur) => {
         acc[cur] = []

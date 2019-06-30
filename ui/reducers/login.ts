@@ -22,12 +22,6 @@ export default function login(state = initialState, action) {
   let newState
 
   switch (type) {
-    // case SET_ACCESS_TOKEN: {
-    //   const { accessToken } = payload
-
-    //   newState = state.updateIn([ACCESS_TOKENS], list => list.push(accessToken))
-    //   break
-    // }
     case SET_LOGGED_IN: {
       const { status } = payload
 

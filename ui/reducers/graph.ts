@@ -7,7 +7,7 @@ import {
   END_DATE,
   SET_START_DATE,
   SET_END_DATE,
-} from '../constants/index'
+} from '../konstants/index'
 import { GraphActionTypes } from '../actions'
 
 const initialState = {

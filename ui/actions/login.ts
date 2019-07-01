@@ -5,7 +5,7 @@ import {
   SET_USER_INFO,
   FETCH_LOG_OUT,
   FETCH_CREATE_USER,
-} from '../constants/index'
+} from '../konstants/index'
 import { Action } from 'redux'
 
 export type LogInActionTypes =

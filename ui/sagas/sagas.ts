@@ -21,7 +21,7 @@ import {
   API_TRANSACTIONS_RETRIEVE,
   API_USER_LOGOUT,
   API_USER_CREATE,
-} from '../constants'
+} from '../konstants'
 import { parseSSEFields } from '../utils'
 import { services } from '../services'
 import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'

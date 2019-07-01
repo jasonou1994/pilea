@@ -6,7 +6,7 @@ import transactions, * as fromTransactions from './transactionsAccounts'
 import login, * as fromLogin from './login'
 import graph, * as fromGraph from './graph'
 import grid, * as fromGrid from './grid'
-import { TRANSACTIONS, LOGIN, GRAPH, GRID, INPUT, OUTPUT } from '../constants'
+import { TRANSACTIONS, LOGIN, GRAPH, GRID, INPUT, OUTPUT } from '../konstants'
 
 const reducers = combineReducers({
   transactions,

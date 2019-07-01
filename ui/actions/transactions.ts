@@ -4,7 +4,7 @@ import {
   RESET_TRANSACTIONS,
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
-} from '../constants/index'
+} from '../konstants/index'
 import { Action } from 'redux'
 import { Transaction } from 'plaid'
 

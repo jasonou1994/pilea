@@ -2,7 +2,7 @@ import { Map } from 'immutable'
 import {
   SELECTED_TRANSACTION_KEY,
   SET_SELECTED_TRANSACTION_KEY,
-} from '../constants/index'
+} from '../konstants/index'
 import { GridActionTypes } from '../actions'
 
 const initialState = Map({

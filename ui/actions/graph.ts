@@ -2,7 +2,7 @@ import {
   SET_GRAPH_FIDELITY,
   SET_START_DATE,
   SET_END_DATE,
-} from '../constants/index'
+} from '../konstants/index'
 import { Action } from 'redux'
 
 export type GraphActionTypes =

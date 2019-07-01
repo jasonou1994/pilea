@@ -6,6 +6,9 @@ import {
   isLoadingSelector,
   loggedInSelector,
 } from '../reducers'
+import HeaderContainer from './HeaderContainer'
+import LogInContainer from './LogInContainer'
+import { MainView } from '../components/MainView'
 
 class _App extends Component {
   constructor(props) {
@@ -17,36 +20,13 @@ class _App extends Component {
   }
 
   render() {
-    return <div>hih</div>
-    // return loggedIn ? (
-    //   <div>
-    //     <PlaidLink
-    //       clientName="testApp"
-    //       env={'development'}
-    //       product={['transactions']}
-    //       publicKey={PLAID_PUBLIC_KEY}
-    //       onSuccess={addAccount}
-    //     >
-    //       Add new accounts
-    //     </PlaidLink>
-    //     {!isLoading ? (
-    //       <>
-    //         <button onClick={() => refreshTransactions()}>
-    //           Refresh Transactions
-    //         </button>
-    //         <button onClick={() => fetchLogOut()}>Log Out</button>
-
-    //         <LoadingContainer />
-    //         <GraphContainer />
-    //         <GridContainer />
-    //       </>
-    //     ) : (
-    //       <LoadingContainer />
-    //     )}
-    //   </div>
-    // ) : (
-    //   <LogInContainer />
-    // )
+    return (
+      <div>
+        <HeaderContainer />
+        <LogInContainer />
+        <MainView />
+      </div>
+    )
   }
 }
 

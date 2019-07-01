@@ -1,4 +1,4 @@
-import { SET_CARDS, SET_ITEMS } from '../constants/index'
+import { SET_CARDS, SET_ITEMS } from '../konstants/index'
 import { Action } from 'redux'
 import { Account as PlaidCard } from 'plaid'
 import { DBItem } from '../sagas/sagas'

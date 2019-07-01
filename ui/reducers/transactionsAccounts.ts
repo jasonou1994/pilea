@@ -12,7 +12,7 @@ import {
   CARDS,
   ITEMS,
   SET_CARDS,
-} from '../constants'
+} from '../konstants'
 import { shouldKeepTransaction } from '../utils'
 import { updateIn, set } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'

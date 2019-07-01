@@ -1,4 +1,4 @@
-import { SET_SELECTED_TRANSACTION_KEY } from '../constants/index'
+import { SET_SELECTED_TRANSACTION_KEY } from '../konstants/index'
 import { Action } from 'redux'
 
 export type GridActionTypes = typeof SET_SELECTED_TRANSACTION_KEY

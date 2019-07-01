@@ -1,4 +1,4 @@
-import { TRANSACTIONS } from '../constants'
+import { TRANSACTIONS } from '../konstants'
 import { Action } from 'redux'
 
 export type Loaders = typeof TRANSACTIONS

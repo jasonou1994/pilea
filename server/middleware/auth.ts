@@ -58,6 +58,7 @@ export const checkUpdateAuthToken = async (
     if (!acceptToken) {
       throw 'Invalid Authorization: Bearer token on request'
     }
+    console.log('Token accepted.')
 
     // 3. Check JWT properly signed.
     await jwt.verify(authorization, key)
@@ -70,7 +71,6 @@ export const checkUpdateAuthToken = async (
       },
       key
     )
-    console.log(token === authorization)
 
     console.log('New Token: ', token)
     await updateUserWithToken({ oldToken: authorization, newToken: token })

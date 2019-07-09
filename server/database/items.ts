@@ -29,14 +29,14 @@ export const insertItem: ({
     userId,
     accessToken,
     alias,
-    lastUpdated: moment().format('MMMM Do YYYY, h:mm:ss a'),
+    lastUpdated: moment(),
   })
 }
 
 export const updateItemById: ({ id }) => Promise<void> = async ({ id }) => {
   await dbClient(ITEMS)
     .update({
-      lastUpdated: moment().format('MMMM Do YYYY, h:mm:ss a'),
+      lastUpdated: moment(),
     })
     .where({ id })
 }

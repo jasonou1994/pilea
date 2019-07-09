@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { addAccount, refreshTransactions, fetchLogOut } from '../actions'
-import {
-  accountsSelector,
-  isLoadingSelector,
-  loggedInSelector,
-} from '../reducers'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
 import { MainView } from '../components/MainView'
+import { loggedInSelector } from '../reducers'
 
-class _App extends Component {
+interface AppProps {
+  loggedIn: boolean
+}
+
+class _App extends Component<AppProps> {
   constructor(props) {
     super(props)
     this.state = {
@@ -20,25 +19,20 @@ class _App extends Component {
   }
 
   render() {
+    const { loggedIn } = this.props
+
     return (
-      <div>
+      <>
         <HeaderContainer />
-        <LogInContainer />
-        <MainView />
-      </div>
+        {!loggedIn ? <LogInContainer /> : <MainView />}
+      </>
     )
   }
 }
 
 export default connect(
   state => ({
-    accounts: accountsSelector(state),
-    isLoading: isLoadingSelector(state),
     loggedIn: loggedInSelector(state),
   }),
-  dispatch => ({
-    refreshTransactions: () => dispatch(refreshTransactions({})),
-    addAccount: token => dispatch(addAccount(token)),
-    fetchLogOut: () => dispatch(fetchLogOut({})),
-  })
+  {}
 )(_App)

@@ -22,10 +22,10 @@ export const plaidGetTransactions: ({
   })
 
 export const plaidGetAccessToken: ({
-  publicToken,
-}) => Promise<string> = async ({ publicToken }) =>
+  public_token,
+}) => Promise<string> = async ({ public_token }) =>
   new Promise((resolve, reject) => {
-    client.exchangePublicToken(publicToken, (err, tokenResponse) => {
+    client.exchangePublicToken(public_token, (err, tokenResponse) => {
       if (err) {
         reject(err)
       }

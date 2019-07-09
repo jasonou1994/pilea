@@ -16,28 +16,38 @@ export type TransactionsActionTypes =
   | typeof STOP_LOADING_TRANSACTIONS
 
 // Generics
-export interface TransactionsAction<P> extends Action<TransactionsActionTypes> {
-  type: TransactionsActionTypes
+export interface TransactionsAction<P, AT extends TransactionsActionTypes>
+  extends Action<TransactionsActionTypes> {
+  type: AT
   payload: P
 }
-export type TransactionsActionCreator<P> = (payload: P) => TransactionsAction<P>
+export type TransactionsActionCreator<P, AT extends TransactionsActionTypes> = (
+  payload: P
+) => TransactionsAction<P, AT>
 
 // Action Creators
-export type RefreshTransactionsActionCreator = TransactionsActionCreator<{}>
-export const refreshTransactions: RefreshTransactionsActionCreator = () => ({
+export type FetchRefreshTransactionsActionCreator = TransactionsActionCreator<
+  {},
+  typeof FETCH_REFRESH_TRANSACTIONS
+>
+export const fetchRefreshTransactions: FetchRefreshTransactionsActionCreator = () => ({
   type: FETCH_REFRESH_TRANSACTIONS,
   payload: {},
 })
 
 export type SetTransactionsActionCreator = TransactionsActionCreator<
-  Transaction[]
+  Transaction[],
+  typeof SET_TRANSACTIONS
 >
 export const setTransactions: SetTransactionsActionCreator = transactions => ({
   type: SET_TRANSACTIONS,
   payload: transactions,
 })
 
-export type ResetTransactionsActionCreator = TransactionsActionCreator<{}>
+export type ResetTransactionsActionCreator = TransactionsActionCreator<
+  {},
+  typeof RESET_TRANSACTIONS
+>
 export const resetTransactions: ResetTransactionsActionCreator = () => ({
   type: RESET_TRANSACTIONS,
   payload: {},

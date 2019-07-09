@@ -3,8 +3,21 @@ import { connect } from 'react-redux'
 import { CurrentItems } from '../components/CurrentItems'
 import { AddNewItem } from '../components/AddNewItem'
 import { RefreshItemData } from '../components/RefreshItemData'
+import { cardsByItemsSelector } from '../reducers'
+import { ItemWithCards } from '../reducers/transactionsAccounts'
+import {
+  fetchAddItem,
+  FetchAddItemActionCreator,
+  fetchRefreshTransactions,
+  FetchRefreshTransactionsActionCreator,
+} from '../actions'
 
-interface ItemsContainerProps {}
+interface ItemsContainerProps {
+  cardsByItems: ItemWithCards[]
+
+  fetchAddItemAction: FetchAddItemActionCreator
+  fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
+}
 
 interface ItemsContainerState {}
 
@@ -12,9 +25,12 @@ class _ItemsContainer extends Component<
   ItemsContainerProps,
   ItemsContainerState
 > {
-  static state = {}
-
   render() {
+    const {
+      cardsByItems,
+      fetchAddItemAction,
+      fetchRefreshTransactionsAction,
+    } = this.props
     return (
       <div
         style={{
@@ -23,15 +39,33 @@ class _ItemsContainer extends Component<
         }}
       >
         ItemsContainer
-        <CurrentItems />
-        <AddNewItem />
-        <RefreshItemData />
+        <CurrentItems
+          {...{
+            cardsByItems,
+          }}
+        />
+        <AddNewItem
+          {...{
+            fetchAddItemAction,
+          }}
+        />
+        {cardsByItems.length > 0 && (
+          <RefreshItemData
+            {...{
+              cardsByItems,
+              fetchRefreshTransactionsAction,
+            }}
+          />
+        )}
       </div>
     )
   }
 }
 
 export default connect(
-  state => ({}),
-  {}
+  state => ({ cardsByItems: cardsByItemsSelector(state) }),
+  {
+    fetchAddItemAction: fetchAddItem,
+    fetchRefreshTransactionsAction: fetchRefreshTransactions,
+  }
 )(_ItemsContainer)

@@ -79,7 +79,7 @@ export const refreshTransactionsSSE = async (req: Request, res: Response) => {
             await deleteCards({ userId, itemId })
             await insertCards({ cards: accounts, userId, itemId })
 
-            res.write('event: items\n')
+            res.write('event: cards\n')
             res.write(`data: ${JSON.stringify(accounts)}\n\n`)
           }
 
@@ -99,11 +99,13 @@ export const refreshTransactionsSSE = async (req: Request, res: Response) => {
 
   Promise.all(tokenProms)
     .then(() => {
+      console.log('tx succeed')
       res.write('id: CLOSE\n')
       res.write('event: success\n\n')
       res.end()
     })
     .catch(() => {
+      console.log('tx fail')
       res.write('id: CLOSE\n')
       res.write('event: error\n\n')
       res.end()

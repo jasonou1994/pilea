@@ -20,7 +20,7 @@ export const parseSSEFields = rawString => {
         const fieldColonSplit = field
           .replace(/:/, '&&&&&&&&')
           .split('&&&&&&&&')
-          .map(kv => kv.trim())
+          .map((kv: string): string => kv.trim())
 
         const fieldObj = {
           [fieldColonSplit[0]]: fieldColonSplit[1],

@@ -1,12 +1,11 @@
 import {
   API_ITEMS_ADD,
-  API_TRANSACTIONS_REFRESH,
   API_TRANSACTIONS_RETRIEVE,
   API_USER_CREATE,
   API_USER_LOGIN,
   API_USER_LOGOUT,
   AvailableAPIs,
-} from './constants'
+} from './konstants'
 
 interface ServiceDefinition {
   name: AvailableAPIs
@@ -27,7 +26,7 @@ const defaultOptions = {
 const serviceDefs: ServiceDefinition[] = [
   {
     name: API_ITEMS_ADD,
-    url: 'http://localhost:8000/accounts/add',
+    url: 'http://localhost:8000/items/add',
   },
   {
     name: API_USER_CREATE,
@@ -50,14 +49,21 @@ const serviceDefs: ServiceDefinition[] = [
 export const services = serviceDefs.reduce((acc, service) => {
   const { name, url, ...options } = service
 
-  acc[name] = ({ body }) => {
+  acc[name] = ({ body } = { body: '{}' }) => {
     return new Promise(async (resolve, reject) => {
       try {
-        const rawResponse = await fetch(url, { ...options, body })
+        console.log(url, {
+          ...options,
+          body,
+        })
+        const rawResponse = await fetch(url, {
+          ...options,
+          body,
+        })
         const response = await rawResponse.json()
         const { error, success, status, ...contents } = response
 
-        success ? resolve({ contents, status }) : reject({ status, error })
+        success ? resolve({ ...contents, status }) : reject({ status, error })
       } catch (error) {
         reject({ error, status: `Error in ${name}` })
       }

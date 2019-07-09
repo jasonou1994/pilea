@@ -18,7 +18,12 @@ export interface DBCard {
   official_currency_code: string | null
 }
 
-export const getCards: ({ userId }) => Promise<PlaidCard[]> = async ({
+export interface PileaCard extends PlaidCard {
+  userId: number
+  itemId: number
+}
+
+export const getCards: ({ userId }) => Promise<PileaCard[]> = async ({
   userId,
 }) => {
   const dbCards: DBCard[] = await dbClient
@@ -28,8 +33,6 @@ export const getCards: ({ userId }) => Promise<PlaidCard[]> = async ({
 
   return dbCards.map(dbCard => {
     const {
-      userId,
-      itemId,
       available,
       current,
       credit_limit,

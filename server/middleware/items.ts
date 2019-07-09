@@ -12,9 +12,9 @@ export interface ContractItemAdd extends ContractResponse {
 export const addItem = async (req: Request, res: Response) => {
   const { userId } = res.locals
   const { alias, publicToken } = req.body
-
+  console.log(publicToken, alias)
   try {
-    const accessToken = await plaidGetAccessToken({ publicToken })
+    const accessToken = await plaidGetAccessToken({ public_token: publicToken })
     await insertItem({ userId, accessToken, alias })
 
     const items = await getItems({ userId })

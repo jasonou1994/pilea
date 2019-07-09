@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { ItemWithCards } from '../reducers/transactionsAccounts'
+import moment from 'moment'
+import { FetchRefreshTransactionsActionCreator } from '../actions'
 
-interface RefreshItemDataProps {}
+interface RefreshItemDataProps {
+  cardsByItems: ItemWithCards[]
+  fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
+}
 
 interface RefreshItemDataState {}
 
@@ -9,17 +14,23 @@ export class RefreshItemData extends Component<
   RefreshItemDataProps,
   RefreshItemDataState
 > {
-  static state = {}
-
   render() {
+    const { cardsByItems, fetchRefreshTransactionsAction } = this.props
+
     return (
       <div
         style={{
-          border: '1px solid black',
+          border: '1px solid green',
           padding: '5px',
         }}
       >
-        RefreshItemData
+        <div>
+          Your data was last refreshed on:
+          {moment(cardsByItems[0].lastUpdated.replace(/"/g, '')).format(
+            'dddd, MMMM Do YYYY, h:mm:ss a'
+          )}
+        </div>
+        <button onClick={fetchRefreshTransactionsAction}>Refresh now</button>
       </div>
     )
   }

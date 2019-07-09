@@ -12,6 +12,7 @@ const config: webpack.Configuration = {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
+  devtool: 'source-map',
 
   module: {
     rules: [

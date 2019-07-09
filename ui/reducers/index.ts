@@ -19,22 +19,24 @@ export default reducers
 //transactions
 export const transactionsSelector = state =>
   fromTransactions.transactionsSelector(state[TRANSACTIONS])
-export const accountsSelector = state =>
-  fromTransactions.accountsSelector(state[TRANSACTIONS])
-export const isLoadingSelector = state =>
-  fromTransactions.isLoadingSelector(state[TRANSACTIONS])
+export const cardsSelector = state =>
+  fromTransactions.cardsSelector(state[TRANSACTIONS])
+export const itemsSelector = state =>
+  fromTransactions.itemsSelector(state[TRANSACTIONS])
 export const dailyTransactionsSelector = state =>
   fromTransactions.dailyTransactionsSelector(state[TRANSACTIONS])
 export const transactionsByDateInputOutputSelector = state =>
   fromTransactions.transactionsByDateInputOutputSelector(state[TRANSACTIONS])
-export const transactionsByAccountsSelector = state =>
-  fromTransactions.transactionsByAccountsSelector(state[TRANSACTIONS])
+export const transactionsBycardsSelector = state =>
+  fromTransactions.transactionsBycardsSelector(state[TRANSACTIONS])
 export const transactionsNoIntraAccountSelector = state =>
   fromTransactions.transactionsNoIntraAccountSelector(state[TRANSACTIONS])
 export const transactionsByCategorySelector = state =>
   fromTransactions.transactionsByCategorySelector(state[TRANSACTIONS])
 export const transactionsByNameSelector = state =>
   fromTransactions.transactionsByNameSelector(state[TRANSACTIONS])
+export const cardsByItemsSelector = state =>
+  fromTransactions.cardsByItemsSelector(state[TRANSACTIONS])
 
 //log in
 export const accessTokensSelector = state =>

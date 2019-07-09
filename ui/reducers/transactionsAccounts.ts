@@ -6,24 +6,23 @@ import {
   AMOUNT,
   CATEGORY,
   NAME,
-  IS_LOADING,
-  START_LOADING_TRANSACTIONS,
-  STOP_LOADING_TRANSACTIONS,
   CARDS,
   ITEMS,
   SET_CARDS,
+  SET_ITEMS,
+  LAST_UPDATED,
 } from '../konstants'
 import { shouldKeepTransaction } from '../utils'
-import { updateIn, set } from 'timm'
+import { updateIn, set, update } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
-import { DBItem } from '../sagas/sagas'
+import { DBItem, PileaCard } from '../sagas/sagas'
 import { TransactionsActionTypes, AccountsActionTypes } from '../actions'
 
 const initialState = {
   [TRANSACTIONS]: [] as PlaidTransaction[],
-  [CARDS]: [] as PlaidCard[],
+  [CARDS]: [] as PileaCard[],
   [ITEMS]: [] as DBItem[],
-  [IS_LOADING]: false,
+  [LAST_UPDATED]: '',
 }
 
 const transactions: (
@@ -32,41 +31,45 @@ const transactions: (
     type,
     payload,
   }: { type: TransactionsActionTypes | AccountsActionTypes; payload }
-) => typeof initialState = (state = initialState, action) => {
-  const { type, payload } = action
-  let newState
+) => typeof initialState = (state = initialState, { type, payload }) => {
+  let newState: typeof initialState
 
   switch (type) {
     case SET_TRANSACTIONS: {
-      newState = updateIn(state, [TRANSACTIONS], list => list.push(...payload))
+      console.log('before', state[TRANSACTIONS])
+      console.log('payload', payload)
+      newState = update(state, TRANSACTIONS, list => {
+        list.push(...payload)
+        return list
+      })
+      console.log('after', newState[TRANSACTIONS])
       break
     }
     case SET_CARDS: {
-      newState = updateIn(state, [CARDS], accounts => {
-        return payload.reduce((accounts, testAccount) => {
-          if (
-            !accounts.find(
-              existingAccount =>
-                existingAccount.account_id === testAccount.account_id
-            )
-          ) {
-            accounts = accounts.push(testAccount)
-          }
-          return accounts
-        }, accounts)
+      newState = updateIn(state, [CARDS], existingCards => {
+        return (payload as PlaidCard[]).reduce(
+          (acc, newCard) => {
+            if (
+              !acc.find(
+                existCard => existCard.account_id === newCard.account_id
+              )
+            ) {
+              acc.push(newCard)
+            }
+            return acc
+          },
+          existingCards as PlaidCard[]
+        )
       })
       break
     }
+    case SET_ITEMS: {
+      newState = updateIn(state, [ITEMS], _ => [...payload])
+      break
+    }
+
     case RESET_TRANSACTIONS: {
       newState = set(state, TRANSACTIONS, [])
-      break
-    }
-    case START_LOADING_TRANSACTIONS: {
-      newState = set(state, IS_LOADING, true)
-      break
-    }
-    case STOP_LOADING_TRANSACTIONS: {
-      newState = set(state, IS_LOADING, false)
       break
     }
     default: {
@@ -95,13 +98,12 @@ export const getAccountName = ({ accounts, id }) => {
 
 export const transactionsSelector = (state: typeof initialState) =>
   state[TRANSACTIONS]
-export const accountsSelector = (state: typeof initialState) => state[CARDS]
-export const isLoadingSelector = (state: typeof initialState) =>
-  state[IS_LOADING]
+export const cardsSelector = (state: typeof initialState) => state[CARDS]
+export const itemsSelector = (state: typeof initialState) => state[ITEMS]
 
 export const transactionsNoIntraAccountSelector = createSelector(
   transactionsSelector,
-  accountsSelector,
+  cardsSelector,
   (transactions, accounts) => {
     return transactions
       .map(tx => ({
@@ -224,7 +226,7 @@ export const transactionsByNameSelector = createSelector(
     }, {})
 )
 
-export const transactionsByAccountsSelector = createSelector(
+export const transactionsBycardsSelector = createSelector(
   dailyTransactionsSelector,
   transactions => {
     return Object.keys(transactions).reduce((result, date) => {
@@ -237,5 +239,20 @@ export const transactionsByAccountsSelector = createSelector(
 
       return result
     }, {})
+  }
+)
+
+export interface ItemWithCards extends DBItem {
+  cards: PileaCard[]
+}
+
+export const cardsByItemsSelector = createSelector(
+  cardsSelector,
+  itemsSelector,
+  (cards, items) => {
+    return items.map(item => ({
+      ...item,
+      cards: cards.filter(card => card.itemId === item.id),
+    }))
   }
 )

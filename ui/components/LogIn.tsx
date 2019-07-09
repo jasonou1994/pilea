@@ -1,14 +1,38 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FetchLogInActionCreator } from '../actions'
 
-interface LogInProps {}
+interface LogInProps {
+  fetchLogIn: FetchLogInActionCreator
+}
 
-interface LogInState {}
+interface LogInState {
+  userInput: string
+  passwordInput: string
+}
 
 export class LogIn extends Component<LogInProps, LogInState> {
-  static state = {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      userInput: '',
+      passwordInput: '',
+    }
+  }
+
+  submitLogIn = () => {
+    const { userInput, passwordInput } = this.state
+    const { fetchLogIn } = this.props
+
+    fetchLogIn({
+      user: userInput,
+      password: passwordInput,
+    })
+  }
 
   render() {
+    const { userInput, passwordInput } = this.state
+
     return (
       <div
         style={{
@@ -17,6 +41,23 @@ export class LogIn extends Component<LogInProps, LogInState> {
         }}
       >
         LogIn
+        <input
+          type="text"
+          value={userInput}
+          placeholder="Username"
+          onChange={e => {
+            this.setState({ userInput: e.target.value })
+          }}
+        />
+        <input
+          type="text"
+          value={passwordInput}
+          placeholder="Password"
+          onChange={e => {
+            this.setState({ passwordInput: e.target.value })
+          }}
+        />
+        <button onClick={this.submitLogIn}>Log In</button>
       </div>
     )
   }

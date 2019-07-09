@@ -9,18 +9,18 @@ import {
   setItems,
 } from '../actions'
 import {
-  FETCH_ADD_ACCOUNT,
   TRANSACTIONS,
   FETCH_LOG_IN,
   FETCH_LOG_OUT,
   FETCH_CREATE_USER,
   FETCH_REFRESH_TRANSACTIONS,
   API_ITEMS_ADD,
-  ITEMS,
   API_USER_LOGIN,
   API_TRANSACTIONS_RETRIEVE,
   API_USER_LOGOUT,
   API_USER_CREATE,
+  FETCH_ADD_ITEM,
+  CARDS,
 } from '../konstants'
 import { parseSSEFields } from '../utils'
 import { services } from '../services'
@@ -61,24 +61,30 @@ export interface DBItem {
   alias?: string
 }
 
+export interface PileaCard extends PlaidCard {
+  userId: number
+  itemId: number
+}
+
 export interface TransactionsRetrieveResponse extends APIResponse {
-  cards: PlaidCard[]
+  cards: PileaCard[]
   transactions: PlaidTransaction[]
   items: DBItem[]
 }
 
-function* addItem({ payload: publicToken }) {
+function* addItem({ payload: { accessToken, alias } }) {
   try {
     const { status, items }: AddItemResponse = yield call(
       services[API_ITEMS_ADD],
       {
         body: JSON.stringify({
-          publicToken,
-          alias: 'noalias',
+          publicToken: accessToken,
+          alias,
         }),
       }
     )
-    console.log(status, items)
+
+    yield put(setItems(items))
   } catch ({ error, status }) {
     console.error(status, error)
   }
@@ -171,18 +177,21 @@ function* refreshTransactions() {
       .format('YYYY-MM-DD')
     const end = moment().format('YYYY-MM-DD')
 
-    const SSEResponse = yield call(fetch, ({
-      url: 'http://localhost:8000/transactions/retrieve',
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify({
-        start,
-        end,
-      }),
-    } as unknown) as RequestInfo)
+    const SSEResponse = yield call(
+      fetch,
+      'http://localhost:8000/transactions/refresh',
+      ({
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          start,
+          end,
+        }),
+      } as unknown) as RequestInit
+    )
 
     const reader = yield SSEResponse.body.getReader()
     const decoder = yield new TextDecoder('utf-8')
@@ -195,9 +204,9 @@ function* refreshTransactions() {
       dataString += yield decoder.decode(chunk.value)
 
       const possibleEventArr = dataString.split(/\n\n/g)
+
       let eventsFound = 0
 
-      // @ts-ignore
       for (const [i, message] of possibleEventArr.entries()) {
         if (i === possibleEventArr.length - 1) {
           continue
@@ -211,8 +220,8 @@ function* refreshTransactions() {
         }
 
         switch (event) {
-          case ITEMS: {
-            yield put(setItems(JSON.parse(data) as DBItem[]))
+          case CARDS: {
+            yield put(setCards(JSON.parse(data) as PileaCard[]))
             break
           }
           case TRANSACTIONS: {
@@ -239,7 +248,7 @@ function* saga() {
   //@ts-ignore
   yield takeLatest(FETCH_REFRESH_TRANSACTIONS, refreshTransactions)
   //@ts-ignore
-  yield takeLatest(FETCH_ADD_ACCOUNT, addItem)
+  yield takeLatest(FETCH_ADD_ITEM, addItem)
   //@ts-ignore
   yield takeLatest(FETCH_LOG_IN, fetchLogIn)
   //@ts-ignore

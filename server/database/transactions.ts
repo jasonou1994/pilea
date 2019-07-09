@@ -3,7 +3,6 @@ import { TRANSACTIONS } from '../constants'
 import {
   Iso8601DateString,
   Transaction as PlaidTransaction,
-  Account as PlaidCard,
   TransactionsResponse,
 } from 'plaid'
 

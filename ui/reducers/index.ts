@@ -55,7 +55,9 @@ export const selectedTransactionKeySelector = state => {
 }
 
 //combined
-export const transactionsByDayCountCombinedSelector = createSelector(
+export const transactionsByDayCountCombinedSelector: (
+  state
+) => fromTransactions.TimeConsolidatedTransactionGroups = createSelector(
   transactionsByDateInputOutputSelector,
   graphFidelitySelector,
   (transactions, days) => {
@@ -84,7 +86,9 @@ export const transactionsByDayCountCombinedSelector = createSelector(
   }
 )
 
-export const selectedTransactionsSelector = createSelector(
+export const selectedTransactionsSelector: (
+  state
+) => fromTransactions.TimeConsolidatedTransactionGroup = createSelector(
   transactionsByDayCountCombinedSelector,
   selectedTransactionKeySelector,
   (transactions, selectedKey) => {

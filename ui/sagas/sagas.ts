@@ -21,12 +21,25 @@ import {
   API_USER_CREATE,
   FETCH_ADD_ITEM,
   CARDS,
+  API_ITEMS_GET,
 } from '../konstants'
-import { parseSSEFields } from '../utils'
-import { services } from '../services'
+import { parseSSEFields } from '../utilities/utils'
+import { services } from '../utilities/services'
 import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
 
+export interface DBItem {
+  id?: number
+  userId: number
+  accessToken: string
+  lastUpdated?: string
+  alias?: string
+}
+
+export interface PileaCard extends PlaidCard {
+  userId: number
+  itemId: number
+}
 export interface APIResponse {
   success: boolean
   status: string
@@ -43,6 +56,8 @@ export interface AddItemResponse extends APIResponse {
   }>
 }
 
+export interface GetItemsResponse extends AddItemResponse {}
+
 export interface CreateUserResponse extends APIResponse {
   username: string
   userId: number
@@ -51,19 +66,6 @@ export interface CreateUserResponse extends APIResponse {
 export interface UserLogInResponse extends APIResponse {
   username: string
   id: number
-}
-
-export interface DBItem {
-  id?: number
-  userId: number
-  accessToken: string
-  lastUpdated?: string
-  alias?: string
-}
-
-export interface PileaCard extends PlaidCard {
-  userId: number
-  itemId: number
 }
 
 export interface TransactionsRetrieveResponse extends APIResponse {
@@ -123,8 +125,8 @@ function* fetchLogIn({ payload: { user, password } }) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
-  } catch ({ error, status }) {
-    console.error(status, error)
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -235,6 +237,11 @@ function* refreshTransactions() {
       possibleEventArr.splice(0, eventsFound)
       dataString = possibleEventArr.join('\n\n')
     }
+
+    // Immediately after successful refresh, get items.
+    const { items }: AddItemResponse = yield call(services[API_ITEMS_GET])
+
+    yield put(setItems(items))
   } catch (e) {
     console.error('Error in fetchTransactions:', e)
   }

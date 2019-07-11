@@ -12,7 +12,7 @@ import {
   SET_ITEMS,
   LAST_UPDATED,
 } from '../konstants'
-import { shouldKeepTransaction } from '../utils'
+import { shouldKeepTransaction } from '../utilities/utils'
 import { updateIn, set, update } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
@@ -36,13 +36,7 @@ const transactions: (
 
   switch (type) {
     case SET_TRANSACTIONS: {
-      console.log('before', state[TRANSACTIONS])
-      console.log('payload', payload)
-      newState = update(state, TRANSACTIONS, list => {
-        list.push(...payload)
-        return list
-      })
-      console.log('after', newState[TRANSACTIONS])
+      newState = updateIn(state, [TRANSACTIONS], list => [...list, ...payload])
       break
     }
     case SET_CARDS: {
@@ -81,49 +75,72 @@ const transactions: (
 }
 export default transactions
 
-export const getTypeOfAccount = ({ accounts, id }) => {
-  const account = accounts.find(account => account.account_id === id)
+export const getTypeOfCard: ({
+  cards,
+  id,
+}: {
+  cards: PileaCard[]
+  id: string
+}) => string | null = ({ cards, id }) => {
+  const card = cards.find(card => card.account_id === id)
 
-  return account ? account.type : null
-}
-export const getAccountName = ({ accounts, id }) => {
-  const account = accounts.find(account => account.account_id === id)
-
-  return account
-    ? account.official_name
-      ? account.official_name
-      : account.name
-    : null
+  return card ? card.type : null
 }
 
-export const transactionsSelector = (state: typeof initialState) =>
-  state[TRANSACTIONS]
-export const cardsSelector = (state: typeof initialState) => state[CARDS]
-export const itemsSelector = (state: typeof initialState) => state[ITEMS]
+export const getCardName: ({
+  cards,
+  id,
+}: {
+  cards: PileaCard[]
+  id: string
+}) => string | null = ({ cards, id }) => {
+  const card = cards.find(account => account.account_id === id)
 
-export const transactionsNoIntraAccountSelector = createSelector(
+  return card ? (card.official_name ? card.official_name : card.name) : null
+}
+
+export const transactionsSelector: (
+  state: typeof initialState
+) => PlaidTransaction[] = state => state[TRANSACTIONS]
+
+export const cardsSelector: (
+  state: typeof initialState
+) => PileaCard[] = state => state[CARDS]
+
+export const itemsSelector: (state: typeof initialState) => DBItem[] = state =>
+  state[ITEMS]
+
+export interface TxWithCardType extends PlaidTransaction {
+  cardType: string
+}
+export const transactionsNoIntraAccountSelector: (
+  state: typeof initialState
+) => TxWithCardType[] = createSelector(
   transactionsSelector,
   cardsSelector,
-  (transactions, accounts) => {
+  (transactions, cards) => {
     return transactions
       .map(tx => ({
         ...tx,
-        accountType: getTypeOfAccount({
+        cardType: getTypeOfCard({
           id: tx.account_id,
-          accounts,
+          cards,
         }),
       }))
-      .filter(({ accountType, ...tx }) => {
-        console.log(tx)
-        return shouldKeepTransaction(tx, accountType)
+      .filter(({ cardType, ...tx }) => {
+        return shouldKeepTransaction(tx, cardType)
       })
   }
 )
 
-export const dailyTransactionsSelector = createSelector(
+export interface DailyTransactions {
+  [uniqueDate: string]: TxWithCardType[]
+}
+export const dailyTransactionsSelector: (
+  state: typeof initialState
+) => DailyTransactions = createSelector(
   transactionsNoIntraAccountSelector,
   transactions => {
-    // @ts-ignore
     const uniqueDates = [...new Set(transactions.map(tx => tx.date))].reduce(
       (acc, cur) => {
         acc[cur] = []
@@ -131,35 +148,50 @@ export const dailyTransactionsSelector = createSelector(
       },
       {}
     )
-    const txByDates = transactions.reduce((acc, cur) => {
-      const { date } = cur
+    const txByDates = transactions.reduce(
+      (acc, cur) => {
+        const { date } = cur
 
-      acc[date].push(cur)
-      return acc
-    }, uniqueDates)
+        acc[date].push(cur)
+        return acc
+      },
+      uniqueDates as DailyTransactions
+    )
 
     return txByDates
   }
 )
 
-export const transactionsByDateInputOutputSelector = createSelector(
+export interface TimeConsolidatedTransactionGroup {
+  input: number
+  output: number
+  transactions: TxWithCardType[]
+}
+
+export interface TimeConsolidatedTransactionGroups {
+  [key: string]: TimeConsolidatedTransactionGroup
+}
+
+export const transactionsByDateInputOutputSelector: (
+  state: typeof initialState
+) => TimeConsolidatedTransactionGroups = createSelector(
   dailyTransactionsSelector,
   transactions => {
     return Object.keys(transactions).reduce((finalResult, date) => {
       finalResult[date] = transactions[date].reduce(
         (dailyInfo, tx) => {
-          const { accountType, amount } = tx
+          const { cardType, amount } = tx
 
-          if (accountType === 'credit' && amount >= 0) {
+          if (cardType === 'credit' && amount >= 0) {
             dailyInfo.output += amount
           }
-          if (accountType === 'credit' && amount <= 0) {
+          if (cardType === 'credit' && amount <= 0) {
             dailyInfo.input += -amount
           }
-          if (accountType === 'depository' && amount >= 0) {
+          if (cardType === 'depository' && amount >= 0) {
             dailyInfo.output += amount
           }
-          if (accountType === 'depository' && amount <= 0) {
+          if (cardType === 'depository' && amount <= 0) {
             dailyInfo.input += -amount
           }
 
@@ -171,7 +203,7 @@ export const transactionsByDateInputOutputSelector = createSelector(
           input: 0,
           output: 0,
           transactions: [],
-        }
+        } as TimeConsolidatedTransactionGroup
       )
       return finalResult
     }, {})
@@ -226,7 +258,15 @@ export const transactionsByNameSelector = createSelector(
     }, {})
 )
 
-export const transactionsBycardsSelector = createSelector(
+export interface TxGroupedByDateAndCards {
+  [date: string]: {
+    [card: string]: TxWithCardType[]
+  }
+}
+
+export const transactionsBycardsSelector: (
+  state: typeof initialState
+) => TxGroupedByDateAndCards = createSelector(
   dailyTransactionsSelector,
   transactions => {
     return Object.keys(transactions).reduce((result, date) => {
@@ -246,7 +286,9 @@ export interface ItemWithCards extends DBItem {
   cards: PileaCard[]
 }
 
-export const cardsByItemsSelector = createSelector(
+export const cardsByItemsSelector: (
+  state: typeof initialState
+) => ItemWithCards[] = createSelector(
   cardsSelector,
   itemsSelector,
   (cards, items) => {

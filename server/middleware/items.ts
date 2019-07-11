@@ -9,6 +9,8 @@ export interface ContractItemAdd extends ContractResponse {
   items: DBItem[]
 }
 
+export interface ContractItemGet extends ContractItemAdd {}
+
 export const addItem = async (req: Request, res: Response) => {
   const { userId } = res.locals
   const { alias, publicToken } = req.body
@@ -33,5 +35,28 @@ export const addItem = async (req: Request, res: Response) => {
       status: 'Failed to add item.',
       error,
     } as ContractItemAdd)
+  }
+}
+
+export const getAllItems = async (_: Request, res: Response) => {
+  try {
+    const { userId } = res.locals
+
+    const items = await getItems({ userId })
+
+    const resBody: ContractItemGet = {
+      items,
+      status: 'Successfully retrieved items.',
+      success: true,
+    } as ContractItemGet
+
+    res.json(resBody)
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      status: 'Failed to add item.',
+      error,
+    } as ContractItemGet)
   }
 }

@@ -4,10 +4,11 @@ import {
   SET_SELECTED_TRANSACTION_KEY,
 } from '../konstants/index'
 import { GridActionTypes } from '../actions'
+import { setIn } from 'timm'
 
-const initialState = Map({
+const initialState = {
   [SELECTED_TRANSACTION_KEY]: '',
-})
+}
 
 const grid: (
   state: typeof initialState,
@@ -23,9 +24,7 @@ const grid: (
 
   switch (type) {
     case SET_SELECTED_TRANSACTION_KEY: {
-      const { key } = payload
-
-      newState = state.setIn([SELECTED_TRANSACTION_KEY], key)
+      newState = setIn(state, [SELECTED_TRANSACTION_KEY], payload)
 
       break
     }

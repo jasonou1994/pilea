@@ -1,8 +1,42 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { IncomeSpendingView } from '../components/IncomeSpendingView'
+import {
+  setGraphFidelity,
+  setSelectedTransactionKey,
+  SetGraphFidelityActionCreator,
+  SetSelectedTransactionActionCreator,
+} from '../actions'
+import {
+  graphFidelitySelector,
+  transactionsByDayCountCombinedSelector,
+  transactionsByCategorySelector,
+  transactionsByNameSelector,
+  cardsSelector,
+  selectedTransactionKeySelector,
+  selectedTransactionsSelector,
+  cardsByItemsSelector,
+} from '../reducers'
+import { PileaCard } from '../sagas/sagas'
+import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
+import {
+  ItemWithCards,
+  TimeConsolidatedTransactionGroup,
+  TimeConsolidatedTransactionGroups,
+} from '../reducers/transactionsAccounts'
 
-interface AnalysisContainerProps {}
+interface AnalysisContainerProps {
+  graphFidelity: number
+  transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
+  transactionsByCategory: any
+  transactionsByName: any
+  cards: PileaCard[]
+  cardsByItems: ItemWithCards[]
+  selectedTransactions: TimeConsolidatedTransactionGroup
+  selectedTransactionsKey: string
+  setGraphFidelityAction: SetGraphFidelityActionCreator
+  setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
+}
 
 interface AnalysisContainerState {}
 
@@ -13,6 +47,19 @@ class _AnalysisContainer extends Component<
   static state = {}
 
   render() {
+    const {
+      graphFidelity,
+      transactionsByCategory,
+      transactionsByDayCountCombined,
+      transactionsByName,
+      cards,
+      cardsByItems,
+      selectedTransactions,
+      selectedTransactionsKey,
+      setGraphFidelityAction,
+      setSelectedTransactionKeyAction,
+    } = this.props
+
     return (
       <div
         style={{
@@ -21,13 +68,39 @@ class _AnalysisContainer extends Component<
         }}
       >
         AnalysisContainer
-        <IncomeSpendingView />
+        <IncomeSpendingView
+          {...{
+            graphFidelity,
+            transactionsByCategory,
+            transactionsByDayCountCombined,
+            transactionsByName,
+            cards,
+            selectedTransactions,
+            selectedTransactionsKey,
+            setGraphFidelityAction,
+            setSelectedTransactionKeyAction,
+          }}
+        />
       </div>
     )
   }
 }
 
 export default connect(
-  state => ({}),
-  {}
+  state => ({
+    graphFidelity: graphFidelitySelector(state),
+    transactionsByDayCountCombined: transactionsByDayCountCombinedSelector(
+      state
+    ),
+    transactionsByCategory: transactionsByCategorySelector(state),
+    transactionsByName: transactionsByNameSelector(state),
+    cards: cardsSelector(state),
+    cardsByItems: cardsByItemsSelector(state),
+    selectedTransactions: selectedTransactionsSelector(state),
+    selectedTransactionsKey: selectedTransactionKeySelector(state),
+  }),
+  {
+    setGraphFidelityAction: setGraphFidelity,
+    setSelectedTransactionKeyAction: setSelectedTransactionKey,
+  }
 )(_AnalysisContainer)

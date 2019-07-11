@@ -1,14 +1,15 @@
 import moment from 'moment'
 
-export const formatMilliseconds = milli => moment(milli).format('MMM Do, YYYY')
+export const formatMilliseconds: (milli: number) => string = milli =>
+  moment(milli).format('MMM Do, YYYY')
 
-export const formatNumberAsDollars = number =>
+export const formatNumberAsDollars: (number: number) => string = number =>
   new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
   }).format(number)
 
-export const parseSSEFields = rawString => {
+export const parseSSEFields = (rawString: string) => {
   return (
     rawString
       // since the string is multi line, each for a different field, split by line
@@ -53,19 +54,19 @@ const nonCountedCategories = [
   return acc
 }, {})
 
-export const shouldKeepTransaction = (
-  { amount, category: categoryString },
-  accountType
-) => {
-  console.log(categoryString)
-  if (!categoryString) {
+export const shouldKeepTransaction = ({ amount, category }, accountType) => {
+  // console.log(category)
+  if (!category) {
     return true
   }
 
-  const cleanedCategories = categoryString
-    .replace(/[{|}|"]/g, '')
-    .split(',')
-    .map(cat => cat.trim())
+  const cleanedCategories =
+    category instanceof Array
+      ? category
+      : category
+          .replace(/[{|}|"]/g, '')
+          .split(',')
+          .map(cat => cat.trim())
 
   return cleanedCategories.reduce((acc, category) => {
     const tryMatch = `${accountType}-${

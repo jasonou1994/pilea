@@ -5,7 +5,8 @@ import {
   API_USER_LOGIN,
   API_USER_LOGOUT,
   AvailableAPIs,
-} from './konstants'
+  API_ITEMS_GET,
+} from '../konstants'
 
 interface ServiceDefinition {
   name: AvailableAPIs
@@ -27,6 +28,11 @@ const serviceDefs: ServiceDefinition[] = [
   {
     name: API_ITEMS_ADD,
     url: 'http://localhost:8000/items/add',
+  },
+  {
+    name: API_ITEMS_GET,
+    url: 'http://localhost:8000/items/',
+    method: 'GET',
   },
   {
     name: API_USER_CREATE,
@@ -58,7 +64,7 @@ export const services = serviceDefs.reduce((acc, service) => {
         })
         const rawResponse = await fetch(url, {
           ...options,
-          body,
+          ...(options.method === 'POST' ? { body } : {}),
         })
         const response = await rawResponse.json()
         const { error, success, status, ...contents } = response

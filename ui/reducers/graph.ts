@@ -11,7 +11,7 @@ import {
 import { GraphActionTypes } from '../actions'
 
 const initialState = {
-  [GRAPH_FIDELITY]: 7,
+  [GRAPH_FIDELITY]: 30,
   [START_DATE]: moment()
     .subtract(1, 'year')
     .format('YYYY-MM-DD'),
@@ -32,24 +32,18 @@ const graph: (
 
   switch (type) {
     case SET_GRAPH_FIDELITY: {
-      const { graphFidelity } = payload
-
-      newState = setIn(state, [GRAPH_FIDELITY], Number(graphFidelity))
+      newState = setIn(state, [GRAPH_FIDELITY], Number(payload))
 
       break
     }
 
     case SET_START_DATE: {
-      const { startDate } = payload
-
-      newState = setIn(state, [START_DATE], startDate)
+      newState = setIn(state, [START_DATE], payload)
 
       break
     }
     case SET_END_DATE: {
-      const { endDate } = payload
-
-      newState = setIn(state, [END_DATE], endDate)
+      newState = setIn(state, [END_DATE], payload)
 
       break
     }

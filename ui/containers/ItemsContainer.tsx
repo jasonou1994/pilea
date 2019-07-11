@@ -31,6 +31,7 @@ class _ItemsContainer extends Component<
       fetchAddItemAction,
       fetchRefreshTransactionsAction,
     } = this.props
+
     return (
       <div
         style={{
@@ -63,7 +64,9 @@ class _ItemsContainer extends Component<
 }
 
 export default connect(
-  state => ({ cardsByItems: cardsByItemsSelector(state) }),
+  state => ({
+    cardsByItems: cardsByItemsSelector(state),
+  }),
   {
     fetchAddItemAction: fetchAddItem,
     fetchRefreshTransactionsAction: fetchRefreshTransactions,

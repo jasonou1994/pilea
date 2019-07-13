@@ -18,9 +18,7 @@ import {
   cardsByItemsSelector,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
-import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import {
-  ItemWithCards,
   TimeConsolidatedTransactionGroup,
   TimeConsolidatedTransactionGroups,
 } from '../reducers/transactionsAccounts'
@@ -31,7 +29,6 @@ interface AnalysisContainerProps {
   transactionsByCategory: any
   transactionsByName: any
   cards: PileaCard[]
-  cardsByItems: ItemWithCards[]
   selectedTransactions: TimeConsolidatedTransactionGroup
   selectedTransactionsKey: string
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -53,7 +50,6 @@ class _AnalysisContainer extends Component<
       transactionsByDayCountCombined,
       transactionsByName,
       cards,
-      cardsByItems,
       selectedTransactions,
       selectedTransactionsKey,
       setGraphFidelityAction,

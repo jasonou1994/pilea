@@ -1,21 +1,28 @@
 import { setIn } from 'timm'
-import moment from 'moment'
 import {
   GRAPH_FIDELITY,
   SET_GRAPH_FIDELITY,
-  START_DATE,
-  END_DATE,
-  SET_START_DATE,
-  SET_END_DATE,
+  HISTORICAL_LENGTH,
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+  AvailableTimeUnits,
 } from '../konstants/index'
 import { GraphActionTypes } from '../actions'
 
-const initialState = {
+interface GraphState {
+  [GRAPH_FIDELITY]: number
+  [HISTORICAL_LENGTH]: {
+    [HISTORICAL_TIME_COUNT]: number
+    [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
+  }
+}
+
+const initialState: GraphState = {
   [GRAPH_FIDELITY]: 30,
-  [START_DATE]: moment()
-    .subtract(1, 'year')
-    .format('YYYY-MM-DD'),
-  [END_DATE]: moment().format('YYYY-MM-DD'),
+  [HISTORICAL_LENGTH]: {
+    [HISTORICAL_TIME_COUNT]: 1,
+    [HISTORICAL_TIME_UNIT]: 'year',
+  },
 }
 
 const graph: (
@@ -33,17 +40,6 @@ const graph: (
   switch (type) {
     case SET_GRAPH_FIDELITY: {
       newState = setIn(state, [GRAPH_FIDELITY], Number(payload))
-
-      break
-    }
-
-    case SET_START_DATE: {
-      newState = setIn(state, [START_DATE], payload)
-
-      break
-    }
-    case SET_END_DATE: {
-      newState = setIn(state, [END_DATE], payload)
 
       break
     }

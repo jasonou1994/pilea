@@ -1,4 +1,17 @@
 import moment from 'moment'
+import {
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+  AvailableTimeUnits,
+  ONE_YEAR,
+  YEAR,
+  AvailableTimeStrings,
+  TWO_YEARS,
+  SIX_MONTHS,
+  MONTH,
+  THREE_MONTHS,
+} from '../konstants'
+import { PileaCard } from '../sagas/sagas'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')
@@ -79,4 +92,78 @@ export const shouldKeepTransaction = ({ amount, category }, accountType) => {
 
     return acc
   }, true)
+}
+
+export const convertDateSelectString: (
+  string: AvailableTimeStrings
+) => {
+  [HISTORICAL_TIME_COUNT]: number
+  [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
+} = string => {
+  switch (string) {
+    case ONE_YEAR: {
+      return {
+        [HISTORICAL_TIME_COUNT]: 1,
+        [HISTORICAL_TIME_UNIT]: YEAR,
+      }
+    }
+    case TWO_YEARS: {
+      return {
+        [HISTORICAL_TIME_COUNT]: 2,
+        [HISTORICAL_TIME_UNIT]: YEAR,
+      }
+    }
+    case SIX_MONTHS: {
+      return {
+        [HISTORICAL_TIME_COUNT]: 6,
+        [HISTORICAL_TIME_UNIT]: MONTH,
+      }
+    }
+    case THREE_MONTHS: {
+      return {
+        [HISTORICAL_TIME_COUNT]: 3,
+        [HISTORICAL_TIME_UNIT]: MONTH,
+      }
+    }
+  }
+}
+
+export const convertDateSelectObject: ({
+  historicalTimeCount,
+  historicalTimeUnit,
+}: {
+  historicalTimeCount: number
+  historicalTimeUnit: AvailableTimeUnits
+}) => AvailableTimeStrings = ({ historicalTimeCount, historicalTimeUnit }) => {
+  return historicalTimeCount === 2 && historicalTimeUnit === 'year'
+    ? TWO_YEARS
+    : historicalTimeCount === 1 && historicalTimeUnit === 'year'
+    ? ONE_YEAR
+    : historicalTimeCount === 6 && historicalTimeUnit === 'month'
+    ? SIX_MONTHS
+    : THREE_MONTHS
+}
+
+export const getTypeOfCard: ({
+  cards,
+  id,
+}: {
+  cards: PileaCard[]
+  id: string
+}) => string | null = ({ cards, id }) => {
+  const card = cards.find(card => card.account_id === id)
+
+  return card ? card.type : null
+}
+
+export const getCardName: ({
+  cards,
+  id,
+}: {
+  cards: PileaCard[]
+  id: string
+}) => string | null = ({ cards, id }) => {
+  const card = cards.find(account => account.account_id === id)
+
+  return card ? (card.official_name ? card.official_name : card.name) : null
 }

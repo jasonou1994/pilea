@@ -1,7 +1,12 @@
-import { SET_GRAPH_FIDELITY } from '../konstants/index'
+import {
+  SET_GRAPH_FIDELITY,
+  SET_GRAPH_HISTORICAL_LENGTH,
+} from '../konstants/index'
 import { Action } from 'redux'
 
-export type GraphActionTypes = typeof SET_GRAPH_FIDELITY
+export type GraphActionTypes =
+  | typeof SET_GRAPH_FIDELITY
+  | typeof SET_GRAPH_HISTORICAL_LENGTH
 
 // Generics
 export interface GraphAction<P, AT extends GraphActionTypes>
@@ -22,3 +27,12 @@ export const setGraphFidelity: SetGraphFidelityActionCreator = fidelity => ({
   type: SET_GRAPH_FIDELITY,
   payload: fidelity,
 })
+
+export type SetGraphHistoricalLengthActionCreator = GraphActionCreator<
+  { count: number; unit: string },
+  typeof SET_GRAPH_HISTORICAL_LENGTH
+>
+export const setGraphHistoricalLength: SetGraphHistoricalLengthActionCreator = ({
+  count,
+  unit,
+}) => ({ type: SET_GRAPH_HISTORICAL_LENGTH, payload: { count, unit } })

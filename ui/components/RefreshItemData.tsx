@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { ItemWithCards } from '../reducers/transactionsAccounts'
 import moment from 'moment'
 import { FetchRefreshTransactionsActionCreator } from '../actions'
+import { ItemWithCards } from '../reducers'
 
 interface RefreshItemDataProps {
   cardsByItems: ItemWithCards[]

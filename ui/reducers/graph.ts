@@ -6,6 +6,7 @@ import {
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
+  SET_GRAPH_HISTORICAL_LENGTH,
 } from '../konstants/index'
 import { GraphActionTypes } from '../actions'
 
@@ -35,11 +36,22 @@ const graph: (
     type: GraphActionTypes
   }
 ) => typeof initialState = (state = initialState, { type, payload }) => {
-  let newState
+  let newState: GraphState
 
   switch (type) {
     case SET_GRAPH_FIDELITY: {
       newState = setIn(state, [GRAPH_FIDELITY], Number(payload))
+
+      break
+    }
+
+    case SET_GRAPH_HISTORICAL_LENGTH: {
+      const { count, unit } = payload
+
+      newState = setIn(state, [HISTORICAL_LENGTH], {
+        [HISTORICAL_TIME_COUNT]: count,
+        [HISTORICAL_TIME_UNIT]: unit,
+      })
 
       break
     }
@@ -54,3 +66,6 @@ export default graph
 
 export const graphFidelitySelector = (state: typeof initialState) =>
   state[GRAPH_FIDELITY]
+
+export const graphHistoricalLengthSelector = (state: typeof initialState) =>
+  state[HISTORICAL_LENGTH]

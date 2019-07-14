@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { ItemWithCards } from '../reducers/transactionsAccounts'
+import { ItemWithCards } from '../reducers'
 
 interface CurrentItemsProps {
   cardsByItems: ItemWithCards[]

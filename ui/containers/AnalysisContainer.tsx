@@ -6,6 +6,8 @@ import {
   setSelectedTransactionKey,
   SetGraphFidelityActionCreator,
   SetSelectedTransactionActionCreator,
+  setGraphHistoricalLength,
+  SetGraphHistoricalLengthActionCreator,
 } from '../actions'
 import {
   graphFidelitySelector,
@@ -13,15 +15,18 @@ import {
   transactionsByCategorySelector,
   transactionsByNameSelector,
   cardsSelector,
-  selectedTransactionKeySelector,
   selectedTransactionsSelector,
   cardsByItemsSelector,
+  graphHistoricalLengthSelector,
+  TimeConsolidatedTransactionGroups,
+  TimeConsolidatedTransactionGroup,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
 import {
-  TimeConsolidatedTransactionGroup,
-  TimeConsolidatedTransactionGroups,
-} from '../reducers/transactionsAccounts'
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+  AvailableTimeUnits,
+} from '../konstants'
 
 interface AnalysisContainerProps {
   graphFidelity: number
@@ -30,9 +35,13 @@ interface AnalysisContainerProps {
   transactionsByName: any
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
-  selectedTransactionsKey: string
   setGraphFidelityAction: SetGraphFidelityActionCreator
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
+  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
+  graphHistoricalLength: {
+    [HISTORICAL_TIME_COUNT]: number
+    [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
+  }
 }
 
 interface AnalysisContainerState {}
@@ -41,8 +50,6 @@ class _AnalysisContainer extends Component<
   AnalysisContainerProps,
   AnalysisContainerState
 > {
-  static state = {}
-
   render() {
     const {
       graphFidelity,
@@ -51,9 +58,10 @@ class _AnalysisContainer extends Component<
       transactionsByName,
       cards,
       selectedTransactions,
-      selectedTransactionsKey,
       setGraphFidelityAction,
       setSelectedTransactionKeyAction,
+      setGraphHistoricalLengthAction,
+      graphHistoricalLength,
     } = this.props
 
     return (
@@ -72,9 +80,10 @@ class _AnalysisContainer extends Component<
             transactionsByName,
             cards,
             selectedTransactions,
-            selectedTransactionsKey,
             setGraphFidelityAction,
             setSelectedTransactionKeyAction,
+            setGraphHistoricalLengthAction,
+            graphHistoricalLength,
           }}
         />
       </div>
@@ -93,10 +102,11 @@ export default connect(
     cards: cardsSelector(state),
     cardsByItems: cardsByItemsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),
-    selectedTransactionsKey: selectedTransactionKeySelector(state),
+    graphHistoricalLength: graphHistoricalLengthSelector(state),
   }),
   {
     setGraphFidelityAction: setGraphFidelity,
     setSelectedTransactionKeyAction: setSelectedTransactionKey,
+    setGraphHistoricalLengthAction: setGraphHistoricalLength,
   }
 )(_AnalysisContainer)

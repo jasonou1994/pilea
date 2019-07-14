@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { CurrentItems } from '../components/CurrentItems'
 import { AddNewItem } from '../components/AddNewItem'
 import { RefreshItemData } from '../components/RefreshItemData'
-import { cardsByItemsSelector } from '../reducers'
-import { ItemWithCards } from '../reducers/transactionsAccounts'
+import { cardsByItemsSelector, ItemWithCards } from '../reducers'
 import {
   fetchAddItem,
   FetchAddItemActionCreator,

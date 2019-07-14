@@ -5,10 +5,8 @@ import { AgGridReact } from 'ag-grid-react'
 import { GridColumnDef, getGridColumnDefs } from '../utilities/layout'
 import { GRID_LAYOUT_BY_TIME } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
-import {
-  TimeConsolidatedTransactionGroup,
-  getCardName,
-} from '../reducers/transactionsAccounts'
+import { TimeConsolidatedTransactionGroup } from '../reducers'
+import { getCardName } from '../utilities/utils'
 
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]

@@ -7,11 +7,17 @@ import { Transaction as PlaidTransaction } from 'plaid'
 import {
   SetGraphFidelityActionCreator,
   SetSelectedTransactionActionCreator,
+  SetGraphHistoricalLengthActionCreator,
 } from '../actions'
+import {
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+  AvailableTimeUnits,
+} from '../konstants'
 import {
   TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
-} from '../reducers/transactionsAccounts'
+} from '../reducers'
 
 interface IncomeSpendingViewProps {
   graphFidelity: number
@@ -20,9 +26,13 @@ interface IncomeSpendingViewProps {
   transactionsByName: any
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
-  selectedTransactionsKey: string
   setGraphFidelityAction: SetGraphFidelityActionCreator
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
+  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
+  graphHistoricalLength: {
+    [HISTORICAL_TIME_COUNT]: number
+    [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
+  }
 }
 
 interface IncomeSpendingViewState {}
@@ -41,9 +51,10 @@ export class IncomeSpendingView extends Component<
       transactionsByName,
       cards,
       selectedTransactions,
-      selectedTransactionsKey,
       setGraphFidelityAction,
       setSelectedTransactionKeyAction,
+      setGraphHistoricalLengthAction,
+      graphHistoricalLength,
     } = this.props
 
     return (
@@ -67,6 +78,8 @@ export class IncomeSpendingView extends Component<
             setGraphFidelityAction,
             setSelectedTransactionKeyAction,
             graphFidelity,
+            setGraphHistoricalLengthAction,
+            graphHistoricalLength,
           }}
         />
         <IncomeSpendingDetailsGrid {...{ cards, selectedTransactions }} />

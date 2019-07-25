@@ -63,6 +63,26 @@ export const selectedTransactionKeySelector = state => {
  * TRANSFORMATION SELECTORS
  ***********/
 
+// Filtering
+export const allowedCardsSelector: (
+  state
+) => { [key: string]: boolean } = createSelector(
+  cardsSelector,
+  cards => {
+    const allowedCards = cards.reduce((acc, card) => {
+      if (card.selected) {
+        acc[card.account_id] = true
+      }
+
+      return acc
+    }, {})
+
+    console.log(allowedCards)
+
+    return allowedCards
+  }
+)
+
 // transaction filtering and combination
 export interface TxWithCardType extends PlaidTransaction {
   cardType: string
@@ -88,8 +108,8 @@ export interface TxGroupedByDateAndCards {
   }
 }
 
-export interface ItemWithCards extends DBItem {
-  cards: PileaCard[]
+export interface ItemWithCards extends fromTransactions.ItemWithFilter {
+  cards: fromTransactions.CardWithFilter[]
 }
 
 export const transactionsNoIntraAccountSelector: (
@@ -117,12 +137,17 @@ export const filteredTransactionsSelector: (
 ) => TxWithCardType[] = createSelector(
   transactionsNoIntraAccountSelector,
   graphHistoricalLengthSelector,
-  (transactions, { historicalTimeCount, historicalTimeUnit }) => {
+  allowedCardsSelector,
+  (transactions, { historicalTimeCount, historicalTimeUnit }, allowedCards) => {
     const cutOffDate = moment()
       .subtract(historicalTimeCount, historicalTimeUnit)
       .valueOf()
 
-    return transactions.filter(tx => moment(tx.date).valueOf() > cutOffDate)
+    // No need to also filter item due to 1:m relationship
+    return transactions.filter(
+      tx =>
+        moment(tx.date).valueOf() > cutOffDate && allowedCards[tx.account_id]
+    )
   }
 )
 

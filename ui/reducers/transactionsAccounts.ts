@@ -6,7 +6,6 @@ import {
   ITEMS,
   SET_CARDS,
   SET_ITEMS,
-  LAST_UPDATED,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
 } from '../konstants'
@@ -55,7 +54,7 @@ const transactions: (
             }
             return acc
           },
-          existingCards as PlaidCard[]
+          [...existingCards] as PlaidCard[]
         )
       })
       break
@@ -108,7 +107,7 @@ const transactions: (
 
       // toggling an item also sets all cards under that item to also be the same as the new selected value
       newState = updateIn(
-        state,
+        newState,
         [CARDS],
         (oldCards: CardWithFilter[]): CardWithFilter[] =>
           oldCards.map(oldCard => ({ ...oldCard, selected }))

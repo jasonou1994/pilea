@@ -13,8 +13,20 @@ export class FilterRow extends Component<Props> {
 
     return (
       <div>
-        <input type="checkbox" checked={selected} onClick={onCheckboxClick} />
-        <span>{displayName}</span>
+        <span>
+          {Array(indentLevel)
+            .fill(null)
+            .map(_ => (
+              <span style={{ opacity: 0 }}>---</span>
+            ))}
+
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={onCheckboxClick}
+          />
+          {displayName}
+        </span>
       </div>
     )
   }

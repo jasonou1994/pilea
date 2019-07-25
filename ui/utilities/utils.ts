@@ -12,6 +12,7 @@ import {
   THREE_MONTHS,
 } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
+import { CardWithFilter } from '../reducers/transactionsAccounts'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')

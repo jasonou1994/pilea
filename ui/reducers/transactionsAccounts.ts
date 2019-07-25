@@ -1,4 +1,3 @@
-import { createSelector } from 'reselect'
 import {
   SET_TRANSACTIONS,
   TRANSACTIONS,
@@ -8,18 +7,25 @@ import {
   SET_CARDS,
   SET_ITEMS,
   LAST_UPDATED,
+  TOGGLE_CARD_SELECTED,
+  TOGGLE_ITEM_SELECTED,
 } from '../konstants'
-import { shouldKeepTransaction } from '../utilities/utils'
-import { updateIn, set, update } from 'timm'
+import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
 import { TransactionsActionTypes, AccountsActionTypes } from '../actions'
 
+export interface CardWithFilter extends PileaCard {
+  selected: boolean
+}
+export interface ItemWithFilter extends DBItem {
+  selected: boolean
+}
+
 const initialState = {
   [TRANSACTIONS]: [] as PlaidTransaction[],
-  [CARDS]: [] as PileaCard[],
-  [ITEMS]: [] as DBItem[],
-  [LAST_UPDATED]: '',
+  [CARDS]: [] as CardWithFilter[],
+  [ITEMS]: [] as ItemWithFilter[],
 }
 
 const transactions: (
@@ -45,7 +51,7 @@ const transactions: (
                 existCard => existCard.account_id === newCard.account_id
               )
             ) {
-              acc.push(newCard)
+              acc.push({ ...newCard, selected: true } as CardWithFilter)
             }
             return acc
           },
@@ -55,7 +61,13 @@ const transactions: (
       break
     }
     case SET_ITEMS: {
-      newState = updateIn(state, [ITEMS], _ => [...payload])
+      newState = setIn(
+        state,
+        [ITEMS],
+        payload.map(
+          (item: DBItem): ItemWithFilter => ({ ...item, selected: true })
+        )
+      )
       break
     }
 
@@ -63,6 +75,47 @@ const transactions: (
       newState = set(state, TRANSACTIONS, [])
       break
     }
+
+    case TOGGLE_CARD_SELECTED: {
+      const foundCardIndex = state[CARDS].findIndex(
+        card => card.account_id === payload
+      )
+
+      newState = updateIn(
+        state,
+        [CARDS, foundCardIndex],
+        (oldCard: CardWithFilter): CardWithFilter => ({
+          ...oldCard,
+          selected: !oldCard.selected,
+        })
+      )
+      break
+    }
+
+    case TOGGLE_ITEM_SELECTED: {
+      const foundItemIndex = state[ITEMS].findIndex(item => item.id === payload)
+
+      const selected = !state[ITEMS][foundItemIndex].selected
+
+      newState = updateIn(
+        state,
+        [ITEMS, foundItemIndex],
+        (oldItem: ItemWithFilter): ItemWithFilter => ({
+          ...oldItem,
+          selected,
+        })
+      )
+
+      // toggling an item also sets all cards under that item to also be the same as the new selected value
+      newState = updateIn(
+        state,
+        [CARDS],
+        (oldCards: CardWithFilter[]): CardWithFilter[] =>
+          oldCards.map(oldCard => ({ ...oldCard, selected }))
+      )
+      break
+    }
+
     default: {
       newState = state
     }
@@ -78,7 +131,8 @@ export const transactionsSelector: (
 
 export const cardsSelector: (
   state: typeof initialState
-) => PileaCard[] = state => state[CARDS]
+) => CardWithFilter[] = state => state[CARDS]
 
-export const itemsSelector: (state: typeof initialState) => DBItem[] = state =>
-  state[ITEMS]
+export const itemsSelector: (
+  state: typeof initialState
+) => ItemWithFilter[] = state => state[ITEMS]

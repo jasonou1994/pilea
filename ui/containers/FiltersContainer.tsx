@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AccountFilter } from '../components/AccountFilter'
+import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
+import { cardsByItemsSelector, ItemWithCards } from '../reducers'
 
-interface FiltersContainerProps {}
+interface FiltersContainerProps {
+  cardsByItems: ItemWithCards[]
+}
 
 interface FiltersContainerState {}
 
@@ -14,6 +17,8 @@ class _FiltersContainer extends Component<
   static state = {}
 
   render() {
+    const { cardsByItems } = this.props
+
     return (
       <div
         style={{
@@ -21,8 +26,7 @@ class _FiltersContainer extends Component<
           padding: '5px',
         }}
       >
-        FiltersContainer
-        <AccountFilter />
+        <CardFilter {...{ cardsByItems }} />
         <CategoryFilter />
       </div>
     )
@@ -30,6 +34,8 @@ class _FiltersContainer extends Component<
 }
 
 export default connect(
-  state => ({}),
+  state => ({
+    cardsByItems: cardsByItemsSelector(state),
+  }),
   {}
 )(_FiltersContainer)

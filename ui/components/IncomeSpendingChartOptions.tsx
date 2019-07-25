@@ -3,6 +3,7 @@ import {
   SetGraphFidelityActionCreator,
   SetSelectedTransactionActionCreator,
   SetGraphHistoricalLengthActionCreator,
+  ResetSelectedTransactionActionCreator,
 } from '../actions'
 import {
   HISTORICAL_TIME_COUNT,
@@ -23,12 +24,12 @@ import {
 interface IncomeSpendingChartOptionsProps {
   setGraphFidelityAction: SetGraphFidelityActionCreator
   graphFidelity: number
-  setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
   setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
 interface IncomeSpendingChartOptionsState {}
@@ -43,9 +44,9 @@ export class IncomeSpendingChartOptions extends Component<
     const {
       setGraphFidelityAction,
       graphFidelity,
-      setSelectedTransactionKeyAction,
       setGraphHistoricalLengthAction,
       graphHistoricalLength: { historicalTimeCount, historicalTimeUnit },
+      resetSelectedTransactionKeyAction,
     } = this.props
 
     return (
@@ -55,7 +56,7 @@ export class IncomeSpendingChartOptions extends Component<
           <select
             value={graphFidelity}
             onChange={e => {
-              setSelectedTransactionKeyAction('')
+              resetSelectedTransactionKeyAction()
               setGraphFidelityAction(e.target.value)
             }}
           >
@@ -78,6 +79,7 @@ export class IncomeSpendingChartOptions extends Component<
               } = convertDateSelectString(e.target
                 .value as AvailableTimeStrings)
 
+              resetSelectedTransactionKeyAction()
               setGraphHistoricalLengthAction({
                 count: historicalTimeCount,
                 unit: historicalTimeUnit,

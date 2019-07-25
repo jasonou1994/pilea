@@ -38,7 +38,6 @@ class _ItemsContainer extends Component<
           padding: '5px',
         }}
       >
-        ItemsContainer
         <CurrentItems
           {...{
             cardsByItems,

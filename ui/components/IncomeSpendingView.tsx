@@ -3,11 +3,11 @@ import { IncomeSpendingChart } from './IncomeSpendingChart'
 import { IncomeSpendingChartOptions } from './IncomeSpendingChartOptions'
 import { IncomeSpendingDetailsGrid } from './IncomeSpendingDetailsGrid'
 import { PileaCard } from '../sagas/sagas'
-import { Transaction as PlaidTransaction } from 'plaid'
 import {
   SetGraphFidelityActionCreator,
   SetSelectedTransactionActionCreator,
   SetGraphHistoricalLengthActionCreator,
+  ResetSelectedTransactionActionCreator,
 } from '../actions'
 import {
   HISTORICAL_TIME_COUNT,
@@ -33,6 +33,7 @@ interface IncomeSpendingViewProps {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
 interface IncomeSpendingViewState {}
@@ -55,6 +56,7 @@ export class IncomeSpendingView extends Component<
       setSelectedTransactionKeyAction,
       setGraphHistoricalLengthAction,
       graphHistoricalLength,
+      resetSelectedTransactionKeyAction,
     } = this.props
 
     return (
@@ -76,10 +78,10 @@ export class IncomeSpendingView extends Component<
         <IncomeSpendingChartOptions
           {...{
             setGraphFidelityAction,
-            setSelectedTransactionKeyAction,
             graphFidelity,
             setGraphHistoricalLengthAction,
             graphHistoricalLength,
+            resetSelectedTransactionKeyAction,
           }}
         />
         <IncomeSpendingDetailsGrid {...{ cards, selectedTransactions }} />

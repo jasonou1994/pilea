@@ -19,7 +19,6 @@ export class MainView extends Component<MainViewProps, MainViewState> {
           padding: '5px',
         }}
       >
-        MainView
         <ItemsContainer />
         <FiltersContainer />
         <AnalysisContainer />

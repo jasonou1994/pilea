@@ -27,7 +27,6 @@ class _LogInContainer extends Component<LogInContainerProps> {
           padding: '5px',
         }}
       >
-        LogInContainer
         <LogIn {...{ fetchLogIn }} />
         <CreateUser {...{ fetchCreateUser }} />
       </div>

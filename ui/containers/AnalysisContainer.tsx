@@ -8,6 +8,8 @@ import {
   SetSelectedTransactionActionCreator,
   setGraphHistoricalLength,
   SetGraphHistoricalLengthActionCreator,
+  resetSelectedTransactionKey,
+  ResetSelectedTransactionActionCreator,
 } from '../actions'
 import {
   graphFidelitySelector,
@@ -42,6 +44,7 @@ interface AnalysisContainerProps {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
 interface AnalysisContainerState {}
@@ -62,6 +65,7 @@ class _AnalysisContainer extends Component<
       setSelectedTransactionKeyAction,
       setGraphHistoricalLengthAction,
       graphHistoricalLength,
+      resetSelectedTransactionKeyAction,
     } = this.props
 
     return (
@@ -71,7 +75,6 @@ class _AnalysisContainer extends Component<
           padding: '5px',
         }}
       >
-        AnalysisContainer
         <IncomeSpendingView
           {...{
             graphFidelity,
@@ -84,6 +87,7 @@ class _AnalysisContainer extends Component<
             setSelectedTransactionKeyAction,
             setGraphHistoricalLengthAction,
             graphHistoricalLength,
+            resetSelectedTransactionKeyAction,
           }}
         />
       </div>
@@ -108,5 +112,6 @@ export default connect(
     setGraphFidelityAction: setGraphFidelity,
     setSelectedTransactionKeyAction: setSelectedTransactionKey,
     setGraphHistoricalLengthAction: setGraphHistoricalLength,
+    resetSelectedTransactionKeyAction: resetSelectedTransactionKey,
   }
 )(_AnalysisContainer)

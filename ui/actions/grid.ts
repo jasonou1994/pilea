@@ -1,14 +1,19 @@
-import { SET_SELECTED_TRANSACTION_KEY } from '../konstants/index'
+import {
+  SET_SELECTED_TRANSACTION_KEY,
+  RESET_SELECTED_TRANSACTION_KEY,
+} from '../konstants/index'
 import { Action } from 'redux'
 
-export type GridActionTypes = typeof SET_SELECTED_TRANSACTION_KEY
+export type GridActionTypes =
+  | typeof SET_SELECTED_TRANSACTION_KEY
+  | typeof RESET_SELECTED_TRANSACTION_KEY
 
 // Generics
-export interface GridAction<P, AT extends GridActionTypes> extends Action<AT> {
+interface GridAction<P, AT extends GridActionTypes> extends Action<AT> {
   type: AT
   payload: P
 }
-export type GridActionCreator<P, AT extends GridActionTypes> = (
+type GridActionCreator<P, AT extends GridActionTypes> = (
   payload: P
 ) => GridAction<P, AT>
 
@@ -20,4 +25,13 @@ export type SetSelectedTransactionActionCreator = GridActionCreator<
 export const setSelectedTransactionKey: SetSelectedTransactionActionCreator = key => ({
   type: SET_SELECTED_TRANSACTION_KEY,
   payload: key,
+})
+
+export type ResetSelectedTransactionActionCreator = GridActionCreator<
+  void,
+  typeof RESET_SELECTED_TRANSACTION_KEY
+>
+export const resetSelectedTransactionKey: ResetSelectedTransactionActionCreator = () => ({
+  type: RESET_SELECTED_TRANSACTION_KEY,
+  payload: undefined,
 })

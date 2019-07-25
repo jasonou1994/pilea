@@ -20,7 +20,6 @@ class _HeaderContainer extends Component<
           padding: '5px',
         }}
       >
-        HeaderContainer
         <Breadcrumb />
       </div>
     )

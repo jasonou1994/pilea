@@ -29,7 +29,7 @@ import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
 
 export interface DBItem {
-  id?: number
+  id: number
   userId: number
   accessToken: string
   lastUpdated?: string
@@ -47,13 +47,7 @@ export interface APIResponse {
 }
 
 export interface AddItemResponse extends APIResponse {
-  items: Array<{
-    id?: number
-    userId: number
-    accessToken: string
-    lastUpdated?: string
-    alias?: string
-  }>
+  items: DBItem[]
 }
 
 export interface GetItemsResponse extends AddItemResponse {}

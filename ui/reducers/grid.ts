@@ -2,6 +2,7 @@ import { Map } from 'immutable'
 import {
   SELECTED_TRANSACTION_KEY,
   SET_SELECTED_TRANSACTION_KEY,
+  RESET_SELECTED_TRANSACTION_KEY,
 } from '../konstants/index'
 import { GridActionTypes } from '../actions'
 import { setIn } from 'timm'
@@ -25,6 +26,11 @@ const grid: (
   switch (type) {
     case SET_SELECTED_TRANSACTION_KEY: {
       newState = setIn(state, [SELECTED_TRANSACTION_KEY], payload)
+
+      break
+    }
+    case RESET_SELECTED_TRANSACTION_KEY: {
+      newState = setIn(state, [SELECTED_TRANSACTION_KEY], '')
 
       break
     }

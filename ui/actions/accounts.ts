@@ -1,10 +1,18 @@
-import { SET_CARDS, SET_ITEMS, FETCH_ADD_ITEM } from '../konstants/index'
+import {
+  SET_CARDS,
+  SET_ITEMS,
+  FETCH_ADD_ITEM,
+  TOGGLE_CARD_SELECTED,
+  TOGGLE_ITEM_SELECTED,
+} from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
 export type AccountsActionTypes =
   | typeof SET_ITEMS
   | typeof SET_CARDS
   | typeof FETCH_ADD_ITEM
+  | typeof TOGGLE_CARD_SELECTED
+  | typeof TOGGLE_ITEM_SELECTED
 
 // Generics
 export interface AccountsAction<P, AT extends AccountsActionTypes>
@@ -45,4 +53,23 @@ export type SetItemsActionCreator = AccountsActionCreator<
 export const setItems: SetItemsActionCreator = items => ({
   type: SET_ITEMS,
   payload: items,
+})
+
+export type ToggleItemSelectedActionCreator = AccountsActionCreator<
+  number,
+  typeof TOGGLE_ITEM_SELECTED
+>
+export const toggleItemSelected: ToggleItemSelectedActionCreator = itemId => ({
+  payload: itemId,
+  type: TOGGLE_ITEM_SELECTED,
+})
+
+export type ToggleCardSelectedActionCreator = AccountsActionCreator<
+  string,
+  typeof TOGGLE_CARD_SELECTED
+>
+
+export const toggleCardSelected: ToggleCardSelectedActionCreator = cardId => ({
+  payload: cardId,
+  type: TOGGLE_CARD_SELECTED,
 })

@@ -1,6 +1,10 @@
 import {
   SET_GRAPH_FIDELITY,
   SET_GRAPH_HISTORICAL_LENGTH,
+  DAY,
+  WEEK,
+  MONTH,
+  AvailableTimeUnits,
 } from '../konstants/index'
 import { Action } from 'redux'
 
@@ -20,7 +24,7 @@ export type GraphActionCreator<P, AT extends GraphActionTypes> = (
 
 // Action Creators
 export type SetGraphFidelityActionCreator = GraphActionCreator<
-  string,
+  AvailableTimeUnits,
   typeof SET_GRAPH_FIDELITY
 >
 export const setGraphFidelity: SetGraphFidelityActionCreator = fidelity => ({

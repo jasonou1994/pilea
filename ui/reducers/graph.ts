@@ -7,11 +7,14 @@ import {
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
   SET_GRAPH_HISTORICAL_LENGTH,
+  DAY,
+  WEEK,
+  MONTH,
 } from '../konstants/index'
 import { GraphActionTypes } from '../actions'
 
 interface GraphState {
-  [GRAPH_FIDELITY]: number
+  [GRAPH_FIDELITY]: AvailableTimeUnits
   [HISTORICAL_LENGTH]: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
@@ -19,7 +22,7 @@ interface GraphState {
 }
 
 const initialState: GraphState = {
-  [GRAPH_FIDELITY]: 30,
+  [GRAPH_FIDELITY]: MONTH,
   [HISTORICAL_LENGTH]: {
     [HISTORICAL_TIME_COUNT]: 1,
     [HISTORICAL_TIME_UNIT]: 'year',
@@ -40,7 +43,7 @@ const graph: (
 
   switch (type) {
     case SET_GRAPH_FIDELITY: {
-      newState = setIn(state, [GRAPH_FIDELITY], Number(payload))
+      newState = setIn(state, [GRAPH_FIDELITY], payload)
 
       break
     }

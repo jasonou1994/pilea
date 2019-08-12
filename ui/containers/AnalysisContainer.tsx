@@ -31,7 +31,7 @@ import {
 } from '../konstants'
 
 interface AnalysisContainerProps {
-  graphFidelity: number
+  graphFidelity: AvailableTimeUnits
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
   transactionsByCategory: any
   transactionsByName: any

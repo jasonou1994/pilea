@@ -15,9 +15,10 @@ import {
 } from 'react-vis'
 import { INPUT, OUTPUT } from '../konstants'
 import { CrosshairDisplay } from './CrosshairDisplay'
+import { TimeConsolidatedTransactionGroups } from '../reducers'
 
 interface IncomeSpendingChartProps {
-  transactionsByDayCountCombined
+  transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
   transactionsByCategory
   transactionsByName
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator

@@ -16,8 +16,10 @@ export class FilterRow extends Component<Props> {
         <span>
           {Array(indentLevel)
             .fill(null)
-            .map(_ => (
-              <span style={{ opacity: 0 }}>---</span>
+            .map((_, i) => (
+              <span key={i} style={{ opacity: 0 }}>
+                ---
+              </span>
             ))}
 
           <input

@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   SetGraphFidelityActionCreator,
-  SetSelectedTransactionActionCreator,
   SetGraphHistoricalLengthActionCreator,
   ResetSelectedTransactionActionCreator,
 } from '../actions'
@@ -15,6 +14,9 @@ import {
   THREE_MONTHS,
   CUSTOM,
   AvailableTimeStrings,
+  DAY,
+  WEEK,
+  MONTH,
 } from '../konstants'
 import {
   convertDateSelectString,
@@ -23,7 +25,7 @@ import {
 
 interface IncomeSpendingChartOptionsProps {
   setGraphFidelityAction: SetGraphFidelityActionCreator
-  graphFidelity: number
+  graphFidelity: AvailableTimeUnits
   setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
@@ -57,12 +59,12 @@ export class IncomeSpendingChartOptions extends Component<
             value={graphFidelity}
             onChange={e => {
               resetSelectedTransactionKeyAction()
-              setGraphFidelityAction(e.target.value)
+              setGraphFidelityAction(e.target.value as AvailableTimeUnits)
             }}
           >
-            <option value={1}>1 day</option>
-            <option value={7}>7 days</option>
-            <option value={30}>30 days</option>
+            <option value={DAY}>Daily</option>
+            <option value={WEEK}>Weekly</option>
+            <option value={MONTH}>Monthly</option>
           </select>
         </>
         <>

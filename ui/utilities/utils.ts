@@ -10,9 +10,11 @@ import {
   SIX_MONTHS,
   MONTH,
   THREE_MONTHS,
+  WEEK,
 } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
 import { CardWithFilter } from '../reducers/transactionsAccounts'
+import { TimeConsolidatedTransactionGroup } from '../reducers'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')
@@ -167,4 +169,57 @@ export const getCardName: ({
   const card = cards.find(account => account.account_id === id)
 
   return card ? (card.official_name ? card.official_name : card.name) : null
+}
+
+export const getOrderedDates: (
+  fidelity: AvailableTimeUnits,
+  historicalTimeCount: number,
+  historicalTimeUnit: AvailableTimeUnits
+) => {
+  orderedDatesArray: string[]
+  orderedDatesMap: {
+    [key: string]: TimeConsolidatedTransactionGroup
+  }
+} = (fidelity, historicalTimeCount, historicalTimeUnit) => {
+  const totalDaysInHistoricalLength =
+    historicalTimeCount *
+    (historicalTimeUnit === YEAR
+      ? 365
+      : historicalTimeUnit === MONTH
+      ? 31
+      : historicalTimeUnit === WEEK
+      ? 7
+      : 1)
+
+  const countDataPoints = Math.floor(
+    totalDaysInHistoricalLength /
+      (fidelity === YEAR
+        ? 365
+        : fidelity === MONTH
+        ? 30
+        : fidelity === WEEK
+        ? 7
+        : 1)
+  )
+
+  // ordered dates from current to past
+  const orderedDatesArray = Array(countDataPoints)
+    .fill(null)
+    .map((_, i) =>
+      moment()
+        .subtract(i + 1, fidelity)
+        .format('YYYY-MM-DD')
+    )
+
+  const orderedDatesMap = orderedDatesArray.reduce((result, date) => {
+    result[date] = {
+      input: 0,
+      output: 0,
+      transactions: [],
+    } as TimeConsolidatedTransactionGroup
+
+    return result
+  }, {})
+
+  return { orderedDatesArray, orderedDatesMap }
 }

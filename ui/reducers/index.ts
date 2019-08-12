@@ -16,9 +16,17 @@ import {
   CATEGORY,
   AMOUNT,
   NAME,
+  DAY,
+  YEAR,
+  MONTH,
+  WEEK,
 } from '../konstants'
 import { Transaction as PlaidTransaction } from 'plaid'
-import { getTypeOfCard, shouldKeepTransaction } from '../utilities/utils'
+import {
+  getTypeOfCard,
+  shouldKeepTransaction,
+  getOrderedDates,
+} from '../utilities/utils'
 import { PileaCard, DBItem } from '../sagas/sagas'
 
 const reducers = combineReducers({
@@ -76,8 +84,6 @@ export const allowedCardsSelector: (
 
       return acc
     }, {})
-
-    console.log(allowedCards)
 
     return allowedCards
   }
@@ -220,29 +226,37 @@ export const transactionsByDayCountCombinedSelector: (
 ) => TimeConsolidatedTransactionGroups = createSelector(
   transactionsByDateInputOutputSelector,
   graphFidelitySelector,
-  (transactions, days) => {
-    const orderedDates = Object.keys(transactions)
-      .map(date => moment(date, 'YYYY-MM-DD', true))
-      //@ts-ignore
-      .sort((a, b) => b - a)
-      .map(date => date.format('YYYY-MM-DD'))
+  graphHistoricalLengthSelector,
+  (transactions, fidelity, { historicalTimeCount, historicalTimeUnit }) => {
+    const { orderedDatesArray, orderedDatesMap } = getOrderedDates(
+      fidelity,
+      historicalTimeCount,
+      historicalTimeUnit
+    )
 
-    return orderedDates.reduce((acc, cur, i) => {
-      const newIndex = Math.floor(i / days) //newIndex is 0
-      const keyMap = orderedDates[newIndex * days]
-      if (!acc[keyMap]) {
-        //if keyMap in acc doesnt exist
-        acc[keyMap] = cloneDeep(transactions[cur])
-      } else {
-        //if it does exist
-        acc[keyMap][INPUT] = acc[keyMap][INPUT] + transactions[cur][INPUT]
-        acc[keyMap][OUTPUT] = acc[keyMap][OUTPUT] + transactions[cur][OUTPUT]
-        acc[keyMap][TRANSACTIONS] = acc[keyMap][TRANSACTIONS].concat(
-          transactions[cur][TRANSACTIONS]
+    console.log(orderedDatesArray, orderedDatesMap)
+
+    //sort transactions into ordered dates
+    return Object.entries(transactions).reduce(
+      (acc, [date, transactionGroup]) => {
+        // find the first date in orderedDates that comes before the transaction
+        const foundDate = orderedDatesArray.find(
+          orderedDate => moment(orderedDate).valueOf() < moment(date).valueOf()
         )
-      }
-      return acc
-    }, {})
+
+        if (foundDate) {
+          acc[foundDate].input += transactionGroup.input
+          acc[foundDate].output += transactionGroup.output
+          acc[foundDate].transactions = [
+            ...acc[foundDate].transactions,
+            ...transactionGroup.transactions,
+          ]
+        }
+
+        return acc
+      },
+      orderedDatesMap as TimeConsolidatedTransactionGroups
+    )
   }
 )
 

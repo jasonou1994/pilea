@@ -20,7 +20,7 @@ import {
 } from '../reducers'
 
 interface IncomeSpendingViewProps {
-  graphFidelity: number
+  graphFidelity: AvailableTimeUnits
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
   transactionsByCategory: any
   transactionsByName: any

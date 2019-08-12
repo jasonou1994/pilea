@@ -45,7 +45,7 @@ export class CardFilter extends Component<CardFilterProps, CardFilterState> {
             key={i}
             selected={card.selected}
             indentLevel={1}
-            displayName={card.official_name}
+            displayName={card.official_name || card.name}
             onCheckboxClick={() => {
               resetSelectedTransactionKeyAction()
               toggleCardSelectedAction(card.account_id)

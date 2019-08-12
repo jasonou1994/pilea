@@ -15,8 +15,6 @@ interface LogInContainerProps {
 }
 
 class _LogInContainer extends Component<LogInContainerProps> {
-  static state = {}
-
   render() {
     const { fetchLogIn, fetchCreateUser } = this.props
 

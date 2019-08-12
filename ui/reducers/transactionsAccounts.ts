@@ -110,7 +110,10 @@ const transactions: (
         newState,
         [CARDS],
         (oldCards: CardWithFilter[]): CardWithFilter[] =>
-          oldCards.map(oldCard => ({ ...oldCard, selected }))
+          oldCards.map(oldCard => ({
+            ...oldCard,
+            ...(oldCard.itemId === payload ? { selected } : {}),
+          }))
       )
       break
     }

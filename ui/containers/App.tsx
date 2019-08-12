@@ -10,14 +10,6 @@ interface AppProps {
 }
 
 class _App extends Component<AppProps> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      PLAID_PUBLIC_KEY: '134893e5d974bced3a52c91e8e6b5a',
-      PLAID_ENV: 'development',
-    }
-  }
-
   render() {
     const { loggedIn } = this.props
 

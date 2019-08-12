@@ -24,7 +24,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
     const { userInput, passwordInput } = this.state
     const { fetchLogIn } = this.props
 
-    fetchLogIn({
+    this.props.fetchLogIn({
       user: userInput,
       password: passwordInput,
     })

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
 import { MainView } from '../components/MainView'
-import { loggedInSelector } from '../reducers'
+import { loggedInSelector, RootState } from '../reducers'
 
 interface AppProps {
   loggedIn: boolean
@@ -23,7 +23,7 @@ class _App extends Component<AppProps> {
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     loggedIn: loggedInSelector(state),
   }),
   {}

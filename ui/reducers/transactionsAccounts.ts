@@ -12,7 +12,7 @@ import {
 import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
-import { TransactionsActionTypes, AccountsActionTypes } from '../actions'
+import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean
@@ -21,29 +21,35 @@ export interface ItemWithFilter extends DBItem {
   selected: boolean
 }
 
-const initialState = {
-  [TRANSACTIONS]: [] as PlaidTransaction[],
-  [CARDS]: [] as CardWithFilter[],
-  [ITEMS]: [] as ItemWithFilter[],
+export interface TransactionsAccountsState {
+  [TRANSACTIONS]: PlaidTransaction[]
+  [CARDS]: CardWithFilter[]
+  [ITEMS]: ItemWithFilter[]
+}
+
+const initialState: TransactionsAccountsState = {
+  [TRANSACTIONS]: [],
+  [CARDS]: [],
+  [ITEMS]: [],
 }
 
 const transactions: (
-  state: typeof initialState,
-  {
-    type,
-    payload,
-  }: { type: TransactionsActionTypes | AccountsActionTypes; payload }
-) => typeof initialState = (state = initialState, { type, payload }) => {
-  let newState: typeof initialState
+  state: TransactionsAccountsState,
+  action: AccountsInterfaces | TransactionsInterfaces
+) => TransactionsAccountsState = (state = initialState, action) => {
+  let newState: TransactionsAccountsState
 
-  switch (type) {
+  switch (action.type) {
     case SET_TRANSACTIONS: {
-      newState = updateIn(state, [TRANSACTIONS], list => [...list, ...payload])
+      newState = updateIn(state, [TRANSACTIONS], list => [
+        ...list,
+        ...action.payload,
+      ])
       break
     }
     case SET_CARDS: {
       newState = updateIn(state, [CARDS], existingCards => {
-        return (payload as PlaidCard[]).reduce(
+        return action.payload.reduce(
           (acc, newCard) => {
             if (
               !acc.find(
@@ -63,7 +69,7 @@ const transactions: (
       newState = setIn(
         state,
         [ITEMS],
-        payload.map(
+        action.payload.map(
           (item: DBItem): ItemWithFilter => ({ ...item, selected: true })
         )
       )
@@ -77,7 +83,7 @@ const transactions: (
 
     case TOGGLE_CARD_SELECTED: {
       const foundCardIndex = state[CARDS].findIndex(
-        card => card.account_id === payload
+        card => card.account_id === action.payload
       )
 
       newState = updateIn(
@@ -92,7 +98,9 @@ const transactions: (
     }
 
     case TOGGLE_ITEM_SELECTED: {
-      const foundItemIndex = state[ITEMS].findIndex(item => item.id === payload)
+      const foundItemIndex = state[ITEMS].findIndex(
+        item => item.id === action.payload
+      )
 
       const selected = !state[ITEMS][foundItemIndex].selected
 
@@ -112,7 +120,7 @@ const transactions: (
         (oldCards: CardWithFilter[]): CardWithFilter[] =>
           oldCards.map(oldCard => ({
             ...oldCard,
-            ...(oldCard.itemId === payload ? { selected } : {}),
+            ...(oldCard.itemId === action.payload ? { selected } : {}),
           }))
       )
       break

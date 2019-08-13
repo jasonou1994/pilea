@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { CurrentItems } from '../components/CurrentItems'
 import { AddNewItem } from '../components/AddNewItem'
 import { RefreshItemData } from '../components/RefreshItemData'
-import { cardsByItemsSelector, ItemWithCards } from '../reducers'
+import { cardsByItemsSelector, ItemWithCards, RootState } from '../reducers'
 import {
   fetchAddItem,
   FetchAddItemActionCreator,
@@ -62,7 +62,7 @@ class _ItemsContainer extends Component<
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     cardsByItems: cardsByItemsSelector(state),
   }),
   {

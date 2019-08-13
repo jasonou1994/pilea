@@ -11,15 +11,9 @@ import {
   LOGIN,
   GRAPH,
   GRID,
-  INPUT,
-  OUTPUT,
   CATEGORY,
   AMOUNT,
   NAME,
-  DAY,
-  YEAR,
-  MONTH,
-  WEEK,
 } from '../konstants'
 import { Transaction as PlaidTransaction } from 'plaid'
 import {
@@ -27,7 +21,13 @@ import {
   shouldKeepTransaction,
   getOrderedDates,
 } from '../utilities/utils'
-import { PileaCard, DBItem } from '../sagas/sagas'
+
+export interface RootState {
+  [TRANSACTIONS]: fromTransactions.TransactionsAccountsState
+  [LOGIN]: fromLogin.LoginState
+  [GRAPH]: fromGraph.GraphState
+  [GRID]: fromGrid.GridState
+}
 
 const reducers = combineReducers({
   transactions,
@@ -42,28 +42,27 @@ export default reducers
  ***********/
 
 //transactions
-export const transactionsSelector = state =>
+export const transactionsSelector = (state: RootState) =>
   fromTransactions.transactionsSelector(state[TRANSACTIONS])
-export const cardsSelector = state =>
+export const cardsSelector = (state: RootState) =>
   fromTransactions.cardsSelector(state[TRANSACTIONS])
-export const itemsSelector = state =>
+export const itemsSelector = (state: RootState) =>
   fromTransactions.itemsSelector(state[TRANSACTIONS])
 
 //log in
-export const accessTokensSelector = state =>
-  fromLogin.accessTokensSelector(state[LOGIN])
-export const loggedInSelector = state =>
+export const loggedInSelector = (state: RootState) =>
   fromLogin.loggedInSelector(state[LOGIN])
-export const userSelector = state => fromLogin.userSelector(state[LOGIN])
+export const userSelector = (state: RootState) =>
+  fromLogin.userSelector(state[LOGIN])
 
 //graph
-export const graphFidelitySelector = state =>
+export const graphFidelitySelector = (state: RootState) =>
   fromGraph.graphFidelitySelector(state[GRAPH])
-export const graphHistoricalLengthSelector = state =>
+export const graphHistoricalLengthSelector = (state: RootState) =>
   fromGraph.graphHistoricalLengthSelector(state[GRAPH])
 
 //grid
-export const selectedTransactionKeySelector = state => {
+export const selectedTransactionKeySelector = (state: RootState) => {
   return fromGrid.selectedTransactionKeySelector(state[GRID])
 }
 
@@ -73,17 +72,20 @@ export const selectedTransactionKeySelector = state => {
 
 // Filtering
 export const allowedCardsSelector: (
-  state
+  state: RootState
 ) => { [key: string]: boolean } = createSelector(
   cardsSelector,
   cards => {
-    const allowedCards = cards.reduce((acc, card) => {
-      if (card.selected) {
-        acc[card.account_id] = true
-      }
+    const allowedCards = cards.reduce(
+      (acc, card) => {
+        if (card.selected) {
+          acc[card.account_id] = true
+        }
 
-      return acc
-    }, {})
+        return acc
+      },
+      {} as { [key: string]: boolean }
+    )
 
     return allowedCards
   }
@@ -119,7 +121,7 @@ export interface ItemWithCards extends fromTransactions.ItemWithFilter {
 }
 
 export const transactionsNoIntraAccountSelector: (
-  state
+  state: RootState
 ) => TxWithCardType[] = createSelector(
   transactionsSelector,
   cardsSelector,
@@ -139,7 +141,7 @@ export const transactionsNoIntraAccountSelector: (
 )
 
 export const filteredTransactionsSelector: (
-  state
+  state: RootState
 ) => TxWithCardType[] = createSelector(
   transactionsNoIntraAccountSelector,
   graphHistoricalLengthSelector,
@@ -158,7 +160,7 @@ export const filteredTransactionsSelector: (
 )
 
 export const dailyTransactionsSelector: (
-  state
+  state: RootState
 ) => DailyTransactions = createSelector(
   filteredTransactionsSelector,
   transactions => {
@@ -167,7 +169,7 @@ export const dailyTransactionsSelector: (
         acc[cur] = []
         return acc
       },
-      {}
+      {} as DailyTransactions
     )
     const txByDates = transactions.reduce(
       (acc, cur) => {
@@ -184,45 +186,48 @@ export const dailyTransactionsSelector: (
 )
 
 export const transactionsByDateInputOutputSelector: (
-  state
+  state: RootState
 ) => TimeConsolidatedTransactionGroups = createSelector(
   dailyTransactionsSelector,
   transactions => {
-    return Object.keys(transactions).reduce((finalResult, date) => {
-      finalResult[date] = transactions[date].reduce(
-        (dailyInfo, tx) => {
-          const { cardType, amount } = tx
+    return Object.keys(transactions).reduce(
+      (finalResult, date) => {
+        finalResult[date] = transactions[date].reduce(
+          (dailyInfo, tx) => {
+            const { cardType, amount } = tx
 
-          if (cardType === 'credit' && amount >= 0) {
-            dailyInfo.output += amount
-          }
-          if (cardType === 'credit' && amount <= 0) {
-            dailyInfo.input += -amount
-          }
-          if (cardType === 'depository' && amount >= 0) {
-            dailyInfo.output += amount
-          }
-          if (cardType === 'depository' && amount <= 0) {
-            dailyInfo.input += -amount
-          }
+            if (cardType === 'credit' && amount >= 0) {
+              dailyInfo.output += amount
+            }
+            if (cardType === 'credit' && amount <= 0) {
+              dailyInfo.input += -amount
+            }
+            if (cardType === 'depository' && amount >= 0) {
+              dailyInfo.output += amount
+            }
+            if (cardType === 'depository' && amount <= 0) {
+              dailyInfo.input += -amount
+            }
 
-          dailyInfo.transactions.push(tx)
+            dailyInfo.transactions.push(tx)
 
-          return dailyInfo
-        },
-        {
-          input: 0,
-          output: 0,
-          transactions: [],
-        } as TimeConsolidatedTransactionGroup
-      )
-      return finalResult
-    }, {})
+            return dailyInfo
+          },
+          {
+            input: 0,
+            output: 0,
+            transactions: [],
+          } as TimeConsolidatedTransactionGroup
+        )
+        return finalResult
+      },
+      {} as TimeConsolidatedTransactionGroups
+    )
   }
 )
 
 export const transactionsByDayCountCombinedSelector: (
-  state
+  state: RootState
 ) => TimeConsolidatedTransactionGroups = createSelector(
   transactionsByDateInputOutputSelector,
   graphFidelitySelector,
@@ -261,7 +266,7 @@ export const transactionsByDayCountCombinedSelector: (
 )
 
 export const selectedTransactionsSelector: (
-  state
+  state: RootState
 ) => TimeConsolidatedTransactionGroup = createSelector(
   transactionsByDayCountCombinedSelector,
   selectedTransactionKeySelector,
@@ -276,75 +281,85 @@ export const selectedTransactionsSelector: (
   }
 )
 
-export const transactionsByCategorySelector = createSelector(
-  transactionsNoIntraAccountSelector,
-  transactions =>
-    transactions.reduce((acc, cur) => {
-      if (!cur[CATEGORY]) {
-        return acc
-      }
+// export const transactionsByCategorySelector = createSelector(
+//   transactionsNoIntraAccountSelector,
+//   transactions =>
+//     transactions.reduce((acc, cur) => {
+//       if (!cur[CATEGORY]) {
+//         return acc
+//       }
 
-      const category = cur[CATEGORY][0]
+//       const category = cur[CATEGORY][0]
 
-      if (acc[category]) {
-        acc[category][AMOUNT] += cur[AMOUNT]
-        acc[category][TRANSACTIONS].push(cur)
-      } else {
-        acc[category] = {
-          [AMOUNT]: cur[AMOUNT],
-          [TRANSACTIONS]: [cur],
-        }
-      }
+//       if (acc[category]) {
+//         acc[category][AMOUNT] += cur[AMOUNT]
+//         acc[category][TRANSACTIONS].push(cur)
+//       } else {
+//         acc[category] = {
+//           [AMOUNT]: cur[AMOUNT],
+//           [TRANSACTIONS]: [cur],
+//         }
+//       }
 
-      return acc
-    }, {})
-)
+//       return acc
+//     }, {})
+// )
 
-export const transactionsByNameSelector = createSelector(
-  transactionsNoIntraAccountSelector,
-  transactions =>
-    transactions.reduce((acc, cur) => {
-      if (!cur[NAME]) {
-        return acc
-      }
+// export const transactionsByNameSelector = createSelector(
+//   transactionsNoIntraAccountSelector,
+//   transactions =>
+//     transactions.reduce((acc, cur) => {
+//       if (!cur[NAME]) {
+//         return acc
+//       }
 
-      const name = cur[NAME]
+//       const name = cur[NAME]
 
-      if (acc[name]) {
-        acc[name][AMOUNT] += cur[AMOUNT]
-        acc[name][TRANSACTIONS].push(cur)
-      } else {
-        acc[name] = {
-          [AMOUNT]: cur[AMOUNT],
-          [TRANSACTIONS]: [cur],
-        }
-      }
+//       if (acc[name]) {
+//         acc[name][AMOUNT] += cur[AMOUNT]
+//         acc[name][TRANSACTIONS].push(cur)
+//       } else {
+//         acc[name] = {
+//           [AMOUNT]: cur[AMOUNT],
+//           [TRANSACTIONS]: [cur],
+//         }
+//       }
 
-      return acc
-    }, {})
-)
+//       return acc
+//     }, {})
+// )
 
 export const transactionsBycardsSelector: (
-  state
+  state: RootState
 ) => TxGroupedByDateAndCards = createSelector(
   dailyTransactionsSelector,
   transactions => {
-    return Object.keys(transactions).reduce((result, date) => {
-      result[date] = transactions[date].reduce((acc, cur) => {
-        acc[cur.account_id]
-          ? acc[cur.account_id].push(cur)
-          : (acc[cur.account_id] = [cur])
-        return acc
-      }, {})
+    return Object.keys(transactions).reduce(
+      (result, date) => {
+        result[date] = transactions[date].reduce(
+          (acc, cur) => {
+            acc[cur.account_id]
+              ? acc[cur.account_id].push(cur)
+              : (acc[cur.account_id] = [cur])
+            return acc
+          },
+          {} as {
+            [card: string]: TxWithCardType[]
+          }
+        )
 
-      return result
-    }, {})
+        return result
+      },
+      {} as TxGroupedByDateAndCards
+    )
   }
 )
 
 // Card combination
 
-export const cardsByItemsSelector: (state) => ItemWithCards[] = createSelector(
+export const cardsByItemsSelector: (
+  state: RootState
+) => ItemWithCards[] = createSelector(
   cardsSelector,
   itemsSelector,
   (cards, items) => {
@@ -353,4 +368,36 @@ export const cardsByItemsSelector: (state) => ItemWithCards[] = createSelector(
       cards: cards.filter(card => card.itemId === item.id),
     }))
   }
+)
+
+export interface CategoryData {
+  [key: string]: {
+    spending: number
+    txCount: number
+  }
+}
+
+export const categoryCountSelector: (
+  state: RootState
+) => CategoryData = createSelector(
+  filteredTransactionsSelector,
+  transactions =>
+    transactions.reduce(
+      (acc, tx) => {
+        tx.category.forEach(category => {
+          if (acc[category]) {
+            acc[category].spending += tx.amount
+            acc[category].txCount += 1
+          } else {
+            acc[category] = {
+              spending: tx.amount,
+              txCount: 1,
+            }
+          }
+        })
+
+        return acc
+      },
+      {} as CategoryData
+    )
 )

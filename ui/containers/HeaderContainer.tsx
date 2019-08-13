@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Breadcrumb } from '../components/Breadcrumb'
+import { RootState } from '../reducers'
 
 interface HeaderContainerProps {}
 
@@ -27,6 +28,6 @@ class _HeaderContainer extends Component<
 }
 
 export default connect(
-  state => ({}),
+  (state: RootState) => ({}),
   {}
 )(_HeaderContainer)

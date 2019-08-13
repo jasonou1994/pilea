@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
-import { cardsByItemsSelector, ItemWithCards } from '../reducers'
+import { cardsByItemsSelector, ItemWithCards, RootState } from '../reducers'
 import {
   toggleCardSelected,
   toggleItemSelected,
@@ -55,7 +55,7 @@ class _FiltersContainer extends Component<
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     cardsByItems: cardsByItemsSelector(state),
   }),
   {

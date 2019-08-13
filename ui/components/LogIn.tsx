@@ -12,7 +12,7 @@ interface LogInState {
 }
 
 export class LogIn extends Component<LogInProps, LogInState> {
-  constructor(props) {
+  constructor(props: LogInProps) {
     super(props)
     this.state = {
       userInput: '',
@@ -24,7 +24,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
     const { userInput, passwordInput } = this.state
     const { fetchLogIn } = this.props
 
-    this.props.fetchLogIn({
+    fetchLogIn({
       user: userInput,
       password: passwordInput,
     })

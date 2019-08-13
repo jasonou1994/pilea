@@ -22,8 +22,6 @@ import {
 interface IncomeSpendingViewProps {
   graphFidelity: AvailableTimeUnits
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
-  transactionsByCategory: any
-  transactionsByName: any
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -47,9 +45,7 @@ export class IncomeSpendingView extends Component<
   render() {
     const {
       graphFidelity,
-      transactionsByCategory,
       transactionsByDayCountCombined,
-      transactionsByName,
       cards,
       selectedTransactions,
       setGraphFidelityAction,
@@ -69,9 +65,7 @@ export class IncomeSpendingView extends Component<
         IncomeSpendingView
         <IncomeSpendingChart
           {...{
-            transactionsByCategory,
             transactionsByDayCountCombined,
-            transactionsByName,
             setSelectedTransactionKeyAction,
           }}
         />

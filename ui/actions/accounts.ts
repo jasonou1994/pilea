@@ -7,12 +7,20 @@ import {
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
+
 export type AccountsActionTypes =
   | typeof SET_ITEMS
   | typeof SET_CARDS
   | typeof FETCH_ADD_ITEM
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
+
+export type AccountsInterfaces =
+  | FetchAddItemInterface
+  | SetCardsInterface
+  | SetItemsInterface
+  | ToggleItemSelectedInterface
+  | ToggleCardSelectedInterface
 
 // Generics
 export interface AccountsAction<P, AT extends AccountsActionTypes>
@@ -32,6 +40,13 @@ export type FetchAddItemActionCreator = AccountsActionCreator<
   },
   typeof FETCH_ADD_ITEM
 >
+export type FetchAddItemInterface = AccountsAction<
+  {
+    accessToken: string
+    alias: string
+  },
+  typeof FETCH_ADD_ITEM
+>
 export const fetchAddItem: FetchAddItemActionCreator = tokenAndAlias => ({
   type: FETCH_ADD_ITEM,
   payload: tokenAndAlias,
@@ -41,6 +56,7 @@ export type SetCardsActionCreator = AccountsActionCreator<
   PileaCard[],
   typeof SET_CARDS
 >
+export type SetCardsInterface = AccountsAction<PileaCard[], typeof SET_CARDS>
 export const setCards: SetCardsActionCreator = cards => ({
   type: SET_CARDS,
   payload: cards,
@@ -50,12 +66,17 @@ export type SetItemsActionCreator = AccountsActionCreator<
   DBItem[],
   typeof SET_ITEMS
 >
+export type SetItemsInterface = AccountsAction<DBItem[], typeof SET_ITEMS>
 export const setItems: SetItemsActionCreator = items => ({
   type: SET_ITEMS,
   payload: items,
 })
 
 export type ToggleItemSelectedActionCreator = AccountsActionCreator<
+  number,
+  typeof TOGGLE_ITEM_SELECTED
+>
+export type ToggleItemSelectedInterface = AccountsAction<
   number,
   typeof TOGGLE_ITEM_SELECTED
 >
@@ -68,7 +89,10 @@ export type ToggleCardSelectedActionCreator = AccountsActionCreator<
   string,
   typeof TOGGLE_CARD_SELECTED
 >
-
+export type ToggleCardSelectedInterface = AccountsAction<
+  string,
+  typeof TOGGLE_CARD_SELECTED
+>
 export const toggleCardSelected: ToggleCardSelectedActionCreator = cardId => ({
   payload: cardId,
   type: TOGGLE_CARD_SELECTED,

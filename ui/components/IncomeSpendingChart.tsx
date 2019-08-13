@@ -19,8 +19,6 @@ import { TimeConsolidatedTransactionGroups } from '../reducers'
 
 interface IncomeSpendingChartProps {
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
-  transactionsByCategory
-  transactionsByName
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
 }
 
@@ -32,7 +30,7 @@ export class IncomeSpendingChart extends Component<
   IncomeSpendingChartProps,
   IncomeSpendingChartState
 > {
-  constructor(props) {
+  constructor(props: IncomeSpendingChartProps) {
     super(props)
     this.state = {
       currentX: 0,

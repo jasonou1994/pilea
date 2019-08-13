@@ -4,28 +4,26 @@ import {
   SET_SELECTED_TRANSACTION_KEY,
   RESET_SELECTED_TRANSACTION_KEY,
 } from '../konstants/index'
-import { GridActionTypes } from '../actions'
 import { setIn } from 'timm'
+import { GridActions } from '../actions'
 
-const initialState = {
+export interface GridState {
+  [SELECTED_TRANSACTION_KEY]: string
+}
+
+const initialState: GridState = {
   [SELECTED_TRANSACTION_KEY]: '',
 }
 
-const grid: (
-  state: typeof initialState,
-  {
-    type,
-    payload,
-  }: {
-    type: GridActionTypes
-    payload: any
-  }
-) => typeof initialState = (state = initialState, { type, payload }) => {
+const grid: (state: GridState, action: GridActions) => GridState = (
+  state = initialState,
+  action
+) => {
   let newState
 
-  switch (type) {
+  switch (action.type) {
     case SET_SELECTED_TRANSACTION_KEY: {
-      newState = setIn(state, [SELECTED_TRANSACTION_KEY], payload)
+      newState = setIn(state, [SELECTED_TRANSACTION_KEY], action.payload)
 
       break
     }

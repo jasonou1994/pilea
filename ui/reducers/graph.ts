@@ -7,13 +7,11 @@ import {
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
   SET_GRAPH_HISTORICAL_LENGTH,
-  DAY,
-  WEEK,
   MONTH,
 } from '../konstants/index'
-import { GraphActionTypes } from '../actions'
+import { GraphInterfaces } from '../actions'
 
-interface GraphState {
+export interface GraphState {
   [GRAPH_FIDELITY]: AvailableTimeUnits
   [HISTORICAL_LENGTH]: {
     [HISTORICAL_TIME_COUNT]: number
@@ -29,27 +27,21 @@ const initialState: GraphState = {
   },
 }
 
-const graph: (
-  state: typeof initialState,
-  {
-    payload,
-    type,
-  }: {
-    payload
-    type: GraphActionTypes
-  }
-) => typeof initialState = (state = initialState, { type, payload }) => {
+const graph: (state: GraphState, action: GraphInterfaces) => GraphState = (
+  state = initialState,
+  action
+) => {
   let newState: GraphState
 
-  switch (type) {
+  switch (action.type) {
     case SET_GRAPH_FIDELITY: {
-      newState = setIn(state, [GRAPH_FIDELITY], payload)
+      newState = setIn(state, [GRAPH_FIDELITY], action.payload)
 
       break
     }
 
     case SET_GRAPH_HISTORICAL_LENGTH: {
-      const { count, unit } = payload
+      const { count, unit } = action.payload
 
       newState = setIn(state, [HISTORICAL_LENGTH], {
         [HISTORICAL_TIME_COUNT]: count,

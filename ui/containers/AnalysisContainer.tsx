@@ -14,14 +14,13 @@ import {
 import {
   graphFidelitySelector,
   transactionsByDayCountCombinedSelector,
-  transactionsByCategorySelector,
-  transactionsByNameSelector,
   cardsSelector,
   selectedTransactionsSelector,
   cardsByItemsSelector,
   graphHistoricalLengthSelector,
   TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
+  RootState,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
 import {
@@ -33,8 +32,6 @@ import {
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
-  transactionsByCategory: any
-  transactionsByName: any
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -56,9 +53,7 @@ class _AnalysisContainer extends Component<
   render() {
     const {
       graphFidelity,
-      transactionsByCategory,
       transactionsByDayCountCombined,
-      transactionsByName,
       cards,
       selectedTransactions,
       setGraphFidelityAction,
@@ -78,9 +73,7 @@ class _AnalysisContainer extends Component<
         <IncomeSpendingView
           {...{
             graphFidelity,
-            transactionsByCategory,
             transactionsByDayCountCombined,
-            transactionsByName,
             cards,
             selectedTransactions,
             setGraphFidelityAction,
@@ -96,13 +89,11 @@ class _AnalysisContainer extends Component<
 }
 
 export default connect(
-  state => ({
+  (state: RootState) => ({
     graphFidelity: graphFidelitySelector(state),
     transactionsByDayCountCombined: transactionsByDayCountCombinedSelector(
       state
     ),
-    transactionsByCategory: transactionsByCategorySelector(state),
-    transactionsByName: transactionsByNameSelector(state),
     cards: cardsSelector(state),
     cardsByItems: cardsByItemsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),

@@ -13,7 +13,6 @@ import {
   WEEK,
 } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
-import { CardWithFilter } from '../reducers/transactionsAccounts'
 import { TimeConsolidatedTransactionGroup } from '../reducers'
 
 export const formatMilliseconds: (milli: number) => string = milli =>

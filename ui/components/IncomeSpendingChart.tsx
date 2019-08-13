@@ -89,7 +89,7 @@ export class IncomeSpendingChart extends Component<
 
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
-    // console.log(incomeSeries, spendingSeries, incomeY, spendingY)
+
     return (
       <div>
         <div style={{ fontSize: '18px' }}>Transactions by Time</div>

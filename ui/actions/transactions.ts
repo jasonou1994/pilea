@@ -1,17 +1,18 @@
 import {
   FETCH_REFRESH_TRANSACTIONS,
-  SET_TRANSACTIONS,
-  RESET_TRANSACTIONS,
+  ADD_TRANSACTIONS,
+  READD_TRANSACTIONS,
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { Transaction } from 'plaid'
+import { RawTransaction } from '../sagas/sagas'
 
 type TransactionsActionTypes =
   | typeof FETCH_REFRESH_TRANSACTIONS
-  | typeof SET_TRANSACTIONS
-  | typeof RESET_TRANSACTIONS
+  | typeof ADD_TRANSACTIONS
+  | typeof READD_TRANSACTIONS
   | typeof START_LOADING_TRANSACTIONS
   | typeof STOP_LOADING_TRANSACTIONS
 
@@ -45,27 +46,27 @@ export const fetchRefreshTransactions: FetchRefreshTransactionsActionCreator = (
 })
 
 export type SetTransactionsActionCreator = TransactionsActionCreator<
-  Transaction[],
-  typeof SET_TRANSACTIONS
+  RawTransaction[],
+  typeof ADD_TRANSACTIONS
 >
 export type SetTransactionsInterface = TransactionsAction<
-  Transaction[],
-  typeof SET_TRANSACTIONS
+  RawTransaction[],
+  typeof ADD_TRANSACTIONS
 >
 export const setTransactions: SetTransactionsActionCreator = transactions => ({
-  type: SET_TRANSACTIONS,
+  type: ADD_TRANSACTIONS,
   payload: transactions,
 })
 
 export type ResetTransactionsActionCreator = TransactionsActionCreator<
   {},
-  typeof RESET_TRANSACTIONS
+  typeof READD_TRANSACTIONS
 >
 export type ResetTransactionsInterface = TransactionsAction<
   {},
-  typeof RESET_TRANSACTIONS
+  typeof READD_TRANSACTIONS
 >
 export const resetTransactions: ResetTransactionsActionCreator = () => ({
-  type: RESET_TRANSACTIONS,
+  type: READD_TRANSACTIONS,
   payload: {},
 })

@@ -11,7 +11,7 @@ interface GridColumnDefWithShown extends GridColumnDef {
   shown: AvailableGridLayouts[]
 }
 
-const gridColumnDefs: GridColumnDefWithShown[] = [
+const dataGridColumnDefs: GridColumnDefWithShown[] = [
   {
     headerName: 'Date',
     field: 'date',
@@ -45,7 +45,7 @@ const gridColumnDefs: GridColumnDefWithShown[] = [
 export const getGridColumnDefs: (
   layout: AvailableGridLayouts
 ) => GridColumnDef[] = layout =>
-  gridColumnDefs
+  dataGridColumnDefs
     .filter(def => def.shown.includes(layout))
     .map(({ headerName, field, sortable, filter }) => ({
       headerName,

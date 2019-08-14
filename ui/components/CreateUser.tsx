@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import { FetchCreateUserActionCreator } from '../actions'
 
 interface CreateUserProps {
@@ -12,7 +11,7 @@ interface CreateUserState {
 }
 
 export class CreateUser extends Component<CreateUserProps, CreateUserState> {
-  constructor(props) {
+  constructor(props: CreateUserProps) {
     super(props)
     this.state = {
       userInput: '',

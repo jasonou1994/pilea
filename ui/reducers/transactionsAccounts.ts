@@ -1,7 +1,7 @@
 import {
-  SET_TRANSACTIONS,
+  ADD_TRANSACTIONS,
   TRANSACTIONS,
-  RESET_TRANSACTIONS,
+  READD_TRANSACTIONS,
   CARDS,
   ITEMS,
   SET_CARDS,
@@ -40,10 +40,20 @@ const transactions: (
   let newState: TransactionsAccountsState
 
   switch (action.type) {
-    case SET_TRANSACTIONS: {
-      newState = updateIn(state, [TRANSACTIONS], list => [
-        ...list,
-        ...action.payload,
+    case ADD_TRANSACTIONS: {
+      const translatedTxs: PlaidTransaction[] = action.payload.map(tx => ({
+        ...tx,
+        category: tx.category
+          ? tx.category
+              .replace(/[{|}|"]/g, '')
+              .trim()
+              .split(',')
+          : [],
+      }))
+
+      newState = updateIn(state, [TRANSACTIONS], existingTxs => [
+        ...existingTxs,
+        ...translatedTxs,
       ])
       break
     }
@@ -76,7 +86,7 @@ const transactions: (
       break
     }
 
-    case RESET_TRANSACTIONS: {
+    case READD_TRANSACTIONS: {
       newState = set(state, TRANSACTIONS, [])
       break
     }

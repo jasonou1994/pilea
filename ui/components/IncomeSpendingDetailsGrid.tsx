@@ -20,7 +20,7 @@ export class IncomeSpendingDetailsGrid extends Component<
   IncomeSpendingDetailsGridProps,
   IncomeSpendingDetailsGridState
 > {
-  constructor(props) {
+  constructor(props: IncomeSpendingDetailsGridProps) {
     super(props)
 
     this.state = {

@@ -1,5 +1,5 @@
 export const transactions = {
-    type: 'SET_TRANSACTIONS',
+    type: 'ADD_TRANSACTIONS',
     payload: [
       {
         account_id: '4Xb391PXyXtNp1X4amLDInmkYd5QLYtkyKEPN',

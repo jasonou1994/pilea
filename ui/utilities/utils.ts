@@ -13,7 +13,10 @@ import {
   WEEK,
 } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
-import { TimeConsolidatedTransactionGroup } from '../reducers'
+import {
+  TimeConsolidatedTransactionGroup,
+  TimeConsolidatedTransactionGroups,
+} from '../reducers'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')
@@ -64,13 +67,21 @@ const nonCountedCategories = [
   // { accountType: 'depository', amount: 'negative', category: 'Transfer' },
   { accountType: 'depository', amount: 'positive', category: 'CreditCard' },
   { accountType: 'depository', amount: 'positive', category: 'Deposit' },
-].reduce((acc, { accountType, amount, category }) => {
-  acc[`${accountType}-${amount}-${category}`] = true
-  return acc
-}, {})
+].reduce(
+  (acc, { accountType, amount, category }) => {
+    acc[`${accountType}-${amount}-${category}`] = true
+    return acc
+  },
+  {} as { [category: string]: true }
+)
 
-export const shouldKeepTransaction = ({ amount, category }, accountType) => {
-  // console.log(category)
+export const shouldKeepTransaction: (
+  tx: {
+    amount: number
+    category: string | string[]
+  },
+  accountType: string
+) => boolean = ({ amount, category }, accountType) => {
   if (!category) {
     return true
   }
@@ -83,17 +94,20 @@ export const shouldKeepTransaction = ({ amount, category }, accountType) => {
           .split(',')
           .map(cat => cat.trim())
 
-  return cleanedCategories.reduce((acc, category) => {
-    const tryMatch = `${accountType}-${
-      amount >= 0 ? 'positive' : 'negative'
-    }-${category}`
+  return cleanedCategories.reduce(
+    (acc, category) => {
+      const tryMatch = `${accountType}-${
+        amount >= 0 ? 'positive' : 'negative'
+      }-${category}`
 
-    if (nonCountedCategories[tryMatch]) {
-      acc = false
-    }
+      if (nonCountedCategories[tryMatch]) {
+        acc = false
+      }
 
-    return acc
-  }, true)
+      return acc
+    },
+    true as boolean
+  )
 }
 
 export const convertDateSelectString: (
@@ -210,15 +224,18 @@ export const getOrderedDates: (
         .format('YYYY-MM-DD')
     )
 
-  const orderedDatesMap = orderedDatesArray.reduce((result, date) => {
-    result[date] = {
-      input: 0,
-      output: 0,
-      transactions: [],
-    } as TimeConsolidatedTransactionGroup
+  const orderedDatesMap = orderedDatesArray.reduce(
+    (result, date) => {
+      result[date] = {
+        input: 0,
+        output: 0,
+        transactions: [],
+      } as TimeConsolidatedTransactionGroup
 
-    return result
-  }, {})
+      return result
+    },
+    {} as TimeConsolidatedTransactionGroups
+  )
 
   return { orderedDatesArray, orderedDatesMap }
 }

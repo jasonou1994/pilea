@@ -16,6 +16,8 @@ interface ServiceDefinition {
   credentials: RequestCredentials
 }
 
+type Services = { [name in AvailableAPIs]: any }
+
 const defaultOptions = {
   method: 'POST',
   headers: {
@@ -52,29 +54,32 @@ const serviceDefs: ServiceDefinition[] = [
   },
 ].map(def => ({ ...defaultOptions, ...def } as ServiceDefinition))
 
-export const services = serviceDefs.reduce((acc, service) => {
-  const { name, url, ...options } = service
+export const services = serviceDefs.reduce(
+  (acc, service) => {
+    const { name, url, ...options } = service
 
-  acc[name] = ({ body } = { body: '{}' }) => {
-    return new Promise(async (resolve, reject) => {
-      try {
-        console.log(url, {
-          ...options,
-          body,
-        })
-        const rawResponse = await fetch(url, {
-          ...options,
-          ...(options.method === 'POST' ? { body } : {}),
-        })
-        const response = await rawResponse.json()
-        const { error, success, status, ...contents } = response
+    acc[name] = ({ body }: { body: any } = { body: '{}' }) => {
+      return new Promise(async (resolve, reject) => {
+        try {
+          console.log(url, {
+            ...options,
+            body,
+          })
+          const rawResponse = await fetch(url, {
+            ...options,
+            ...(options.method === 'POST' ? { body } : {}),
+          })
+          const response = await rawResponse.json()
+          const { error, success, status, ...contents } = response
 
-        success ? resolve({ ...contents, status }) : reject({ status, error })
-      } catch (error) {
-        reject({ error, status: `Error in ${name}` })
-      }
-    })
-  }
+          success ? resolve({ ...contents, status }) : reject({ status, error })
+        } catch (error) {
+          reject({ error, status: `Error in ${name}` })
+        }
+      })
+    }
 
-  return acc
-}, {})
+    return acc
+  },
+  {} as Services
+)

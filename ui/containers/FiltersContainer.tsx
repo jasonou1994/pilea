@@ -2,7 +2,13 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
-import { cardsByItemsSelector, ItemWithCards, RootState } from '../reducers'
+import {
+  cardsByItemsSelector,
+  ItemWithCards,
+  RootState,
+  categoryDataSelector,
+  CategoryData,
+} from '../reducers'
 import {
   toggleCardSelected,
   toggleItemSelected,
@@ -14,24 +20,23 @@ import {
 
 interface FiltersContainerProps {
   cardsByItems: ItemWithCards[]
+  categoryData: CategoryData
   toggleItemSelectedAction: ToggleItemSelectedActionCreator
   toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
-interface FiltersContainerState {}
-
-class _FiltersContainer extends Component<
-  FiltersContainerProps,
-  FiltersContainerState
-> {
+class _FiltersContainer extends Component<FiltersContainerProps> {
   render() {
     const {
       cardsByItems,
+      categoryData,
       toggleCardSelectedAction,
       toggleItemSelectedAction,
       resetSelectedTransactionKeyAction,
     } = this.props
+
+    console.log(categoryData)
 
     return (
       <div
@@ -57,6 +62,7 @@ class _FiltersContainer extends Component<
 export default connect(
   (state: RootState) => ({
     cardsByItems: cardsByItemsSelector(state),
+    categoryData: categoryDataSelector(state),
   }),
   {
     toggleCardSelectedAction: toggleCardSelected,

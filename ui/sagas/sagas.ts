@@ -7,6 +7,9 @@ import {
   setUserInfo,
   setCards,
   setItems,
+  FetchCreateUserAction,
+  FetchAddItemInterface,
+  FetchLogInAction,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -25,7 +28,13 @@ import {
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
-import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'
+import {
+  Account as PlaidCard,
+  Transaction as PlaidTransaction,
+  Iso8601DateString,
+  TransactionLocation,
+  TransactionPaymentMeta,
+} from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
 
 export interface DBItem {
@@ -64,11 +73,29 @@ export interface UserLogInResponse extends APIResponse {
 
 export interface TransactionsRetrieveResponse extends APIResponse {
   cards: PileaCard[]
-  transactions: PlaidTransaction[]
+  transactions: RawTransaction[]
   items: DBItem[]
 }
 
-function* addItem({ payload: { accessToken, alias } }) {
+export interface RawTransaction {
+  account_id: string
+  account_owner: string | null
+  amount: number | null
+  iso_currency_code: string | null
+  official_currency_code: string | null
+  category: string
+  category_id: string | null
+  date: Iso8601DateString
+  location: TransactionLocation
+  name: string | null
+  payment_meta: TransactionPaymentMeta
+  pending: boolean | null
+  pending_transaction_id: string | null
+  transaction_id: string
+  transaction_type: string | null
+}
+
+function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
   try {
     const { status, items }: AddItemResponse = yield call(
       services[API_ITEMS_ADD],
@@ -86,7 +113,7 @@ function* addItem({ payload: { accessToken, alias } }) {
   }
 }
 
-function* fetchLogIn({ payload: { user, password } }) {
+function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
   try {
     // 1. Attempt log in
     const { username, id }: UserLogInResponse = yield call(
@@ -140,7 +167,9 @@ function* fetchLogOut() {
   }
 }
 
-function* fetchCreateUser({ payload: { user, password } }) {
+function* fetchCreateUser({
+  payload: { user, password },
+}: FetchCreateUserAction) {
   try {
     const { userId, username }: CreateUserResponse = yield call(
       services[API_USER_CREATE],
@@ -221,7 +250,7 @@ function* refreshTransactions() {
             break
           }
           case TRANSACTIONS: {
-            yield put(setTransactions(JSON.parse(data) as PlaidTransaction[]))
+            yield put(setTransactions(JSON.parse(data) as RawTransaction[]))
             break
           }
           default:
@@ -233,6 +262,7 @@ function* refreshTransactions() {
     }
 
     // Immediately after successful refresh, get items.
+    //@ts-ignore
     const { items }: AddItemResponse = yield call(services[API_ITEMS_GET])
 
     yield put(setItems(items))

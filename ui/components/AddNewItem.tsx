@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+// @ts-ignore
 import PlaidLink from 'react-plaid-link'
 import { PLAID_PUBLIC_KEY } from '../konstants'
 import { FetchAddItemActionCreator } from '../actions'
@@ -14,7 +15,7 @@ interface AddNewItemState {
 }
 
 export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
-  constructor(props) {
+  constructor(props: AddNewItemProps) {
     super(props)
     this.state = {
       isShownItemAliasEntry: false,

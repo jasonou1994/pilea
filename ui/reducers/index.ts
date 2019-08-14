@@ -239,8 +239,6 @@ export const transactionsByDayCountCombinedSelector: (
       historicalTimeUnit
     )
 
-    console.log(orderedDatesArray, orderedDatesMap)
-
     //sort transactions into ordered dates
     return Object.entries(transactions).reduce(
       (acc, [date, transactionGroup]) => {
@@ -377,7 +375,7 @@ export interface CategoryData {
   }
 }
 
-export const categoryCountSelector: (
+export const categoryDataSelector: (
   state: RootState
 ) => CategoryData = createSelector(
   filteredTransactionsSelector,

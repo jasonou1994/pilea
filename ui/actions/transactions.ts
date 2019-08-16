@@ -4,9 +4,9 @@ import {
   READD_TRANSACTIONS,
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
+  TOGGLE_CATEGORY_SELECTED,
 } from '../konstants/index'
 import { Action } from 'redux'
-import { Transaction } from 'plaid'
 import { RawTransaction } from '../sagas/sagas'
 
 type TransactionsActionTypes =
@@ -15,11 +15,13 @@ type TransactionsActionTypes =
   | typeof READD_TRANSACTIONS
   | typeof START_LOADING_TRANSACTIONS
   | typeof STOP_LOADING_TRANSACTIONS
+  | typeof TOGGLE_CATEGORY_SELECTED
 
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
   | SetTransactionsInterface
   | ResetTransactionsInterface
+  | ToggleCategorySelectedInterface
 
 // Generics
 export interface TransactionsAction<P, AT extends TransactionsActionTypes>
@@ -69,4 +71,17 @@ export type ResetTransactionsInterface = TransactionsAction<
 export const resetTransactions: ResetTransactionsActionCreator = () => ({
   type: READD_TRANSACTIONS,
   payload: {},
+})
+
+export type ToggleCategorySelectedActionCreator = TransactionsActionCreator<
+  string,
+  typeof TOGGLE_CATEGORY_SELECTED
+>
+export type ToggleCategorySelectedInterface = TransactionsAction<
+  string,
+  typeof TOGGLE_CATEGORY_SELECTED
+>
+export const toggleCategorySelected: ToggleCategorySelectedActionCreator = category => ({
+  type: TOGGLE_CATEGORY_SELECTED,
+  payload: category,
 })

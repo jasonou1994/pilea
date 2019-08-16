@@ -6,15 +6,7 @@ import transactions, * as fromTransactions from './transactionsAccounts'
 import login, * as fromLogin from './login'
 import graph, * as fromGraph from './graph'
 import grid, * as fromGrid from './grid'
-import {
-  TRANSACTIONS,
-  LOGIN,
-  GRAPH,
-  GRID,
-  CATEGORY,
-  AMOUNT,
-  NAME,
-} from '../konstants'
+import { TRANSACTIONS, LOGIN, GRAPH, GRID } from '../konstants'
 import { Transaction as PlaidTransaction } from 'plaid'
 import {
   getTypeOfCard,

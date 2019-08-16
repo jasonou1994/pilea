@@ -36,8 +36,6 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
       resetSelectedTransactionKeyAction,
     } = this.props
 
-    console.log(categoryData)
-
     return (
       <div
         style={{
@@ -53,7 +51,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
             resetSelectedTransactionKeyAction,
           }}
         />
-        <CategoryFilter />
+        <CategoryFilter {...{ categoryData }} />
       </div>
     )
   }

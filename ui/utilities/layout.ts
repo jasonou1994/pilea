@@ -1,10 +1,22 @@
-import { AvailableGridLayouts, GRID_LAYOUT_BY_TIME } from '../konstants'
+import {
+  AvailableGridLayouts,
+  GRID_LAYOUT_BY_TIME,
+  CATEGORY_GRID_HEADER_INCLUDED,
+  CATEGORY_GRID_FIELD_INCLUDED,
+  CATEGORY_GRID_HEADER_CATEGORY,
+  CATEGORY_GRID_FIELD_CATEGORY,
+  CATEGORY_GRID_HEADER_TX_COUNT,
+  CATEGORY_GRID_FIELD_TX_COUNT,
+  CATEGORY_GRID_HEADER_AMOUNT,
+  CATEGORY_GRID_FIELD_AMOUNT,
+} from '../konstants'
 
 export interface GridColumnDef {
   headerName: string
   field: string
   sortable: boolean
   filter: boolean
+  checkboxSelection?: boolean
 }
 
 interface GridColumnDefWithShown extends GridColumnDef {
@@ -42,7 +54,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
   },
 ]
 
-export const getGridColumnDefs: (
+export const getDataGridColumnDefs: (
   layout: AvailableGridLayouts
 ) => GridColumnDef[] = layout =>
   dataGridColumnDefs
@@ -53,3 +65,31 @@ export const getGridColumnDefs: (
       sortable,
       filter,
     }))
+
+export const categoryGridColDefs: GridColumnDef[] = [
+  {
+    headerName: CATEGORY_GRID_HEADER_INCLUDED,
+    field: CATEGORY_GRID_FIELD_INCLUDED,
+    checkboxSelection: true,
+    sortable: true,
+    filter: true,
+  },
+  {
+    headerName: CATEGORY_GRID_HEADER_CATEGORY,
+    field: CATEGORY_GRID_FIELD_CATEGORY,
+    sortable: true,
+    filter: true,
+  },
+  {
+    headerName: CATEGORY_GRID_HEADER_TX_COUNT,
+    field: CATEGORY_GRID_FIELD_TX_COUNT,
+    sortable: true,
+    filter: true,
+  },
+  {
+    headerName: CATEGORY_GRID_HEADER_AMOUNT,
+    field: CATEGORY_GRID_FIELD_AMOUNT,
+    sortable: true,
+    filter: true,
+  },
+]

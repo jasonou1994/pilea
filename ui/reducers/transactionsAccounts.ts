@@ -8,6 +8,8 @@ import {
   SET_ITEMS,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
+  CATEGORIES,
+  TOGGLE_CATEGORY_SELECTED,
 } from '../konstants'
 import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
@@ -20,17 +22,23 @@ export interface CardWithFilter extends PileaCard {
 export interface ItemWithFilter extends DBItem {
   selected: boolean
 }
+export interface CategoryWithFilter {
+  category: string
+  selected: boolean
+}
 
 export interface TransactionsAccountsState {
   [TRANSACTIONS]: PlaidTransaction[]
   [CARDS]: CardWithFilter[]
   [ITEMS]: ItemWithFilter[]
+  [CATEGORIES]: CategoryWithFilter[]
 }
 
 const initialState: TransactionsAccountsState = {
   [TRANSACTIONS]: [],
   [CARDS]: [],
   [ITEMS]: [],
+  [CATEGORIES]: [],
 }
 
 const transactions: (
@@ -55,8 +63,53 @@ const transactions: (
         ...existingTxs,
         ...translatedTxs,
       ])
+
+      // Everytime we get new data, we refresh all categories to be selected
+      const newCategories = Object.values(
+        [
+          ...translatedTxs.map(tx => tx.category),
+          ...state[CATEGORIES].map(catObj => [catObj.category]),
+        ].reduce(
+          (acc, catStringArr) => {
+            catStringArr.forEach(cat => {
+              if (!acc[cat]) {
+                acc[cat] = { category: cat, selected: true }
+              }
+            })
+            return acc
+          },
+          {} as { [key: string]: CategoryWithFilter }
+        )
+      )
+
+      newState = setIn(newState, [CATEGORIES], newCategories)
       break
     }
+
+    case TOGGLE_CATEGORY_SELECTED: {
+      newState = updateIn(
+        state,
+        [CATEGORIES],
+        (oldCategories: CategoryWithFilter[]) => {
+          const foundCategoryIndex = oldCategories.findIndex(
+            cat => cat.category === action.payload
+          )
+
+          return updateIn(
+            oldCategories,
+            [foundCategoryIndex],
+            oldCategory =>
+              ({
+                ...oldCategory,
+                selected: true,
+              } as CategoryWithFilter)
+          )
+        }
+      )
+
+      break
+    }
+
     case SET_CARDS: {
       newState = updateIn(state, [CARDS], existingCards => {
         return action.payload.reduce(

@@ -1,17 +1,58 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import { CategoryData } from '../reducers'
+import {
+  CATEGORY_GRID_FIELD_INCLUDED,
+  CATEGORY_GRID_FIELD_CATEGORY,
+  CATEGORY_GRID_FIELD_TX_COUNT,
+  CATEGORY_GRID_FIELD_AMOUNT,
+} from '../konstants'
+import { AgGridReact } from 'ag-grid-react/lib/agGridReact'
+import { categoryGridColDefs } from '../utilities/layout'
+import { GridApi, ColumnApi } from 'ag-grid-community'
 
-interface CategoryFilterProps {}
+interface CategoryFilterProps {
+  categoryData: CategoryData
+}
 
-interface CategoryFilterState {}
+interface CategoryFilterState {
+  api?: GridApi
+  columnApi?: ColumnApi
+}
 
 export class CategoryFilter extends Component<
   CategoryFilterProps,
   CategoryFilterState
 > {
-  static state = {}
+  constructor(props: CategoryFilterProps) {
+    super(props)
+
+    this.state = {}
+  }
+
+  convertToRowData = () =>
+    Object.entries(this.props.categoryData)
+      .map(([categoryName, { spending, txCount }]) => ({
+        [CATEGORY_GRID_FIELD_CATEGORY]: categoryName,
+        [CATEGORY_GRID_FIELD_TX_COUNT]: txCount,
+        [CATEGORY_GRID_FIELD_AMOUNT]: spending,
+      }))
+      .sort(
+        (a, b) => a[CATEGORY_GRID_FIELD_AMOUNT] - b[CATEGORY_GRID_FIELD_AMOUNT]
+      )
+
+  setGridAPIs = ({
+    api,
+    columnApi,
+  }: {
+    api: GridApi
+    columnApi: ColumnApi
+  }) => {
+    this.setState({ api, columnApi })
+  }
 
   render() {
+    const { api, columnApi } = this.state
+
     return (
       <div
         style={{
@@ -19,7 +60,25 @@ export class CategoryFilter extends Component<
           padding: '5px',
         }}
       >
-        CategoryFilter
+        <div
+          className="ag-theme-balham"
+          style={{
+            height: '250px',
+          }}
+        >
+          <AgGridReact
+            onGridReady={this.setGridAPIs}
+            onModelUpdated={() => {
+              if (api) {
+                api.selectAll()
+              }
+            }}
+            rowSelection="multiple"
+            rowMultiSelectWithClick={true}
+            columnDefs={categoryGridColDefs}
+            rowData={this.convertToRowData()}
+          />
+        </div>
       </div>
     )
   }

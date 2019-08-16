@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import { AgGridReact } from 'ag-grid-react'
-import { GridColumnDef, getGridColumnDefs } from '../utilities/layout'
+import { GridColumnDef, getDataGridColumnDefs } from '../utilities/layout'
 import { GRID_LAYOUT_BY_TIME } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
 import { TimeConsolidatedTransactionGroup } from '../reducers'
@@ -29,7 +29,7 @@ export class IncomeSpendingDetailsGrid extends Component<
   }
 
   componentDidMount() {
-    this.setState({ columnDefs: getGridColumnDefs(GRID_LAYOUT_BY_TIME) })
+    this.setState({ columnDefs: getDataGridColumnDefs(GRID_LAYOUT_BY_TIME) })
   }
 
   convertToRowData = () => {

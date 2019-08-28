@@ -8,10 +8,16 @@ import {
 } from '../konstants'
 import { AgGridReact } from 'ag-grid-react/lib/agGridReact'
 import { categoryGridColDefs } from '../utilities/layout'
-import { GridApi, ColumnApi } from 'ag-grid-community'
+import { GridApi, ColumnApi, SelectionChangedEvent } from 'ag-grid-community'
+import {
+  ResetCategoriesSelectedActionCreator,
+  SetCategoriesSelectedActionCreator,
+} from '../actions'
 
 interface CategoryFilterProps {
   categoryData: CategoryData
+  resetCategoriesSelectedAction: ResetCategoriesSelectedActionCreator
+  setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
 }
 
 interface CategoryFilterState {
@@ -37,7 +43,7 @@ export class CategoryFilter extends Component<
         [CATEGORY_GRID_FIELD_AMOUNT]: spending,
       }))
       .sort(
-        (a, b) => a[CATEGORY_GRID_FIELD_AMOUNT] - b[CATEGORY_GRID_FIELD_AMOUNT]
+        (a, b) => b[CATEGORY_GRID_FIELD_AMOUNT] - a[CATEGORY_GRID_FIELD_AMOUNT]
       )
 
   setGridAPIs = ({
@@ -52,6 +58,10 @@ export class CategoryFilter extends Component<
 
   render() {
     const { api, columnApi } = this.state
+    const {
+      resetCategoriesSelectedAction,
+      setCategoriesSelectedAction,
+    } = this.props
 
     return (
       <div
@@ -70,8 +80,19 @@ export class CategoryFilter extends Component<
             onGridReady={this.setGridAPIs}
             onModelUpdated={() => {
               if (api) {
+                resetCategoriesSelectedAction({})
                 api.selectAll()
               }
+            }}
+            onSelectionChanged={({ api }: SelectionChangedEvent) => {
+              const currentSelectedRows = api.getSelectedRows()
+
+              console.log(currentSelectedRows)
+              setCategoriesSelectedAction(
+                currentSelectedRows.map(
+                  catRow => catRow[CATEGORY_GRID_FIELD_CATEGORY]
+                )
+              )
             }}
             rowSelection="multiple"
             rowMultiSelectWithClick={true}

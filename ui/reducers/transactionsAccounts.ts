@@ -10,8 +10,10 @@ import {
   TOGGLE_ITEM_SELECTED,
   CATEGORIES,
   TOGGLE_CATEGORY_SELECTED,
+  RESET_CATEGORIES_SELECTED,
+  SET_CATEGORIES_SELECTED,
 } from '../konstants'
-import { updateIn, set, setIn } from 'timm'
+import { updateIn, set, setIn, update } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
@@ -22,23 +24,22 @@ export interface CardWithFilter extends PileaCard {
 export interface ItemWithFilter extends DBItem {
   selected: boolean
 }
-export interface CategoryWithFilter {
-  category: string
-  selected: boolean
+export interface Categories {
+  [key: string]: boolean
 }
 
 export interface TransactionsAccountsState {
   [TRANSACTIONS]: PlaidTransaction[]
   [CARDS]: CardWithFilter[]
   [ITEMS]: ItemWithFilter[]
-  [CATEGORIES]: CategoryWithFilter[]
+  [CATEGORIES]: Categories
 }
 
 const initialState: TransactionsAccountsState = {
   [TRANSACTIONS]: [],
   [CARDS]: [],
   [ITEMS]: [],
-  [CATEGORIES]: [],
+  [CATEGORIES]: {},
 }
 
 const transactions: (
@@ -65,21 +66,19 @@ const transactions: (
       ])
 
       // Everytime we get new data, we refresh all categories to be selected
-      const newCategories = Object.values(
-        [
-          ...translatedTxs.map(tx => tx.category),
-          ...state[CATEGORIES].map(catObj => [catObj.category]),
-        ].reduce(
-          (acc, catStringArr) => {
-            catStringArr.forEach(cat => {
-              if (!acc[cat]) {
-                acc[cat] = { category: cat, selected: true }
-              }
-            })
-            return acc
-          },
-          {} as { [key: string]: CategoryWithFilter }
-        )
+      const newCategories = [
+        ...translatedTxs.map(tx => tx.category),
+        ...Object.keys(state[CATEGORIES]).map(category => [category]),
+      ].reduce(
+        (acc, catStringArr) => {
+          catStringArr.forEach(cat => {
+            if (!acc[cat]) {
+              acc[cat] = true
+            }
+          })
+          return acc
+        },
+        {} as Categories
       )
 
       newState = setIn(newState, [CATEGORIES], newCategories)
@@ -87,26 +86,50 @@ const transactions: (
     }
 
     case TOGGLE_CATEGORY_SELECTED: {
-      newState = updateIn(
-        state,
-        [CATEGORIES],
-        (oldCategories: CategoryWithFilter[]) => {
-          const foundCategoryIndex = oldCategories.findIndex(
-            cat => cat.category === action.payload
-          )
+      newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) => ({
+        ...oldCategories,
+        [action.payload]: !oldCategories[action.payload],
+      }))
 
-          return updateIn(
-            oldCategories,
-            [foundCategoryIndex],
-            oldCategory =>
-              ({
-                ...oldCategory,
-                selected: true,
-              } as CategoryWithFilter)
-          )
-        }
+      break
+    }
+
+    case RESET_CATEGORIES_SELECTED: {
+      newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) =>
+        Object.keys(oldCategories).reduce(
+          (acc, cur) => {
+            acc[cur] = true
+            return acc
+          },
+          {} as Categories
+        )
       )
 
+      break
+    }
+
+    case SET_CATEGORIES_SELECTED: {
+      newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) => {
+        const allFalseCategories: Categories = Object.keys(
+          oldCategories
+        ).reduce(
+          (acc, cur) => {
+            acc[cur] = false
+            return acc
+          },
+          {} as Categories
+        )
+
+        const updatedCategories: Categories = action.payload.reduce(
+          (acc, cur) => {
+            acc[cur] = true
+            return acc
+          },
+          allFalseCategories
+        )
+
+        return updatedCategories
+      })
       break
     }
 
@@ -199,13 +222,17 @@ const transactions: (
 export default transactions
 
 export const transactionsSelector: (
-  state: typeof initialState
+  state: TransactionsAccountsState
 ) => PlaidTransaction[] = state => state[TRANSACTIONS]
 
 export const cardsSelector: (
-  state: typeof initialState
+  state: TransactionsAccountsState
 ) => CardWithFilter[] = state => state[CARDS]
 
 export const itemsSelector: (
-  state: typeof initialState
+  state: TransactionsAccountsState
 ) => ItemWithFilter[] = state => state[ITEMS]
+
+export const categoriesSelector: (
+  state: TransactionsAccountsState
+) => Categories = state => state[CATEGORIES]

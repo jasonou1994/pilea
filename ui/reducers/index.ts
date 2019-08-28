@@ -40,6 +40,8 @@ export const cardsSelector = (state: RootState) =>
   fromTransactions.cardsSelector(state[TRANSACTIONS])
 export const itemsSelector = (state: RootState) =>
   fromTransactions.itemsSelector(state[TRANSACTIONS])
+export const categoriesSelector = (state: RootState) =>
+  fromTransactions.categoriesSelector(state[TRANSACTIONS])
 
 //log in
 export const loggedInSelector = (state: RootState) =>
@@ -132,7 +134,7 @@ export const transactionsNoIntraAccountSelector: (
   }
 )
 
-export const filteredTransactionsSelector: (
+export const cardAndTimeFilteredTransactionsSelector: (
   state: RootState
 ) => TxWithCardType[] = createSelector(
   transactionsNoIntraAccountSelector,
@@ -151,10 +153,18 @@ export const filteredTransactionsSelector: (
   }
 )
 
+export const categoryFilteredTransactionsSelector: (
+  state: RootState
+) => TxWithCardType[] = createSelector(
+  cardAndTimeFilteredTransactionsSelector,
+  categoriesSelector,
+  (transactions, categories) => {}
+)
+
 export const dailyTransactionsSelector: (
   state: RootState
 ) => DailyTransactions = createSelector(
-  filteredTransactionsSelector,
+  cardAndTimeFilteredTransactionsSelector,
   transactions => {
     const uniqueDates = [...new Set(transactions.map(tx => tx.date))].reduce(
       (acc, cur) => {
@@ -360,6 +370,8 @@ export const cardsByItemsSelector: (
   }
 )
 
+// Categories
+
 export interface CategoryData {
   [key: string]: {
     spending: number
@@ -370,7 +382,7 @@ export interface CategoryData {
 export const categoryDataSelector: (
   state: RootState
 ) => CategoryData = createSelector(
-  filteredTransactionsSelector,
+  cardAndTimeFilteredTransactionsSelector,
   transactions =>
     transactions.reduce(
       (acc, tx) => {

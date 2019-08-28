@@ -16,6 +16,10 @@ import {
   ToggleCardSelectedActionCreator,
   resetSelectedTransactionKey,
   ResetSelectedTransactionActionCreator,
+  resetCategoriesSelected,
+  ResetCategoriesSelectedActionCreator,
+  setCategoriesSelected,
+  SetCategoriesSelectedActionCreator,
 } from '../actions'
 
 interface FiltersContainerProps {
@@ -24,6 +28,8 @@ interface FiltersContainerProps {
   toggleItemSelectedAction: ToggleItemSelectedActionCreator
   toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  resetCategoriesSelectedAction: ResetCategoriesSelectedActionCreator
+  setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
 }
 
 class _FiltersContainer extends Component<FiltersContainerProps> {
@@ -34,6 +40,8 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
       toggleCardSelectedAction,
       toggleItemSelectedAction,
       resetSelectedTransactionKeyAction,
+      resetCategoriesSelectedAction,
+      setCategoriesSelectedAction,
     } = this.props
 
     return (
@@ -49,9 +57,16 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
             toggleCardSelectedAction,
             toggleItemSelectedAction,
             resetSelectedTransactionKeyAction,
+            setCategoriesSelectedAction,
           }}
         />
-        <CategoryFilter {...{ categoryData }} />
+        <CategoryFilter
+          {...{
+            categoryData,
+            resetCategoriesSelectedAction,
+            setCategoriesSelectedAction,
+          }}
+        />
       </div>
     )
   }
@@ -66,5 +81,7 @@ export default connect(
     toggleCardSelectedAction: toggleCardSelected,
     toggleItemSelectedAction: toggleItemSelected,
     resetSelectedTransactionKeyAction: resetSelectedTransactionKey,
+    resetCategoriesSelectedAction: resetCategoriesSelected,
+    setCategoriesSelectedAction: setCategoriesSelected,
   }
 )(_FiltersContainer)

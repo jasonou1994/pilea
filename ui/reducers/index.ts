@@ -158,13 +158,26 @@ export const categoryFilteredTransactionsSelector: (
 ) => TxWithCardType[] = createSelector(
   cardAndTimeFilteredTransactionsSelector,
   categoriesSelector,
-  (transactions, categories) => {}
+  (transactions, categories) => {
+    return transactions.filter(tx => {
+      const keepTx = tx.category.reduce(
+        (acc, cur) => {
+          if (!categories[cur]) {
+            acc = false
+          }
+          return acc
+        },
+        true as boolean
+      )
+      return keepTx
+    })
+  }
 )
 
 export const dailyTransactionsSelector: (
   state: RootState
 ) => DailyTransactions = createSelector(
-  cardAndTimeFilteredTransactionsSelector,
+  categoryFilteredTransactionsSelector,
   transactions => {
     const uniqueDates = [...new Set(transactions.map(tx => tx.date))].reduce(
       (acc, cur) => {

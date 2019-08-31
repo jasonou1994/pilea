@@ -53,10 +53,12 @@ const transactions: (
       const translatedTxs: PlaidTransaction[] = action.payload.map(tx => ({
         ...tx,
         category: tx.category
-          ? tx.category
-              .replace(/[{|}|"]/g, '')
-              .trim()
-              .split(',')
+          ? typeof tx.category === 'string'
+            ? tx.category
+                .replace(/[{|}|"]/g, '')
+                .trim()
+                .split(',')
+            : tx.category
           : [],
       }))
 

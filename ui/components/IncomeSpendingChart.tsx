@@ -83,10 +83,15 @@ export class IncomeSpendingChart extends Component<
 
   render() {
     const { currentX } = this.state
-    const { setSelectedTransactionKeyAction } = this.props
+    const {
+      setSelectedTransactionKeyAction,
+      transactionsByDayCountCombined,
+    } = this.props
 
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
+
+    console.log(transactionsByDayCountCombined)
 
     return (
       <div>

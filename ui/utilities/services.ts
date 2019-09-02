@@ -72,6 +72,8 @@ export const services = serviceDefs.reduce(
           const response = await rawResponse.json()
           const { error, success, status, ...contents } = response
 
+          console.log(response)
+
           success ? resolve({ ...contents, status }) : reject({ status, error })
         } catch (error) {
           reject({ error, status: `Error in ${name}` })

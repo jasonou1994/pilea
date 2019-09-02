@@ -1,5 +1,5 @@
 import {
-  SET_CARDS,
+  ADD_CARDS,
   SET_ITEMS,
   FETCH_ADD_ITEM,
   TOGGLE_CARD_SELECTED,
@@ -10,14 +10,14 @@ import { DBItem, PileaCard } from '../sagas/sagas'
 
 export type AccountsActionTypes =
   | typeof SET_ITEMS
-  | typeof SET_CARDS
+  | typeof ADD_CARDS
   | typeof FETCH_ADD_ITEM
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
 
 export type AccountsInterfaces =
   | FetchAddItemInterface
-  | SetCardsInterface
+  | addCardsInterface
   | SetItemsInterface
   | ToggleItemSelectedInterface
   | ToggleCardSelectedInterface
@@ -52,13 +52,13 @@ export const fetchAddItem: FetchAddItemActionCreator = tokenAndAlias => ({
   payload: tokenAndAlias,
 })
 
-export type SetCardsActionCreator = AccountsActionCreator<
+export type addCardsActionCreator = AccountsActionCreator<
   PileaCard[],
-  typeof SET_CARDS
+  typeof ADD_CARDS
 >
-export type SetCardsInterface = AccountsAction<PileaCard[], typeof SET_CARDS>
-export const setCards: SetCardsActionCreator = cards => ({
-  type: SET_CARDS,
+export type addCardsInterface = AccountsAction<PileaCard[], typeof ADD_CARDS>
+export const addCards: addCardsActionCreator = cards => ({
+  type: ADD_CARDS,
   payload: cards,
 })
 

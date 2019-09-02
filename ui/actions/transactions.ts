@@ -23,8 +23,8 @@ type TransactionsActionTypes =
 
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
-  | SetTransactionsInterface
-  | ResetTransactionsInterface
+  | addTransactionsInterface
+  | ReaddTransactionsInterface
   | ToggleCategorySelectedInterface
   | ResetCategoriesSelectedInterface
   | SetCategoriesSelectedInterface
@@ -53,28 +53,28 @@ export const fetchRefreshTransactions: FetchRefreshTransactionsActionCreator = (
   payload: {},
 })
 
-export type SetTransactionsActionCreator = TransactionsActionCreator<
+export type addTransactionsActionCreator = TransactionsActionCreator<
   RawTransaction[],
   typeof ADD_TRANSACTIONS
 >
-export type SetTransactionsInterface = TransactionsAction<
+export type addTransactionsInterface = TransactionsAction<
   RawTransaction[],
   typeof ADD_TRANSACTIONS
 >
-export const setTransactions: SetTransactionsActionCreator = transactions => ({
+export const addTransactions: addTransactionsActionCreator = transactions => ({
   type: ADD_TRANSACTIONS,
   payload: transactions,
 })
 
-export type ResetTransactionsActionCreator = TransactionsActionCreator<
+export type ReaddTransactionsActionCreator = TransactionsActionCreator<
   {},
   typeof READD_TRANSACTIONS
 >
-export type ResetTransactionsInterface = TransactionsAction<
+export type ReaddTransactionsInterface = TransactionsAction<
   {},
   typeof READD_TRANSACTIONS
 >
-export const resetTransactions: ResetTransactionsActionCreator = () => ({
+export const readdTransactions: ReaddTransactionsActionCreator = () => ({
   type: READD_TRANSACTIONS,
   payload: {},
 })

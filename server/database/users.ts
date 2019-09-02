@@ -67,5 +67,5 @@ export const checkUserToken: ({ token }) => Promise<boolean> = async ({
     .where({ token })
     .count('*')
 
-  return result[0].count >= 0
+  return result[0].count > 0
 }

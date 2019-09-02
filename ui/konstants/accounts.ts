@@ -1,6 +1,6 @@
 //ACTIONS
 export const SET_ITEMS = 'SET_ITEMS'
-export const SET_CARDS = 'SET_CARDS'
+export const ADD_CARDS = 'ADD_CARDS'
 export const FETCH_ADD_ITEM = 'FETCH_ADD_ITEM'
 export const SET_LAST_UPDATED = 'SET_LAST_UPDATED'
 export const TOGGLE_ITEM_SELECTED = 'TOGGLE_ITEM_SELECTED'

@@ -1,19 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Breadcrumb } from '../components/Breadcrumb'
-import { RootState } from '../reducers'
+import { RootState, loggedInSelector, userSelector } from '../reducers'
+import { fetchLogOut, FetchLogOutActionCreator } from '../actions'
+import { USER_ID, USER_NAME } from '../konstants'
 
-interface HeaderContainerProps {}
+interface HeaderContainerProps {
+  fetchLogOutAction: FetchLogOutActionCreator
+  loggedIn: boolean
+  user: {
+    [USER_ID]: string
+    [USER_NAME]: string
+  }
+}
 
-interface HeaderContainerState {}
-
-class _HeaderContainer extends Component<
-  HeaderContainerProps,
-  HeaderContainerState
-> {
-  static state = {}
-
+class _HeaderContainer extends Component<HeaderContainerProps> {
   render() {
+    const { fetchLogOutAction, loggedIn, user } = this.props
+
+    console.log(user)
     return (
       <div
         style={{
@@ -21,6 +26,12 @@ class _HeaderContainer extends Component<
           padding: '5px',
         }}
       >
+        {loggedIn ? (
+          <>
+            <button onClick={() => fetchLogOutAction({})}>Log Out</button>
+            <div>{`Welcome, ${user[USER_NAME]}`}</div>
+          </>
+        ) : null}
         <Breadcrumb />
       </div>
     )
@@ -28,6 +39,9 @@ class _HeaderContainer extends Component<
 }
 
 export default connect(
-  (state: RootState) => ({}),
-  {}
+  (state: RootState) => ({
+    loggedIn: loggedInSelector(state),
+    user: userSelector(state),
+  }),
+  { fetchLogOutAction: fetchLogOut }
 )(_HeaderContainer)

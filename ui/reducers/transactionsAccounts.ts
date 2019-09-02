@@ -4,7 +4,7 @@ import {
   READD_TRANSACTIONS,
   CARDS,
   ITEMS,
-  SET_CARDS,
+  ADD_CARDS,
   SET_ITEMS,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
@@ -135,9 +135,9 @@ const transactions: (
       break
     }
 
-    case SET_CARDS: {
-      newState = updateIn(state, [CARDS], existingCards => {
-        return action.payload.reduce(
+    case ADD_CARDS: {
+      newState = updateIn(state, [CARDS], existingCards =>
+        action.payload.reduce(
           (acc, newCard) => {
             if (
               !acc.find(
@@ -150,7 +150,7 @@ const transactions: (
           },
           [...existingCards] as PlaidCard[]
         )
-      })
+      )
       break
     }
     case SET_ITEMS: {

@@ -1,11 +1,11 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import moment from 'moment'
 import {
-  setTransactions,
-  resetTransactions,
+  addTransactions,
+  readdTransactions,
   setLoggedIn,
   setUserInfo,
-  setCards,
+  addCards,
   setItems,
   FetchCreateUserAction,
   FetchAddItemInterface,
@@ -143,8 +143,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
       services[API_TRANSACTIONS_RETRIEVE]
     )
 
-    yield put(setCards(cards))
-    yield put(setTransactions(transactions))
+    yield put(addCards(cards))
+    yield put(addTransactions(transactions))
     yield put(setItems(items))
   } catch (e) {
     console.error(e)
@@ -162,8 +162,8 @@ function* fetchLogOut() {
         userId: 0,
       })
     )
-  } catch ({ error, status }) {
-    console.error(status, error)
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -195,7 +195,7 @@ function* fetchCreateUser({
 
 function* refreshTransactions() {
   yield put(startLoading(TRANSACTIONS))
-  yield put(resetTransactions({}))
+  yield put(readdTransactions({}))
   try {
     const start = moment()
       .subtract(2, 'year')
@@ -246,11 +246,11 @@ function* refreshTransactions() {
 
         switch (event) {
           case CARDS: {
-            yield put(setCards(JSON.parse(data) as PileaCard[]))
+            yield put(addCards(JSON.parse(data) as PileaCard[]))
             break
           }
           case TRANSACTIONS: {
-            yield put(setTransactions(JSON.parse(data) as RawTransaction[]))
+            yield put(addTransactions(JSON.parse(data) as RawTransaction[]))
             break
           }
           default:

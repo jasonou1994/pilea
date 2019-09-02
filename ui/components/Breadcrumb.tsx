@@ -1,13 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { FetchLogOutActionCreator } from '../actions'
 
 interface BreadcrumbProps {}
 
-interface BreadcrumbState {}
-
-export class Breadcrumb extends Component<BreadcrumbProps, BreadcrumbState> {
-  static state = {}
-
+export class Breadcrumb extends Component<BreadcrumbProps> {
   render() {
     return (
       <div

@@ -23,13 +23,20 @@ export interface PileaCard extends PlaidCard {
   itemId: number
 }
 
-export const getCards: ({ userId }) => Promise<PileaCard[]> = async ({
+export const getCards: ({
   userId,
-}) => {
+  itemId,
+}: {
+  userId: number
+  itemId?: number
+}) => Promise<PileaCard[]> = async ({ userId, itemId }) => {
   const dbCards: DBCard[] = await dbClient
     .select('*')
     .from(CARDS)
-    .where({ userId })
+    .where({
+      userId,
+      ...(itemId ? { itemId } : {}),
+    })
 
   return dbCards.map(dbCard => {
     const {

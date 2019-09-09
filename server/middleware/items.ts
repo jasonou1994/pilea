@@ -47,7 +47,7 @@ export const removeItem = async (
     const { userId } = res.locals
     const { itemId } = req.body
 
-    const cards: PileaCard[] = await getCards({ userId })
+    const cards: PileaCard[] = await getCards({ userId, itemId })
     const deletions: Promise<void>[] = [
       ...cards.map(
         async card =>

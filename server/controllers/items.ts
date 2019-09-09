@@ -6,6 +6,7 @@ import {
   getAllItems,
   removeItem,
   sendEmptyResponse,
+  retrieveTransactions,
 } from '../middleware'
 
 export const items = Router()
@@ -16,7 +17,7 @@ items.post(
   checkUpdateAuthToken,
   getUserId,
   removeItem,
-  sendEmptyResponse
+  retrieveTransactions
 )
 
 items.get('/', checkUpdateAuthToken, getUserId, getAllItems)

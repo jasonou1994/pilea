@@ -1,9 +1,9 @@
-import { Request, Response } from 'express'
-import { dbClient } from '../database'
-import { ITEMS, client } from '../constants'
+import { Request, Response, NextFunction } from 'express'
 import { plaidGetAccessToken } from '../plaidAPI'
-import { insertItem, getItems, DBItem } from '../database/items'
+import { insertItem, getItems, DBItem, deleteItem } from '../database/items'
 import { ContractResponse } from '.'
+import { PileaCard, getCards, deleteCards } from '../database/cards'
+import { deleteTransactionsForGivenCardAndUser } from '../database/transactions'
 
 export interface ContractItemAdd extends ContractResponse {
   items: DBItem[]
@@ -35,6 +35,38 @@ export const addItem = async (req: Request, res: Response) => {
       status: 'Failed to add item.',
       error,
     } as ContractItemAdd)
+  }
+}
+
+export const removeItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = res.locals
+    const { itemId } = req.body
+
+    const cards: PileaCard[] = await getCards({ userId })
+    const deletions: Promise<void>[] = [
+      ...cards.map(
+        async card =>
+          await deleteTransactionsForGivenCardAndUser({
+            userId,
+            cardId: card.account_id,
+          })
+      ),
+      deleteCards({ userId, itemId }),
+      deleteItem({ userId, itemId }),
+    ]
+    await Promise.all(deletions)
+
+    next()
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      error,
+    })
   }
 }
 

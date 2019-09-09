@@ -91,6 +91,16 @@ export const deleteTransactions: ({ userId }) => Promise<void> = async ({
     .where({ userId })
     .del()
 }
+export const deleteTransactionsForGivenCardAndUser: ({
+  userId,
+  cardId,
+}: {
+  userId: number
+  cardId: string
+}) => Promise<void> = async ({ userId, cardId }) =>
+  await dbClient(TRANSACTIONS)
+    .where({ userId, account_id: cardId })
+    .del()
 
 export const insertTransactions: ({
   plaidTransactions,

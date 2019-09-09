@@ -33,6 +33,17 @@ export const insertItem: ({
   })
 }
 
+export const deleteItem: ({
+  userId,
+  itemId,
+}: {
+  userId: number
+  itemId: number
+}) => Promise<void> = async ({ userId, itemId }) =>
+  await dbClient(ITEMS)
+    .where({ userId, id: itemId })
+    .del()
+
 export const updateItemById: ({ id }) => Promise<void> = async ({ id }) => {
   await dbClient(ITEMS)
     .update({

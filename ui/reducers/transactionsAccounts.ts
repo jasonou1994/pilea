@@ -21,6 +21,7 @@ import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 export interface CardWithFilter extends PileaCard {
   selected: boolean
 }
+
 export interface ItemWithFilter extends DBItem {
   selected: boolean
 }

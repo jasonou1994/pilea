@@ -9,6 +9,8 @@ import {
   FetchAddItemActionCreator,
   fetchRefreshTransactions,
   FetchRefreshTransactionsActionCreator,
+  fetchRemoveItem,
+  FetchRemoveItemActionCreator,
 } from '../actions'
 
 interface ItemsContainerProps {
@@ -16,6 +18,7 @@ interface ItemsContainerProps {
 
   fetchAddItemAction: FetchAddItemActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
+  fetchRemoveItemAction: FetchRemoveItemActionCreator
 }
 
 interface ItemsContainerState {}
@@ -29,6 +32,7 @@ class _ItemsContainer extends Component<
       cardsByItems,
       fetchAddItemAction,
       fetchRefreshTransactionsAction,
+      fetchRemoveItemAction,
     } = this.props
 
     return (
@@ -41,6 +45,7 @@ class _ItemsContainer extends Component<
         <CurrentItems
           {...{
             cardsByItems,
+            fetchRemoveItemAction,
           }}
         />
         <AddNewItem
@@ -68,5 +73,6 @@ export default connect(
   {
     fetchAddItemAction: fetchAddItem,
     fetchRefreshTransactionsAction: fetchRefreshTransactions,
+    fetchRemoveItemAction: fetchRemoveItem,
   }
 )(_ItemsContainer)

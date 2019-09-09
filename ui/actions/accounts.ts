@@ -4,6 +4,7 @@ import {
   FETCH_ADD_ITEM,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
+  FETCH_REMOVE_ITEM,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
@@ -14,6 +15,7 @@ export type AccountsActionTypes =
   | typeof FETCH_ADD_ITEM
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
+  | typeof FETCH_REMOVE_ITEM
 
 export type AccountsInterfaces =
   | FetchAddItemInterface
@@ -96,4 +98,17 @@ export type ToggleCardSelectedInterface = AccountsAction<
 export const toggleCardSelected: ToggleCardSelectedActionCreator = cardId => ({
   payload: cardId,
   type: TOGGLE_CARD_SELECTED,
+})
+
+export type FetchRemoveItemActionCreator = AccountsActionCreator<
+  number,
+  typeof FETCH_REMOVE_ITEM
+>
+export type FetchRemoveItemInterface = AccountsAction<
+  number,
+  typeof FETCH_REMOVE_ITEM
+>
+export const fetchRemoveItem: FetchRemoveItemActionCreator = itemId => ({
+  payload: itemId,
+  type: FETCH_REMOVE_ITEM,
 })

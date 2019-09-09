@@ -77,6 +77,8 @@ export interface TransactionsRetrieveResponse extends APIResponse {
   items: DBItem[]
 }
 
+export interface RemoveItemsResponse extends TransactionsRetrieveResponse {}
+
 export interface RawTransaction {
   account_id: string
   account_owner: string | null

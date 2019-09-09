@@ -6,6 +6,7 @@ import {
   API_USER_LOGOUT,
   AvailableAPIs,
   API_ITEMS_GET,
+  API_ITEMS_REMOVE,
 } from '../konstants'
 
 interface ServiceDefinition {
@@ -51,6 +52,10 @@ const serviceDefs: ServiceDefinition[] = [
   {
     name: API_USER_LOGOUT,
     url: 'http://localhost:8000/user/logout',
+  },
+  {
+    name: API_ITEMS_REMOVE,
+    url: 'http://localhost:8000/items/delete',
   },
 ].map(def => ({ ...defaultOptions, ...def } as ServiceDefinition))
 

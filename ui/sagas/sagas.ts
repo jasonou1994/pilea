@@ -11,6 +11,8 @@ import {
   FetchAddItemInterface,
   FetchLogInAction,
   FetchRemoveItemInterface,
+  setCards,
+  setTransactions,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -127,8 +129,8 @@ function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
       }
     )
 
-    yield put(addCards(cards))
-    yield put(addTransactions(transactions))
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch (error) {
     console.error(error)
@@ -165,8 +167,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
       services[API_TRANSACTIONS_RETRIEVE]
     )
 
-    yield put(addCards(cards))
-    yield put(addTransactions(transactions))
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch (e) {
     console.error(e)

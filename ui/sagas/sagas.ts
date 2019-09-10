@@ -10,6 +10,7 @@ import {
   FetchCreateUserAction,
   FetchAddItemInterface,
   FetchLogInAction,
+  FetchRemoveItemInterface,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -25,6 +26,8 @@ import {
   FETCH_ADD_ITEM,
   CARDS,
   API_ITEMS_GET,
+  API_ITEMS_REMOVE,
+  FETCH_REMOVE_ITEM,
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
@@ -112,6 +115,23 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
     yield put(setItems(items))
   } catch ({ error, status }) {
     console.error(status, error)
+  }
+}
+
+function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
+  try {
+    const { cards, transactions, items }: RemoveItemsResponse = yield call(
+      services[API_ITEMS_REMOVE],
+      {
+        body: JSON.stringify({ itemId }),
+      }
+    )
+
+    yield put(addCards(cards))
+    yield put(addTransactions(transactions))
+    yield put(setItems(items))
+  } catch (error) {
+    console.error(error)
   }
 }
 
@@ -286,6 +306,8 @@ function* saga() {
   yield takeLatest(FETCH_LOG_IN, fetchLogIn)
   //@ts-ignore
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
+  //@ts-ignore
+  yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
 }
 
 export default saga

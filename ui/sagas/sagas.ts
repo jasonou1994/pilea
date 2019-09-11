@@ -25,6 +25,7 @@ import {
   FETCH_ADD_ITEM,
   CARDS,
   API_ITEMS_GET,
+  API_TRANSACTIONS_REFRESH,
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
@@ -204,72 +205,21 @@ function* refreshTransactions() {
       .format('YYYY-MM-DD')
     const end = moment().format('YYYY-MM-DD')
 
-    const SSEResponse = yield call(
-      fetch,
-      'http://localhost:8000/transactions/refresh',
-      ({
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+    const {
+      cards,
+      transactions,
+      items,
+    }: TransactionsRetrieveResponse = yield call(
+      services[API_TRANSACTIONS_REFRESH],
+      {
         body: JSON.stringify({
           start,
           end,
         }),
-      } as unknown) as RequestInit
-    )
-
-    const reader = yield SSEResponse.body.getReader()
-    const decoder = yield new TextDecoder('utf-8')
-
-    let complete = false
-    let dataString = ''
-
-    while (!complete) {
-      const chunk = yield reader.read()
-      dataString += yield decoder.decode(chunk.value)
-
-      const possibleEventArr = dataString.split(/\n\n/g)
-
-      let eventsFound = 0
-
-      for (const [i, message] of possibleEventArr.entries()) {
-        if (i === possibleEventArr.length - 1) {
-          continue
-        }
-
-        eventsFound++
-        const { id, data, event } = parseSSEFields(message)
-
-        if (id === 'CLOSE') {
-          complete = true
-        }
-
-        switch (event) {
-          case CARDS: {
-            yield put(addCards(JSON.parse(data) as PileaCard[]))
-            break
-          }
-          case TRANSACTIONS: {
-            yield put(addTransactions(JSON.parse(data) as RawTransaction[]))
-            break
-          }
-          default:
-            break
-        }
       }
-      possibleEventArr.splice(0, eventsFound)
-      dataString = possibleEventArr.join('\n\n')
-    }
-
-    // Immediately after successful refresh, get items.
-    //@ts-ignore
-    const { items }: AddItemResponse = yield call(services[API_ITEMS_GET])
-
-    yield put(setItems(items))
+    )
   } catch (e) {
-    console.error('Error in fetchTransactions:', e)
+    console.error('Error in refreshTransactions:', e)
   }
 
   yield put(stopLoading(TRANSACTIONS))

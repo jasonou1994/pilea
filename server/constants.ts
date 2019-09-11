@@ -10,7 +10,7 @@ export const client = new Client(
   PLAID_SECRET,
   PLAID_PUBLIC_KEY,
   environments[PLAID_ENV],
-  { version: '2018-05-22' }
+  { version: '2019-05-29' }
 )
 
 // export const connection = {

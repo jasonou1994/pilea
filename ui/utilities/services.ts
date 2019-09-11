@@ -7,6 +7,7 @@ import {
   AvailableAPIs,
   API_ITEMS_GET,
   API_ITEMS_REMOVE,
+  API_TRANSACTIONS_REFRESH,
 } from '../konstants'
 
 interface ServiceDefinition {
@@ -44,6 +45,10 @@ const serviceDefs: ServiceDefinition[] = [
   {
     name: API_USER_LOGIN,
     url: 'http://localhost:8000/user/login',
+  },
+  {
+    name: API_TRANSACTIONS_REFRESH,
+    url: 'http://localhost:8000/transactions/refresh',
   },
   {
     name: API_TRANSACTIONS_RETRIEVE,

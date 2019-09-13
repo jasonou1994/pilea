@@ -22,10 +22,10 @@ export const client = new Client(
 // }
 
 export const connection = {
-  host: 'localhost',
-  user: 'jasonou',
-  password: '',
-  database: 'pilea',
+  host: 'salt.db.elephantsql.com',
+  user: 'dsfmzvss',
+  password: 'aF0mHO72woTeIwag11r5qPRVC1YsLc3k',
+  database: 'dsfmzvss',
 }
 
 //Password

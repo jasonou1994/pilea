@@ -5,6 +5,7 @@ import {
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
   FETCH_REMOVE_ITEM,
+  SET_CARDS,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
@@ -12,6 +13,7 @@ import { DBItem, PileaCard } from '../sagas/sagas'
 export type AccountsActionTypes =
   | typeof SET_ITEMS
   | typeof ADD_CARDS
+  | typeof SET_CARDS
   | typeof FETCH_ADD_ITEM
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
@@ -20,6 +22,7 @@ export type AccountsActionTypes =
 export type AccountsInterfaces =
   | FetchAddItemInterface
   | addCardsInterface
+  | setCardsInterface
   | SetItemsInterface
   | ToggleItemSelectedInterface
   | ToggleCardSelectedInterface
@@ -61,6 +64,16 @@ export type addCardsActionCreator = AccountsActionCreator<
 export type addCardsInterface = AccountsAction<PileaCard[], typeof ADD_CARDS>
 export const addCards: addCardsActionCreator = cards => ({
   type: ADD_CARDS,
+  payload: cards,
+})
+
+export type setCardsActionCreator = AccountsActionCreator<
+  PileaCard[],
+  typeof SET_CARDS
+>
+export type setCardsInterface = AccountsAction<PileaCard[], typeof SET_CARDS>
+export const setCards: setCardsActionCreator = cards => ({
+  type: SET_CARDS,
   payload: cards,
 })
 

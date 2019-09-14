@@ -48,18 +48,17 @@ export const removeItem = async (
     const { itemId } = req.body
 
     const cards: PileaCard[] = await getCards({ userId, itemId })
-    const deletions: Promise<void>[] = [
-      ...cards.map(
-        async card =>
-          await deleteTransactionsForGivenCardAndUser({
-            userId,
-            cardId: card.account_id,
-          })
-      ),
-      deleteCards({ userId, itemId }),
-      deleteItem({ userId, itemId }),
-    ]
+    const deletions: Promise<void>[] = cards.map(
+      async card =>
+        await deleteTransactionsForGivenCardAndUser({
+          userId,
+          cardId: card.account_id,
+        })
+    )
+
     await Promise.all(deletions)
+    await deleteCards({ userId, itemId })
+    await deleteItem({ userId, itemId })
 
     next()
   } catch (error) {

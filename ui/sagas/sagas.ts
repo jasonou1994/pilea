@@ -10,6 +10,9 @@ import {
   FetchCreateUserAction,
   FetchAddItemInterface,
   FetchLogInAction,
+  FetchRemoveItemInterface,
+  setCards,
+  setTransactions,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -26,6 +29,8 @@ import {
   CARDS,
   API_ITEMS_GET,
   API_TRANSACTIONS_REFRESH,
+  API_ITEMS_REMOVE,
+  FETCH_REMOVE_ITEM,
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
@@ -116,6 +121,23 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
   }
 }
 
+function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
+  try {
+    const { cards, transactions, items }: RemoveItemsResponse = yield call(
+      services[API_ITEMS_REMOVE],
+      {
+        body: JSON.stringify({ itemId }),
+      }
+    )
+
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
+    yield put(setItems(items))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
   try {
     // 1. Attempt log in
@@ -146,8 +168,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
       services[API_TRANSACTIONS_RETRIEVE]
     )
 
-    yield put(addCards(cards))
-    yield put(addTransactions(transactions))
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch (e) {
     console.error(e)
@@ -236,6 +258,8 @@ function* saga() {
   yield takeLatest(FETCH_LOG_IN, fetchLogIn)
   //@ts-ignore
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
+  //@ts-ignore
+  yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
 }
 
 export default saga

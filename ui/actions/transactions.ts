@@ -7,6 +7,7 @@ import {
   TOGGLE_CATEGORY_SELECTED,
   RESET_CATEGORIES_SELECTED,
   SET_CATEGORIES_SELECTED,
+  SET_TRANSACTIONS,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { RawTransaction } from '../sagas/sagas'
@@ -14,6 +15,7 @@ import { RawTransaction } from '../sagas/sagas'
 type TransactionsActionTypes =
   | typeof FETCH_REFRESH_TRANSACTIONS
   | typeof ADD_TRANSACTIONS
+  | typeof SET_TRANSACTIONS
   | typeof READD_TRANSACTIONS
   | typeof START_LOADING_TRANSACTIONS
   | typeof STOP_LOADING_TRANSACTIONS
@@ -24,6 +26,7 @@ type TransactionsActionTypes =
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
   | addTransactionsInterface
+  | SetTransactionsInterface
   | ReaddTransactionsInterface
   | ToggleCategorySelectedInterface
   | ResetCategoriesSelectedInterface
@@ -63,6 +66,19 @@ export type addTransactionsInterface = TransactionsAction<
 >
 export const addTransactions: addTransactionsActionCreator = transactions => ({
   type: ADD_TRANSACTIONS,
+  payload: transactions,
+})
+
+export type setTransactionsActionCreator = TransactionsActionCreator<
+  RawTransaction[],
+  typeof SET_TRANSACTIONS
+>
+export type SetTransactionsInterface = TransactionsAction<
+  RawTransaction[],
+  typeof SET_TRANSACTIONS
+>
+export const setTransactions: setTransactionsActionCreator = transactions => ({
+  type: SET_TRANSACTIONS,
   payload: transactions,
 })
 

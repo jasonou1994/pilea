@@ -1,6 +1,4 @@
-import { Map } from 'immutable'
 import {
-  ACCESS_TOKENS,
   USER_ID,
   USER,
   USER_NAME,

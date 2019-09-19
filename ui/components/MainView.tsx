@@ -4,14 +4,16 @@ import ItemsContainer from '../containers/ItemsContainer'
 import FiltersContainer from '../containers/FiltersContainer'
 import AnalysisContainer from '../containers/AnalysisContainer'
 
-interface MainViewProps {}
+interface MainViewProps {
+  isTransactionsLoading: boolean
+}
 
 interface MainViewState {}
 
 export class MainView extends Component<MainViewProps, MainViewState> {
-  static state = {}
-
   render() {
+    const { isTransactionsLoading } = this.props
+
     return (
       <div
         style={{
@@ -19,9 +21,17 @@ export class MainView extends Component<MainViewProps, MainViewState> {
           padding: '5px',
         }}
       >
-        <ItemsContainer />
-        <FiltersContainer />
-        <AnalysisContainer />
+        {isTransactionsLoading ? (
+          <div style={{ color: 'blue', border: '1px solid blue' }}>
+            Loading transactions and account data...
+          </div>
+        ) : (
+          <>
+            <ItemsContainer />
+            <FiltersContainer />
+            <AnalysisContainer />
+          </>
+        )}
       </div>
     )
   }

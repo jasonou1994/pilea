@@ -11,7 +11,11 @@ export interface ContractItemAdd extends ContractResponse {
 
 export interface ContractItemGet extends ContractItemAdd {}
 
-export const addItem = async (req: Request, res: Response) => {
+export const addItem = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { userId } = res.locals
   const { alias, publicToken } = req.body
   console.log(publicToken, alias)
@@ -19,15 +23,16 @@ export const addItem = async (req: Request, res: Response) => {
     const accessToken = await plaidGetAccessToken({ public_token: publicToken })
     await insertItem({ userId, accessToken, alias })
 
-    const items = await getItems({ userId })
+    next()
+    // const items = await getItems({ userId })
 
-    const resBody = {
-      success: true,
-      status: 'Successfully added item',
-      items,
-    } as ContractItemAdd
+    // const resBody = {
+    //   success: true,
+    //   status: 'Successfully added item',
+    //   items,
+    // } as ContractItemAdd
 
-    res.json(resBody)
+    // res.json(resBody)
   } catch (error) {
     console.log(error)
     res.status(500).json({

@@ -36,6 +36,7 @@ export const refreshTransactionsSSE = async (
 
   try {
     await deleteTransactions({ userId })
+    await deleteCards({ userId })
 
     const items: DBItem[] = await getItems({ userId })
 
@@ -92,6 +93,8 @@ export const refreshTransactionsSSE = async (
                 item.alias ? item.alias : item.accessToken
               }`
             )
+
+            txOffset += txCount
           } catch (err) {
             console.log(
               `Error ${errorCount} in processing transactions for item ${
@@ -101,7 +104,16 @@ export const refreshTransactionsSSE = async (
             errorCount++
           }
         }
+        //update date
         await updateItemById({ id: itemId })
+
+        await insertTransactions({
+          plaidTransactions: transactionsResult,
+          userId,
+        })
+        await insertCards(
+          convertPlaidCardsToDBCards(Object.values(cardsResult), userId, itemId)
+        )
 
         errorCount < maxError
           ? tokenResolve({
@@ -120,6 +132,7 @@ export const refreshTransactionsSSE = async (
     const txResults = await Promise.all(tokenProms)
     // One DB insertion for all transactions, One DB insertion each per item for cards...can be ref
 
+    // Combine all results together
     const { finalTransactions, finalCards } = txResults.reduce(
       ({ finalCards, finalTransactions }, { transactions, cards, itemId }) => ({
         finalTransactions: [...finalTransactions, ...transactions],
@@ -128,20 +141,30 @@ export const refreshTransactionsSSE = async (
           ...convertPlaidCardsToDBCards(cards, userId, itemId),
         ],
       }),
-      { finalTransactions: [], finalCards: [] } as {
+      {
+        finalTransactions: [],
+        finalCards: [],
+      } as {
         finalTransactions: PlaidTransaction[]
         finalCards: DBCard[]
       }
     )
 
-    await insertTransactions({
-      plaidTransactions: finalTransactions,
-      userId,
-    })
-    await insertCards(finalCards)
+    // await insertTransactions({
+    //   plaidTransactions: finalTransactions,
+    //   userId,
+    // })
+    // await insertCards(finalCards)
+
+    console.log(
+      `Transactions successfully processed for user ${userId} for items ${items.map(
+        item => (item.alias ? item.alias : item.accessToken)
+      )}`
+    )
 
     next()
   } catch (error) {
+    console.log(`Transactions refresh failure for user ${userId}`)
     res.status(500).json({
       status: 'Failed to refresh transactions',
       success: false,

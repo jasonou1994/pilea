@@ -66,10 +66,10 @@ export const deleteCards: ({
   itemId,
 }: {
   userId: number
-  itemId: number
+  itemId?: number
 }) => Promise<void> = async ({ userId, itemId }) => {
   await dbClient(CARDS)
-    .where({ userId, itemId })
+    .where({ userId, ...(itemId ? { itemId } : {}) })
     .del()
 }
 

@@ -31,6 +31,7 @@ import {
   API_TRANSACTIONS_REFRESH,
   API_ITEMS_REMOVE,
   FETCH_REMOVE_ITEM,
+  LOGIN,
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
@@ -61,10 +62,6 @@ export interface APIResponse {
   error: any
 }
 
-export interface AddItemResponse extends APIResponse {
-  items: DBItem[]
-}
-
 export interface GetItemsResponse extends AddItemResponse {}
 
 export interface CreateUserResponse extends APIResponse {
@@ -82,6 +79,8 @@ export interface TransactionsRetrieveResponse extends APIResponse {
   transactions: RawTransaction[]
   items: DBItem[]
 }
+
+export interface AddItemResponse extends TransactionsRetrieveResponse {}
 
 export interface RemoveItemsResponse extends TransactionsRetrieveResponse {}
 
@@ -105,16 +104,25 @@ export interface RawTransaction {
 
 function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
   try {
-    const { status, items }: AddItemResponse = yield call(
+    const start = moment()
+      .subtract(2, 'year')
+      .format('YYYY-MM-DD')
+    const end = moment().format('YYYY-MM-DD')
+
+    const { cards, transactions, items }: AddItemResponse = yield call(
       services[API_ITEMS_ADD],
       {
         body: JSON.stringify({
           publicToken: accessToken,
           alias,
+          start,
+          end,
         }),
       }
     )
 
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch ({ error, status }) {
     console.error(status, error)
@@ -141,6 +149,8 @@ function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
 function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
   try {
     // 1. Attempt log in
+    yield put(startLoading(LOGIN))
+
     const { username, id }: UserLogInResponse = yield call(
       services[API_USER_LOGIN],
       {
@@ -159,7 +169,10 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
       })
     )
 
+    yield put(stopLoading(LOGIN))
+
     // 2. Immediately request accounts + tx stored in DB
+    yield put(startLoading(TRANSACTIONS))
     const {
       cards,
       transactions,
@@ -171,7 +184,12 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+
+    yield put(stopLoading(TRANSACTIONS))
   } catch (e) {
+    yield put(stopLoading(LOGIN))
+    yield put(stopLoading(TRANSACTIONS))
+
     console.error(e)
   }
 }
@@ -240,6 +258,9 @@ function* refreshTransactions() {
         }),
       }
     )
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
+    yield put(setItems(items))
   } catch (e) {
     console.error('Error in refreshTransactions:', e)
   }

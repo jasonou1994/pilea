@@ -1,6 +1,7 @@
 // ITEMS
 export const API_ITEMS_ADD = 'API_ITEMS_ADD'
 export const API_ITEMS_GET = 'API_ITEMS_GET'
+export const API_ITEMS_REMOVE = 'API_ITEMS_REMOVE'
 
 // USERS
 export const API_USER_CREATE = 'API_USER_CREATE'
@@ -18,3 +19,4 @@ export type AvailableAPIs =
   | typeof API_USER_CREATE
   | typeof API_USER_LOGIN
   | typeof API_USER_LOGOUT
+  | typeof API_ITEMS_REMOVE

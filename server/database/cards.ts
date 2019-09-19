@@ -23,13 +23,20 @@ export interface PileaCard extends PlaidCard {
   itemId: number
 }
 
-export const getCards: ({ userId }) => Promise<PileaCard[]> = async ({
+export const getCards: ({
   userId,
-}) => {
+  itemId,
+}: {
+  userId: number
+  itemId?: number
+}) => Promise<PileaCard[]> = async ({ userId, itemId }) => {
   const dbCards: DBCard[] = await dbClient
     .select('*')
     .from(CARDS)
-    .where({ userId })
+    .where({
+      userId,
+      ...(itemId ? { itemId } : {}),
+    })
 
   return dbCards.map(dbCard => {
     const {
@@ -59,45 +66,12 @@ export const deleteCards: ({
   itemId,
 }: {
   userId: number
-  itemId: number
+  itemId?: number
 }) => Promise<void> = async ({ userId, itemId }) => {
   await dbClient(CARDS)
-    .where({ userId, itemId })
+    .where({ userId, ...(itemId ? { itemId } : {}) })
     .del()
 }
 
-export const insertCards: ({
-  cards,
-  userId,
-  itemId,
-}: {
-  cards: PlaidCard[]
-  userId: number
-  itemId: number
-}) => Promise<void> = async ({ cards, userId, itemId }) => {
-  const dbCards: DBCard[] = cards.map(plaidCard => {
-    const {
-      balances: {
-        available,
-        current,
-        limit: credit_limit,
-        iso_currency_code,
-        official_currency_code,
-      },
-      ...sharedFields
-    } = plaidCard
-
-    return {
-      ...sharedFields,
-      userId,
-      itemId,
-      available,
-      current,
-      credit_limit,
-      iso_currency_code,
-      official_currency_code,
-    }
-  })
-
-  await dbClient(CARDS).insert(dbCards)
-}
+export const insertCards: (cards: DBCard[]) => Promise<void> = async cards =>
+  await dbClient(CARDS).insert(cards)

@@ -4,7 +4,7 @@ import {
   READD_TRANSACTIONS,
   CARDS,
   ITEMS,
-  SET_CARDS,
+  ADD_CARDS,
   SET_ITEMS,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
@@ -12,15 +12,19 @@ import {
   TOGGLE_CATEGORY_SELECTED,
   RESET_CATEGORIES_SELECTED,
   SET_CATEGORIES_SELECTED,
+  SET_CARDS,
+  SET_TRANSACTIONS,
 } from '../konstants'
 import { updateIn, set, setIn, update } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
+import { parseRawTransaction } from '../utilities/translation'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean
 }
+
 export interface ItemWithFilter extends DBItem {
   selected: boolean
 }
@@ -50,17 +54,9 @@ const transactions: (
 
   switch (action.type) {
     case ADD_TRANSACTIONS: {
-      const translatedTxs: PlaidTransaction[] = action.payload.map(tx => ({
-        ...tx,
-        category: tx.category
-          ? typeof tx.category === 'string'
-            ? tx.category
-                .replace(/[{|}|"]/g, '')
-                .trim()
-                .split(',')
-            : tx.category
-          : [],
-      }))
+      const translatedTxs: PlaidTransaction[] = parseRawTransaction(
+        action.payload
+      )
 
       newState = updateIn(state, [TRANSACTIONS], existingTxs => [
         ...existingTxs,
@@ -82,6 +78,32 @@ const transactions: (
         },
         {} as Categories
       )
+
+      newState = setIn(newState, [CATEGORIES], newCategories)
+      break
+    }
+
+    case SET_TRANSACTIONS: {
+      const translatedTxs: PlaidTransaction[] = parseRawTransaction(
+        action.payload
+      )
+
+      newState = setIn(state, [TRANSACTIONS], translatedTxs)
+
+      // Everytime we get new data, we refresh all categories to be selected
+      const newCategories = translatedTxs
+        .map(tx => tx.category)
+        .reduce(
+          (acc, catStringArr) => {
+            catStringArr.forEach(cat => {
+              if (!acc[cat]) {
+                acc[cat] = true
+              }
+            })
+            return acc
+          },
+          {} as Categories
+        )
 
       newState = setIn(newState, [CATEGORIES], newCategories)
       break
@@ -135,9 +157,9 @@ const transactions: (
       break
     }
 
-    case SET_CARDS: {
-      newState = updateIn(state, [CARDS], existingCards => {
-        return action.payload.reduce(
+    case ADD_CARDS: {
+      newState = updateIn(state, [CARDS], existingCards =>
+        action.payload.reduce(
           (acc, newCard) => {
             if (
               !acc.find(
@@ -150,9 +172,31 @@ const transactions: (
           },
           [...existingCards] as PlaidCard[]
         )
-      })
+      )
       break
     }
+
+    case SET_CARDS: {
+      newState = setIn(
+        state,
+        [CARDS],
+        action.payload.reduce(
+          (acc, newCard) => {
+            if (
+              !acc.find(
+                existCard => existCard.account_id === newCard.account_id
+              )
+            ) {
+              acc.push({ ...newCard, selected: true } as CardWithFilter)
+            }
+            return acc
+          },
+          [] as PlaidCard[]
+        )
+      )
+      break
+    }
+
     case SET_ITEMS: {
       newState = setIn(
         state,

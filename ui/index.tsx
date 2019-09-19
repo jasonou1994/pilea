@@ -8,7 +8,7 @@ import saga from './sagas/sagas'
 import createSagaMiddleware from 'redux-saga'
 import App from './containers/App'
 // import { accounts } from "./mockData/setAccounts";
-// import { transactions } from "./mockData/setTransactions";
+// import { transactions } from "./mockData/addTransactions";
 
 const sagaMiddleware = createSagaMiddleware()
 

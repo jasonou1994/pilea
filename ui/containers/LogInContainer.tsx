@@ -8,15 +8,17 @@ import {
   fetchCreateUser,
   FetchCreateUserActionCreator,
 } from '../actions'
+import { isLoginLoadingSelector, RootState } from '../reducers'
 
 interface LogInContainerProps {
   fetchLogIn: FetchLogInActionCreator
   fetchCreateUser: FetchCreateUserActionCreator
+  isLoginLoading: boolean
 }
 
 class _LogInContainer extends Component<LogInContainerProps> {
   render() {
-    const { fetchLogIn, fetchCreateUser } = this.props
+    const { fetchLogIn, fetchCreateUser, isLoginLoading } = this.props
 
     return (
       <div
@@ -25,15 +27,25 @@ class _LogInContainer extends Component<LogInContainerProps> {
           padding: '5px',
         }}
       >
-        <LogIn {...{ fetchLogIn }} />
-        <CreateUser {...{ fetchCreateUser }} />
+        {isLoginLoading ? (
+          <div style={{ color: 'blue', border: '1px solid blue' }}>
+            Logging in...
+          </div>
+        ) : (
+          <>
+            <LogIn {...{ fetchLogIn }} />
+            <CreateUser {...{ fetchCreateUser }} />
+          </>
+        )}
       </div>
     )
   }
 }
 
 export default connect(
-  state => ({}),
+  (state: RootState) => ({
+    isLoginLoading: isLoginLoadingSelector(state),
+  }),
   {
     fetchLogIn,
     fetchCreateUser,

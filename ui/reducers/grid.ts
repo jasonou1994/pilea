@@ -1,4 +1,3 @@
-import { Map } from 'immutable'
 import {
   SELECTED_TRANSACTION_KEY,
   SET_SELECTED_TRANSACTION_KEY,

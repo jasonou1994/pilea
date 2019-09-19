@@ -87,7 +87,6 @@ export class CategoryFilter extends Component<
             onSelectionChanged={({ api }: SelectionChangedEvent) => {
               const currentSelectedRows = api.getSelectedRows()
 
-              console.log(currentSelectedRows)
               setCategoriesSelectedAction(
                 currentSelectedRows.map(
                   catRow => catRow[CATEGORY_GRID_FIELD_CATEGORY]

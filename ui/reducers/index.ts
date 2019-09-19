@@ -6,7 +6,8 @@ import transactions, * as fromTransactions from './transactionsAccounts'
 import login, * as fromLogin from './login'
 import graph, * as fromGraph from './graph'
 import grid, * as fromGrid from './grid'
-import { TRANSACTIONS, LOGIN, GRAPH, GRID } from '../konstants'
+import loading, * as fromLoading from './loading'
+import { TRANSACTIONS, LOGIN, GRAPH, GRID, LOADING } from '../konstants'
 import { Transaction as PlaidTransaction } from 'plaid'
 import {
   getTypeOfCard,
@@ -19,6 +20,7 @@ export interface RootState {
   [LOGIN]: fromLogin.LoginState
   [GRAPH]: fromGraph.GraphState
   [GRID]: fromGrid.GridState
+  [LOADING]: fromLoading.LoadingState
 }
 
 const reducers = combineReducers({
@@ -26,12 +28,20 @@ const reducers = combineReducers({
   login,
   graph,
   grid,
+  loading,
 })
 export default reducers
 
 /***********
  * BASE SELECTORS
  ***********/
+//loading
+export const isLoginLoadingSelector = (state: RootState) =>
+  fromLoading.isLoginLoadingSelector(state[LOADING])
+export const isTransactionsLoadingSelector = (state: RootState) =>
+  fromLoading.isTransactionsLoadingSelector(state[LOADING])
+export const isAnythingLoadingSelector = (state: RootState) =>
+  fromLoading.isAnythingLoadingSelector(state[LOADING])
 
 //transactions
 export const transactionsSelector = (state: RootState) =>

@@ -6,6 +6,8 @@ import {
   API_USER_LOGOUT,
   AvailableAPIs,
   API_ITEMS_GET,
+  API_ITEMS_REMOVE,
+  API_TRANSACTIONS_REFRESH,
 } from '../konstants'
 
 interface ServiceDefinition {
@@ -45,12 +47,20 @@ const serviceDefs: ServiceDefinition[] = [
     url: 'http://localhost:8000/user/login',
   },
   {
+    name: API_TRANSACTIONS_REFRESH,
+    url: 'http://localhost:8000/transactions/refresh',
+  },
+  {
     name: API_TRANSACTIONS_RETRIEVE,
     url: 'http://localhost:8000/transactions/retrieve',
   },
   {
     name: API_USER_LOGOUT,
     url: 'http://localhost:8000/user/logout',
+  },
+  {
+    name: API_ITEMS_REMOVE,
+    url: 'http://localhost:8000/items/delete',
   },
 ].map(def => ({ ...defaultOptions, ...def } as ServiceDefinition))
 
@@ -71,6 +81,8 @@ export const services = serviceDefs.reduce(
           })
           const response = await rawResponse.json()
           const { error, success, status, ...contents } = response
+
+          console.log(response)
 
           success ? resolve({ ...contents, status }) : reject({ status, error })
         } catch (error) {

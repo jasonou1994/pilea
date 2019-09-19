@@ -25,9 +25,7 @@ export interface DBTransaction {
   city: string | null
   lat: number | null
   lon: number | null
-  state: string | null
   store_number: string | null
-  zip: string | null
   by_order_of: string | null
   payee: string | null
   payer: string | null
@@ -51,8 +49,6 @@ export const getTransactions: ({
       userId: _,
       address,
       city,
-      state,
-      zip,
       lat,
       lon,
       store_number,
@@ -69,7 +65,16 @@ export const getTransactions: ({
 
     return {
       ...sharedFields,
-      location: { address, city, state, zip, lat, lon, store_number },
+      location: {
+        address,
+        city,
+        lat,
+        lon,
+        store_number,
+        region: null,
+        postal_code: null,
+        country: null,
+      },
       payment_meta: {
         by_order_of,
         payee,
@@ -80,7 +85,7 @@ export const getTransactions: ({
         reason,
         reference_number,
       },
-    }
+    } as PlaidTransaction
   })
 }
 
@@ -91,6 +96,16 @@ export const deleteTransactions: ({ userId }) => Promise<void> = async ({
     .where({ userId })
     .del()
 }
+export const deleteTransactionsForGivenCardAndUser: ({
+  userId,
+  cardId,
+}: {
+  userId: number
+  cardId: string
+}) => Promise<void> = async ({ userId, cardId }) =>
+  await dbClient(TRANSACTIONS)
+    .where({ userId, account_id: cardId })
+    .del()
 
 export const insertTransactions: ({
   plaidTransactions,
@@ -101,7 +116,7 @@ export const insertTransactions: ({
 }) => Promise<void> = async ({ plaidTransactions, userId }) => {
   const dbTransactions: DBTransaction[] = plaidTransactions.map(plaidTx => {
     const {
-      location: { address, city, state, zip, lat, lon, store_number },
+      location: { address, city, lat, lon, store_number },
       payment_meta: {
         by_order_of,
         payee,
@@ -120,8 +135,6 @@ export const insertTransactions: ({
       userId,
       address,
       city,
-      state,
-      zip,
       lat,
       lon,
       store_number,
@@ -137,4 +150,5 @@ export const insertTransactions: ({
   })
 
   await dbClient(TRANSACTIONS).insert(dbTransactions)
+  // .debug(true)
 }

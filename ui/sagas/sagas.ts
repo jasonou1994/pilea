@@ -1,15 +1,18 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import moment from 'moment'
 import {
-  setTransactions,
-  resetTransactions,
+  addTransactions,
+  readdTransactions,
   setLoggedIn,
   setUserInfo,
-  setCards,
+  addCards,
   setItems,
   FetchCreateUserAction,
   FetchAddItemInterface,
   FetchLogInAction,
+  FetchRemoveItemInterface,
+  setCards,
+  setTransactions,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -25,6 +28,10 @@ import {
   FETCH_ADD_ITEM,
   CARDS,
   API_ITEMS_GET,
+  API_TRANSACTIONS_REFRESH,
+  API_ITEMS_REMOVE,
+  FETCH_REMOVE_ITEM,
+  LOGIN,
 } from '../konstants'
 import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
@@ -55,10 +62,6 @@ export interface APIResponse {
   error: any
 }
 
-export interface AddItemResponse extends APIResponse {
-  items: DBItem[]
-}
-
 export interface GetItemsResponse extends AddItemResponse {}
 
 export interface CreateUserResponse extends APIResponse {
@@ -76,6 +79,10 @@ export interface TransactionsRetrieveResponse extends APIResponse {
   transactions: RawTransaction[]
   items: DBItem[]
 }
+
+export interface AddItemResponse extends TransactionsRetrieveResponse {}
+
+export interface RemoveItemsResponse extends TransactionsRetrieveResponse {}
 
 export interface RawTransaction {
   account_id: string
@@ -97,25 +104,53 @@ export interface RawTransaction {
 
 function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
   try {
-    const { status, items }: AddItemResponse = yield call(
+    const start = moment()
+      .subtract(2, 'year')
+      .format('YYYY-MM-DD')
+    const end = moment().format('YYYY-MM-DD')
+
+    const { cards, transactions, items }: AddItemResponse = yield call(
       services[API_ITEMS_ADD],
       {
         body: JSON.stringify({
           publicToken: accessToken,
           alias,
+          start,
+          end,
         }),
       }
     )
 
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch ({ error, status }) {
     console.error(status, error)
   }
 }
 
+function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
+  try {
+    const { cards, transactions, items }: RemoveItemsResponse = yield call(
+      services[API_ITEMS_REMOVE],
+      {
+        body: JSON.stringify({ itemId }),
+      }
+    )
+
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
+    yield put(setItems(items))
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
   try {
     // 1. Attempt log in
+    yield put(startLoading(LOGIN))
+
     const { username, id }: UserLogInResponse = yield call(
       services[API_USER_LOGIN],
       {
@@ -134,7 +169,10 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
       })
     )
 
+    yield put(stopLoading(LOGIN))
+
     // 2. Immediately request accounts + tx stored in DB
+    yield put(startLoading(TRANSACTIONS))
     const {
       cards,
       transactions,
@@ -146,7 +184,12 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+
+    yield put(stopLoading(TRANSACTIONS))
   } catch (e) {
+    yield put(stopLoading(LOGIN))
+    yield put(stopLoading(TRANSACTIONS))
+
     console.error(e)
   }
 }
@@ -162,8 +205,8 @@ function* fetchLogOut() {
         userId: 0,
       })
     )
-  } catch ({ error, status }) {
-    console.error(status, error)
+  } catch (e) {
+    console.error(e)
   }
 }
 
@@ -195,79 +238,31 @@ function* fetchCreateUser({
 
 function* refreshTransactions() {
   yield put(startLoading(TRANSACTIONS))
-  yield put(resetTransactions({}))
+  yield put(readdTransactions({}))
   try {
     const start = moment()
       .subtract(2, 'year')
       .format('YYYY-MM-DD')
     const end = moment().format('YYYY-MM-DD')
 
-    const SSEResponse = yield call(
-      fetch,
-      'http://localhost:8000/transactions/refresh',
-      ({
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
+    const {
+      cards,
+      transactions,
+      items,
+    }: TransactionsRetrieveResponse = yield call(
+      services[API_TRANSACTIONS_REFRESH],
+      {
         body: JSON.stringify({
           start,
           end,
         }),
-      } as unknown) as RequestInit
-    )
-
-    const reader = yield SSEResponse.body.getReader()
-    const decoder = yield new TextDecoder('utf-8')
-
-    let complete = false
-    let dataString = ''
-
-    while (!complete) {
-      const chunk = yield reader.read()
-      dataString += yield decoder.decode(chunk.value)
-
-      const possibleEventArr = dataString.split(/\n\n/g)
-
-      let eventsFound = 0
-
-      for (const [i, message] of possibleEventArr.entries()) {
-        if (i === possibleEventArr.length - 1) {
-          continue
-        }
-
-        eventsFound++
-        const { id, data, event } = parseSSEFields(message)
-
-        if (id === 'CLOSE') {
-          complete = true
-        }
-
-        switch (event) {
-          case CARDS: {
-            yield put(setCards(JSON.parse(data) as PileaCard[]))
-            break
-          }
-          case TRANSACTIONS: {
-            yield put(setTransactions(JSON.parse(data) as RawTransaction[]))
-            break
-          }
-          default:
-            break
-        }
       }
-      possibleEventArr.splice(0, eventsFound)
-      dataString = possibleEventArr.join('\n\n')
-    }
-
-    // Immediately after successful refresh, get items.
-    //@ts-ignore
-    const { items }: AddItemResponse = yield call(services[API_ITEMS_GET])
-
+    )
+    yield put(setCards(cards))
+    yield put(setTransactions(transactions))
     yield put(setItems(items))
   } catch (e) {
-    console.error('Error in fetchTransactions:', e)
+    console.error('Error in refreshTransactions:', e)
   }
 
   yield put(stopLoading(TRANSACTIONS))
@@ -284,6 +279,8 @@ function* saga() {
   yield takeLatest(FETCH_LOG_IN, fetchLogIn)
   //@ts-ignore
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
+  //@ts-ignore
+  yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
 }
 
 export default saga

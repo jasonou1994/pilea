@@ -10,7 +10,7 @@ export const client = new Client(
   PLAID_SECRET,
   PLAID_PUBLIC_KEY,
   environments[PLAID_ENV],
-  { version: '2018-05-22' }
+  { version: '2019-05-29' }
 )
 
 // export const connection = {
@@ -22,10 +22,10 @@ export const client = new Client(
 // }
 
 export const connection = {
-  host: 'localhost',
-  user: 'jasonou',
-  password: '',
-  database: 'pilea',
+  host: 'salt.db.elephantsql.com',
+  user: 'dsfmzvss',
+  password: 'aF0mHO72woTeIwag11r5qPRVC1YsLc3k',
+  database: 'dsfmzvss',
 }
 
 //Password

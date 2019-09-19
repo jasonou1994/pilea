@@ -91,8 +91,6 @@ export class IncomeSpendingChart extends Component<
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
 
-    console.log(transactionsByDayCountCombined)
-
     return (
       <div>
         <div style={{ fontSize: '18px' }}>Transactions by Time</div>

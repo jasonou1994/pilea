@@ -12,7 +12,8 @@ transactions.post(
   '/refresh',
   checkUpdateAuthToken,
   getUserId,
-  refreshTransactionsSSE
+  refreshTransactionsSSE,
+  retrieveTransactions
 )
 
 transactions.post(

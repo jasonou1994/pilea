@@ -1,6 +1,4 @@
-import { Map } from 'immutable'
 import {
-  ACCESS_TOKENS,
   USER_ID,
   USER,
   USER_NAME,
@@ -44,14 +42,10 @@ const login = (
     case SET_USER_INFO: {
       const { userName, userId } = action.payload
 
-      newState = set(
-        state,
-        USER,
-        Map({
-          [USER_ID]: userId,
-          [USER_NAME]: userName,
-        })
-      )
+      newState = set(state, USER, {
+        [USER_ID]: userId,
+        [USER_NAME]: userName,
+      })
 
       break
     }

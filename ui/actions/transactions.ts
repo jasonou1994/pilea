@@ -7,6 +7,7 @@ import {
   TOGGLE_CATEGORY_SELECTED,
   RESET_CATEGORIES_SELECTED,
   SET_CATEGORIES_SELECTED,
+  SET_TRANSACTIONS,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { RawTransaction } from '../sagas/sagas'
@@ -14,6 +15,7 @@ import { RawTransaction } from '../sagas/sagas'
 type TransactionsActionTypes =
   | typeof FETCH_REFRESH_TRANSACTIONS
   | typeof ADD_TRANSACTIONS
+  | typeof SET_TRANSACTIONS
   | typeof READD_TRANSACTIONS
   | typeof START_LOADING_TRANSACTIONS
   | typeof STOP_LOADING_TRANSACTIONS
@@ -23,8 +25,9 @@ type TransactionsActionTypes =
 
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
+  | addTransactionsInterface
   | SetTransactionsInterface
-  | ResetTransactionsInterface
+  | ReaddTransactionsInterface
   | ToggleCategorySelectedInterface
   | ResetCategoriesSelectedInterface
   | SetCategoriesSelectedInterface
@@ -53,28 +56,41 @@ export const fetchRefreshTransactions: FetchRefreshTransactionsActionCreator = (
   payload: {},
 })
 
-export type SetTransactionsActionCreator = TransactionsActionCreator<
+export type addTransactionsActionCreator = TransactionsActionCreator<
   RawTransaction[],
   typeof ADD_TRANSACTIONS
 >
-export type SetTransactionsInterface = TransactionsAction<
+export type addTransactionsInterface = TransactionsAction<
   RawTransaction[],
   typeof ADD_TRANSACTIONS
 >
-export const setTransactions: SetTransactionsActionCreator = transactions => ({
+export const addTransactions: addTransactionsActionCreator = transactions => ({
   type: ADD_TRANSACTIONS,
   payload: transactions,
 })
 
-export type ResetTransactionsActionCreator = TransactionsActionCreator<
+export type setTransactionsActionCreator = TransactionsActionCreator<
+  RawTransaction[],
+  typeof SET_TRANSACTIONS
+>
+export type SetTransactionsInterface = TransactionsAction<
+  RawTransaction[],
+  typeof SET_TRANSACTIONS
+>
+export const setTransactions: setTransactionsActionCreator = transactions => ({
+  type: SET_TRANSACTIONS,
+  payload: transactions,
+})
+
+export type ReaddTransactionsActionCreator = TransactionsActionCreator<
   {},
   typeof READD_TRANSACTIONS
 >
-export type ResetTransactionsInterface = TransactionsAction<
+export type ReaddTransactionsInterface = TransactionsAction<
   {},
   typeof READD_TRANSACTIONS
 >
-export const resetTransactions: ResetTransactionsActionCreator = () => ({
+export const readdTransactions: ReaddTransactionsActionCreator = () => ({
   type: READD_TRANSACTIONS,
   payload: {},
 })

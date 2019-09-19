@@ -1,23 +1,28 @@
 import {
-  SET_CARDS,
+  ADD_CARDS,
   SET_ITEMS,
   FETCH_ADD_ITEM,
   TOGGLE_CARD_SELECTED,
   TOGGLE_ITEM_SELECTED,
+  FETCH_REMOVE_ITEM,
+  SET_CARDS,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
 
 export type AccountsActionTypes =
   | typeof SET_ITEMS
+  | typeof ADD_CARDS
   | typeof SET_CARDS
   | typeof FETCH_ADD_ITEM
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
+  | typeof FETCH_REMOVE_ITEM
 
 export type AccountsInterfaces =
   | FetchAddItemInterface
-  | SetCardsInterface
+  | addCardsInterface
+  | setCardsInterface
   | SetItemsInterface
   | ToggleItemSelectedInterface
   | ToggleCardSelectedInterface
@@ -52,12 +57,22 @@ export const fetchAddItem: FetchAddItemActionCreator = tokenAndAlias => ({
   payload: tokenAndAlias,
 })
 
-export type SetCardsActionCreator = AccountsActionCreator<
+export type addCardsActionCreator = AccountsActionCreator<
+  PileaCard[],
+  typeof ADD_CARDS
+>
+export type addCardsInterface = AccountsAction<PileaCard[], typeof ADD_CARDS>
+export const addCards: addCardsActionCreator = cards => ({
+  type: ADD_CARDS,
+  payload: cards,
+})
+
+export type setCardsActionCreator = AccountsActionCreator<
   PileaCard[],
   typeof SET_CARDS
 >
-export type SetCardsInterface = AccountsAction<PileaCard[], typeof SET_CARDS>
-export const setCards: SetCardsActionCreator = cards => ({
+export type setCardsInterface = AccountsAction<PileaCard[], typeof SET_CARDS>
+export const setCards: setCardsActionCreator = cards => ({
   type: SET_CARDS,
   payload: cards,
 })
@@ -96,4 +111,17 @@ export type ToggleCardSelectedInterface = AccountsAction<
 export const toggleCardSelected: ToggleCardSelectedActionCreator = cardId => ({
   payload: cardId,
   type: TOGGLE_CARD_SELECTED,
+})
+
+export type FetchRemoveItemActionCreator = AccountsActionCreator<
+  number,
+  typeof FETCH_REMOVE_ITEM
+>
+export type FetchRemoveItemInterface = AccountsAction<
+  number,
+  typeof FETCH_REMOVE_ITEM
+>
+export const fetchRemoveItem: FetchRemoveItemActionCreator = itemId => ({
+  payload: itemId,
+  type: FETCH_REMOVE_ITEM,
 })

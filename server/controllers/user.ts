@@ -9,6 +9,7 @@ import {
   sendCreateUserResponse,
   getUserId,
 } from '../middleware'
+import { sendMail } from '../email/mailer'
 
 export const user = Router()
 
@@ -17,6 +18,7 @@ user.post(
   createUser,
   addAuthToken,
   getUserId,
+  sendMail,
   sendCreateUserResponse
 )
 

@@ -13,19 +13,18 @@ export const client = new Client(
   { version: '2019-05-29' }
 )
 
-// export const connection = {
-//   host: 'pileadb',
-//   user: 'docker',
-//   password: 'docker',
-//   database: 'docker',
-//   port: 32000,
-// }
-
 export const connection = {
   host: 'salt.db.elephantsql.com',
   user: 'dsfmzvss',
   password: 'aF0mHO72woTeIwag11r5qPRVC1YsLc3k',
   database: 'dsfmzvss',
+}
+
+export const nodemailerConfig = {
+  auth: {
+    user: 'jason@mypilea.com',
+    pass: 'tihjaJ-xymfom-ruzsu4',
+  },
 }
 
 //Password

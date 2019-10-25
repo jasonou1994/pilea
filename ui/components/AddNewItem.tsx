@@ -3,9 +3,11 @@ import React, { Component } from 'react'
 import PlaidLink from 'react-plaid-link'
 import { PLAID_PUBLIC_KEY } from '../konstants'
 import { FetchAddItemActionCreator } from '../actions'
+import { User } from '../reducers/login'
 
 interface AddNewItemProps {
   fetchAddItemAction: FetchAddItemActionCreator
+  user: User
 }
 
 interface AddNewItemState {
@@ -40,7 +42,10 @@ export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
 
   render: () => JSX.Element = () => {
     const { isShownItemAliasEntry } = this.state
-    const { fetchAddItemAction } = this.props
+    const {
+      fetchAddItemAction,
+      user: { confirmed },
+    } = this.props
 
     return isShownItemAliasEntry ? (
       <div>
@@ -67,15 +72,21 @@ export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
           padding: '5px',
         }}
       >
-        <PlaidLink
-          clientName="Pilea"
-          env={'development'}
-          product={['transactions']}
-          publicKey={PLAID_PUBLIC_KEY}
-          onSuccess={this.setAccessToken}
-        >
-          Add Institution
-        </PlaidLink>
+        {confirmed ? (
+          <PlaidLink
+            clientName="Pilea"
+            env={'development'}
+            product={['transactions']}
+            publicKey={PLAID_PUBLIC_KEY}
+            onSuccess={this.setAccessToken}
+          >
+            Add Institution
+          </PlaidLink>
+        ) : (
+          <div>
+            Please confirm account to add institutions. Check your email!
+          </div>
+        )}
       </div>
     )
   }

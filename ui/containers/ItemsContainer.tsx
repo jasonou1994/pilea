@@ -3,7 +3,12 @@ import { connect } from 'react-redux'
 import { CurrentItems } from '../components/CurrentItems'
 import { AddNewItem } from '../components/AddNewItem'
 import { RefreshItemData } from '../components/RefreshItemData'
-import { cardsByItemsSelector, ItemWithCards, RootState } from '../reducers'
+import {
+  cardsByItemsSelector,
+  ItemWithCards,
+  RootState,
+  userSelector,
+} from '../reducers'
 import {
   fetchAddItem,
   FetchAddItemActionCreator,
@@ -12,9 +17,11 @@ import {
   fetchRemoveItem,
   FetchRemoveItemActionCreator,
 } from '../actions'
+import { User } from '../reducers/login'
 
 interface ItemsContainerProps {
   cardsByItems: ItemWithCards[]
+  user: User
 
   fetchAddItemAction: FetchAddItemActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
@@ -33,6 +40,7 @@ class _ItemsContainer extends Component<
       fetchAddItemAction,
       fetchRefreshTransactionsAction,
       fetchRemoveItemAction,
+      user,
     } = this.props
 
     return (
@@ -50,6 +58,7 @@ class _ItemsContainer extends Component<
         />
         <AddNewItem
           {...{
+            user,
             fetchAddItemAction,
           }}
         />
@@ -69,6 +78,7 @@ class _ItemsContainer extends Component<
 export default connect(
   (state: RootState) => ({
     cardsByItems: cardsByItemsSelector(state),
+    user: userSelector(state),
   }),
   {
     fetchAddItemAction: fetchAddItem,

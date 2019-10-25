@@ -5,15 +5,19 @@ import {
   LOGGED_IN,
   SET_LOGGED_IN,
   SET_USER_INFO,
+  CONFIRMED,
 } from '../konstants/index'
 import { set } from 'timm'
 import { LogInActions } from '../actions'
 
+export interface User {
+  [USER_ID]: string
+  [USER_NAME]: string
+  [CONFIRMED]: boolean
+}
+
 export interface LoginState {
-  [USER]: {
-    [USER_ID]: string
-    [USER_NAME]: string
-  }
+  [USER]: User
   [LOGGED_IN]: boolean
 }
 
@@ -21,6 +25,7 @@ const initialState: LoginState = {
   [USER]: {
     [USER_ID]: '',
     [USER_NAME]: '',
+    [CONFIRMED]: false,
   },
   [LOGGED_IN]: false,
 }
@@ -40,11 +45,12 @@ const login = (
       break
     }
     case SET_USER_INFO: {
-      const { userName, userId } = action.payload
+      const { userName, userId, confirmed } = action.payload
 
       newState = set(state, USER, {
         [USER_ID]: userId,
         [USER_NAME]: userName,
+        [CONFIRMED]: confirmed,
       })
 
       break

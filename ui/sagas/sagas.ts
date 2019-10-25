@@ -71,7 +71,8 @@ export interface CreateUserResponse extends APIResponse {
 
 export interface UserLogInResponse extends APIResponse {
   username: string
-  id: number
+  userId: number
+  confirmed: boolean
 }
 
 export interface TransactionsRetrieveResponse extends APIResponse {
@@ -151,7 +152,7 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     // 1. Attempt log in
     yield put(startLoading(LOGIN))
 
-    const { username, id }: UserLogInResponse = yield call(
+    const { username, userId, confirmed }: UserLogInResponse = yield call(
       services[API_USER_LOGIN],
       {
         body: JSON.stringify({
@@ -165,7 +166,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     yield put(
       setUserInfo({
         userName: username,
-        userId: id,
+        userId,
+        confirmed,
       })
     )
 
@@ -203,6 +205,7 @@ function* fetchLogOut() {
       setUserInfo({
         userName: '',
         userId: 0,
+        confirmed: false,
       })
     )
   } catch (e) {
@@ -229,6 +232,7 @@ function* fetchCreateUser({
       setUserInfo({
         userName: username,
         userId,
+        confirmed: false,
       })
     )
   } catch ({ status, error }) {

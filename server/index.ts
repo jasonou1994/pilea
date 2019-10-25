@@ -1,4 +1,5 @@
-import express, { Response, NextFunction } from 'express'
+import path from 'path'
+import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import { transactions } from './controllers/transactions'
@@ -23,6 +24,13 @@ app.use('/transactions', transactions)
 app.use('/plaid', plaid)
 app.use('/user', user)
 app.use('/items', items)
+
+app.get('/bundle.js', (req: Request, res: Response) =>
+  res.sendFile(path.join(__dirname, '../build/bundle.js'))
+)
+app.get('/*', (req: Request, res: Response) =>
+  res.sendFile(path.join(__dirname, '../build/index.html'))
+)
 
 app.listen(8000, () => {
   console.log('Express server listening on 8000.')

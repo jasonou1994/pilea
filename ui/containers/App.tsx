@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
@@ -19,14 +20,24 @@ class _App extends Component<AppProps> {
     const { loggedIn, isTransactionsLoading } = this.props
 
     return (
-      <>
-        <HeaderContainer />
-        {!loggedIn ? (
-          <LogInContainer />
-        ) : (
-          <MainView {...{ isTransactionsLoading }} />
-        )}
-      </>
+      <Router>
+        <Switch>
+          <Route path="/confirmed">
+            <>
+              <div>Thanks for confirming your email!</div>
+              <Link to="/">Please sign in.</Link>
+            </>
+          </Route>
+          <Route path="/">
+            <HeaderContainer />
+            {!loggedIn ? (
+              <LogInContainer />
+            ) : (
+              <MainView {...{ isTransactionsLoading }} />
+            )}
+          </Route>
+        </Switch>
+      </Router>
     )
   }
 }

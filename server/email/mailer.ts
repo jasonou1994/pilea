@@ -1,28 +1,29 @@
 import nodemailer from 'nodemailer'
-import { Request, Response, NextFunction } from 'express'
 import { nodemailerConfig } from '../constants'
 
-export const sendMail = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+export const sendSignUpEmail = async (
+  address: string,
+  confirmationString: string
 ) => {
-  const { messageType, userEmail } = res.locals
+  await sendMail(address, {
+    subject: 'Welcome to Pilea!',
+    html: `<b>Welcome to Pilea! Please click on this <a href="http://localhost:8000/user/confirm/${confirmationString}">confirmation link</a> to finish signing-up.</b>`,
+  })
+}
 
+const sendMail = async (address: string, { subject, html }) => {
+  console.log(address)
   const transporter = SMTPTransporter.getTransporter()
 
   // send mail with defined transport object
   const info = await transporter.sendMail({
-    to: userEmail, // list of receivers
-    subject: 'Hello ✔', // Subject line
-    text: 'Hello world?', // plain text body
-    html: '<b>Hello world?</b>', // html body
+    to: address,
+    subject,
+    html,
   })
-
-  next()
 }
 
-export const SMTPTransporter = {
+const SMTPTransporter = {
   transporter: undefined,
   getTransporter: () => {
     if (!this.transporter) {

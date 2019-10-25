@@ -5,24 +5,48 @@ export interface DBUser {
   id?: number
   username: string
   passwordHash?: string
+  confirmed?: boolean
   token: string
 }
 
 export const insertUser: ({
   username,
   passwordHash,
-}) => Promise<void> = async ({ username, passwordHash }) => {
+  confirmed,
+  confirmationString,
+}) => Promise<void> = async ({
+  username,
+  passwordHash,
+  confirmationString,
+  confirmed,
+}) => {
   await dbClient(USERS).insert({
-    passwordHash: passwordHash,
+    passwordHash,
     username,
+    confirmed,
+    confirmationString,
   })
+}
+
+export const confirmUserDB = async (
+  confirmationString: string
+): Promise<boolean> => {
+  const result = await dbClient(USERS)
+    .update({ confirmed: true })
+    .where({ confirmationString })
+
+  if (result === 1) {
+    return true
+  } else {
+    throw new Error('Unable to confirm user. Please check confirmation string.')
+  }
 }
 
 export const getUsers: ({ username }) => Promise<DBUser[]> = async ({
   username,
 }) => {
   return await dbClient
-    .select(['*'])
+    .select('*')
     .from(USERS)
     .where({ username })
 }

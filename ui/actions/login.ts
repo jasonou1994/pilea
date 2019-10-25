@@ -105,6 +105,7 @@ export type SetUserInfoActionCreator = LogInActionCreator<
   {
     userName: string
     userId: number
+    confirmed: boolean
   },
   typeof SET_USER_INFO
 >
@@ -112,13 +113,15 @@ export type SetUserInfoAction = LogInAction<
   {
     userName: string
     userId: number
+    confirmed: boolean
   },
   typeof SET_USER_INFO
 >
 export const setUserInfo: SetUserInfoActionCreator = ({
   userName,
   userId,
+  confirmed,
 }) => ({
   type: SET_USER_INFO,
-  payload: { userName, userId },
+  payload: { userName, userId, confirmed },
 })

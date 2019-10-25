@@ -1,15 +1,42 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
-import { getUsers, insertUser, DBUser, getUserByToken } from '../database/users'
+//@ts-ignore
+import uuid from 'uuidv4'
+import {
+  getUsers,
+  insertUser,
+  DBUser,
+  getUserByToken,
+  confirmUserDB,
+} from '../database/users'
 import { encryptPassword } from '../utils'
 import { ContractResponse } from '.'
+import { sendSignUpEmail } from '../email/mailer'
 
 export interface ContractLogin extends ContractResponse {
   username: string
   userId: number
+  confirmed: boolean
 }
 
-export interface ContractCreateUser extends ContractLogin {}
+export interface ContractCreateUser extends ContractResponse {
+  username: string
+  userId: number
+}
+
+export const confirmUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    await confirmUserDB(req.params.confirmationString)
+
+    res.redirect('http://localhost:8000/confirmed')
+  } catch (e) {
+    res.json({ error: 'Unable to confirm user.' })
+  }
+}
 
 export const createUser = async (
   req: Request,
@@ -25,11 +52,20 @@ export const createUser = async (
     }
 
     const hash = await encryptPassword({ password })
-    await insertUser({ username, passwordHash: hash })
 
-    next()
+    const confirmationString = uuid()
+
+    await sendSignUpEmail(username, confirmationString)
+
+    await insertUser({
+      username,
+      passwordHash: hash,
+      confirmed: false,
+      confirmationString,
+    })
 
     res.locals.username = username
+    next()
   } catch (error) {
     console.log(error)
     res.status(500).json({
@@ -66,12 +102,16 @@ export const processLogIn = async (
       throw 'Username or password does not match that of an existing user'
     }
 
-    const { passwordHash, id } = rows[0]
+    const { passwordHash, id, confirmed } = rows[0]
+
+    console.log(id, confirmed)
+
     const authorized = await bcrypt.compare(password, passwordHash)
     if (!authorized) {
       throw 'Username or password does not match that of an existing user'
     }
 
+    res.locals.confirmed = confirmed
     res.locals.username = username
     res.locals.userId = id
 
@@ -85,7 +125,7 @@ export const processLogIn = async (
 }
 
 export const sendLogInResponse = (_: Request, res: Response) => {
-  const { username, userId } = res.locals
+  const { username, userId, confirmed } = res.locals
 
   const body: ContractLogin = {
     success: true,
@@ -93,6 +133,7 @@ export const sendLogInResponse = (_: Request, res: Response) => {
     error: null,
     username,
     userId,
+    confirmed,
   }
   res.json(body)
 }

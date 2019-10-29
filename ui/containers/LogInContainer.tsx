@@ -9,6 +9,7 @@ import {
   FetchCreateUserActionCreator,
 } from '../actions'
 import { isLoginLoadingSelector, RootState } from '../reducers'
+import { Link } from 'react-router-dom'
 
 interface LogInContainerProps {
   fetchLogIn: FetchLogInActionCreator
@@ -35,6 +36,7 @@ class _LogInContainer extends Component<LogInContainerProps> {
           <>
             <LogIn {...{ fetchLogIn }} />
             <CreateUser {...{ fetchCreateUser }} />
+            <Link to="/forgot">Forgot password?</Link>
           </>
         )}
       </div>

@@ -8,10 +8,12 @@ import {
   DBUser,
   getUserByToken,
   confirmUserDB,
+  dbCheckIfUserVerified,
+  addPasswordResetTokenToUser,
 } from '../database/users'
 import { encryptPassword } from '../utils'
 import { ContractResponse } from '.'
-import { sendSignUpEmail } from '../email/mailer'
+import { sendSignUpEmail, sendForgotPasswordEmail } from './mailer'
 
 export interface ContractLogin extends ContractResponse {
   username: string
@@ -157,5 +159,67 @@ export const getUserId = async (
     res.status(500).json({
       error,
     })
+  }
+}
+
+export const processForgotPassword = async (req: Request, res: Response) => {
+  const { username } = req.body
+
+  try {
+    const matchingUsers: DBUser[] = await getUsers({ username })
+
+    if (matchingUsers.length === 1) {
+      const resetToken = uuid()
+
+      await addPasswordResetTokenToUser({
+        username,
+        passwordResetToken: resetToken,
+      })
+      await sendForgotPasswordEmail(username, resetToken)
+    }
+
+    const body: ContractResponse = {
+      status: '',
+      error: null,
+      success: true,
+    }
+    res.json(body)
+  } catch (error) {
+    console.error(error)
+    const body: ContractResponse = {
+      status: 'Error generating forgot password email.',
+      error: error.message,
+      success: false,
+    }
+    res.status(500).json(body)
+  }
+
+  // check if username exists
+
+  // if so, add password reset token in db
+  // send out same token in an email
+  // generic response to user
+}
+
+export const checkIfVerifiedAccount = async (
+  _: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { userId } = res.locals
+  try {
+    const verified: boolean = await dbCheckIfUserVerified({ id: userId })
+
+    if (verified) {
+      next()
+    } else {
+      res.status(400).json({
+        success: false,
+        status: 'User has not been verified through email.',
+        error: null,
+      })
+    }
+  } catch (error) {
+    res.status(500).json({ error })
   }
 }

@@ -11,16 +11,34 @@ export const sendSignUpEmail = async (
   })
 }
 
-const sendMail = async (address: string, { subject, html }) => {
-  console.log(address)
-  const transporter = SMTPTransporter.getTransporter()
-
-  // send mail with defined transport object
-  const info = await transporter.sendMail({
-    to: address,
-    subject,
-    html,
+export const sendForgotPasswordEmail = async (
+  address: string,
+  passwordResetToken: string
+) => {
+  await sendMail(address, {
+    subject: 'Forgot your password?',
+    html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="http://localhost:8000/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
   })
+}
+
+const sendMail: (
+  address: string,
+  { subject, html }: { subject: string; html: string }
+) => Promise<boolean> = async (address, { subject, html }) => {
+  try {
+    const transporter = SMTPTransporter.getTransporter()
+
+    await transporter.sendMail({
+      to: address,
+      subject,
+      html,
+    })
+
+    return true
+  } catch (e) {
+    console.error('Error sending email: ', e)
+    return false
+  }
 }
 
 const SMTPTransporter = {

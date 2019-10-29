@@ -7,6 +7,8 @@ export interface DBUser {
   passwordHash?: string
   confirmed?: boolean
   token: string
+  confirmationString?: string
+  passwordResetToken?: string
 }
 
 export const insertUser: ({
@@ -26,6 +28,20 @@ export const insertUser: ({
     confirmed,
     confirmationString,
   })
+}
+
+export const addPasswordResetTokenToUser: ({
+  username,
+  passwordResetToken,
+}: {
+  username: string
+  passwordResetToken: string
+}) => Promise<boolean> = async ({ username, passwordResetToken }) => {
+  const result = await dbClient(USERS)
+    .update({ passwordResetToken })
+    .where({ username })
+
+  return result === 1
 }
 
 export const confirmUserDB = async (
@@ -89,6 +105,16 @@ export const checkUserToken: ({ token }) => Promise<boolean> = async ({
 }) => {
   const result = await dbClient(USERS)
     .where({ token })
+    .count('*')
+
+  return result[0].count > 0
+}
+
+export const dbCheckIfUserVerified: ({ id }) => Promise<boolean> = async ({
+  id,
+}) => {
+  const result = await dbClient(USERS)
+    .where({ id, confirmed: true })
     .count('*')
 
   return result[0].count > 0

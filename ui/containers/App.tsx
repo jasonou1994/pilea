@@ -28,6 +28,7 @@ class _App extends Component<AppProps> {
               <Link to="/">Please sign in.</Link>
             </>
           </Route>
+          <Route path="/forgot"></Route>
           <Route path="/">
             <HeaderContainer />
             {!loggedIn ? (

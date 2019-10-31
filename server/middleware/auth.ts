@@ -1,5 +1,10 @@
+import { logger } from '../logger'
 import { Router, Request, Response, NextFunction } from 'express'
-import { key } from '../constants'
+import {
+  key,
+  NO_TOKEN_AUTH_ERROR,
+  INVALID_TOKEN_AUTH_ERROR,
+} from '../constants'
 import jwt from 'jsonwebtoken'
 import uuidv4 from 'uuidv4'
 import {
@@ -7,6 +12,7 @@ import {
   checkUserToken,
   updateUserWithToken,
 } from '../database/users'
+import { generateGenericErrorResponse } from '.'
 
 export const auth = Router()
 
@@ -16,6 +22,7 @@ export const addAuthToken = async (
   next: NextFunction
 ) => {
   try {
+    logger.debug('In addAuthToken middleware.')
     const { username } = req.body
 
     const token = jwt.sign(
@@ -29,13 +36,11 @@ export const addAuthToken = async (
 
     res.cookie('Authorization', token)
     res.locals.updatedToken = token
-    console.log('Adding token...', token)
+    logger.debug('Token successfully added:', token)
 
     next()
   } catch (error) {
-    res.status(500).json({
-      error,
-    })
+    res.status(500).json(generateGenericErrorResponse(error))
   }
 }
 
@@ -44,24 +49,24 @@ export const checkUpdateAuthToken = async (
   res: Response,
   next: NextFunction
 ) => {
-  console.log('Checking token...')
+  logger.debug('In checkUpdateAuthToken middleware.')
   try {
     const authorization = req.cookies.Authorization
 
     // 1. Check token exists.
     if (!authorization) {
-      throw 'No Authorization: Bearer header present on request'
+      throw new Error(NO_TOKEN_AUTH_ERROR)
     }
 
     // 2. Check token exists in DB.
     const acceptToken: boolean = await checkUserToken({ token: authorization })
     if (!acceptToken) {
-      throw 'Invalid Authorization: Bearer token on request'
+      throw new Error(INVALID_TOKEN_AUTH_ERROR)
     }
-    console.log('Token accepted.')
 
     // 3. Check JWT properly signed.
     await jwt.verify(authorization, key)
+    logger.debug('Authentication token is valid.')
 
     // 4. Accepted token - refresh in DB and client.
     const token = await jwt.sign(
@@ -72,18 +77,25 @@ export const checkUpdateAuthToken = async (
       key
     )
 
-    console.log('New Token: ', token)
     await updateUserWithToken({ oldToken: authorization, newToken: token })
 
     res.cookie('Authorization', token)
     res.locals.updatedToken = token
 
+    logger.debug('Added new token', token)
+
     next()
   } catch (error) {
-    console.log('Cannot validate token.', error)
-    res.status(401).json({
-      error,
-    })
+    const errorStatusCode =
+      error.message === NO_TOKEN_AUTH_ERROR ||
+      error.message === INVALID_TOKEN_AUTH_ERROR
+        ? 401
+        : 500
+
+    logger.error('Cannot validate token.', error.message)
+    res
+      .status(errorStatusCode)
+      .json(generateGenericErrorResponse(error.message))
   }
 }
 
@@ -97,13 +109,13 @@ export const checkDeleteAuthToken: (
 
     // 1. Check token exists.
     if (!authorization) {
-      throw 'No Authorization: Bearer header present on request'
+      throw new Error(NO_TOKEN_AUTH_ERROR)
     }
 
     // 2. Check token exists in DB.
     const acceptToken = await checkUserToken({ token: authorization })
     if (!acceptToken) {
-      throw 'Invalid Authorization: Bearer token on request'
+      throw new Error(INVALID_TOKEN_AUTH_ERROR)
     }
 
     // 3. Check JWT properly signed.
@@ -114,6 +126,15 @@ export const checkDeleteAuthToken: (
 
     next()
   } catch (error) {
-    res.status(500).json({ error })
+    const errorStatusCode =
+      error.message === NO_TOKEN_AUTH_ERROR ||
+      error.message === INVALID_TOKEN_AUTH_ERROR
+        ? 401
+        : 500
+
+    logger.error('Cannot validate token.', error.message)
+    res
+      .status(errorStatusCode)
+      .json(generateGenericErrorResponse(error.message))
   }
 }

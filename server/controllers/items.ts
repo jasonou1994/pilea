@@ -7,7 +7,7 @@ import {
   removeItem,
   sendEmptyResponse,
   retrieveTransactions,
-  refreshTransactionsSSE,
+  refreshTransactions,
   checkIfVerifiedAccount,
 } from '../middleware'
 
@@ -19,7 +19,7 @@ items.post(
   getUserId,
   checkIfVerifiedAccount,
   addItem,
-  refreshTransactionsSSE,
+  refreshTransactions,
   retrieveTransactions
 )
 items.post(

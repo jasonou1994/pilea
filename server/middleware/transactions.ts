@@ -12,8 +12,9 @@ import {
 import { DBItem, getItems, updateItemById } from '../database/items'
 import { plaidGetTransactions } from '../plaidAPI'
 import { deleteCards, insertCards, getCards, DBCard } from '../database/cards'
-import { ContractResponse } from '.'
+import { ContractResponse, generateGenericErrorResponse } from '.'
 import { convertPlaidCardsToDBCards } from '../utils'
+import { logger } from '../logger'
 
 export interface ContractRetrieveTransactions extends ContractResponse {
   cards: PlaidCard[]
@@ -21,18 +22,14 @@ export interface ContractRetrieveTransactions extends ContractResponse {
   items: DBItem[]
 }
 
-export const refreshTransactionsSSE = async (
+export const refreshTransactions = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  console.log('In /transactions/sse POST endpoint.')
+  logger.debug('In refreshTransactions middlware.')
   const { start, end } = req.body
   const { userId } = res.locals
-
-  // res.header('Content-Type', 'text/event-stream')
-  // res.header('Cache-Control', 'no-cache')
-  // res.header('Connection', 'keep-alive')
 
   try {
     await deleteTransactions({ userId })
@@ -88,7 +85,7 @@ export const refreshTransactionsSSE = async (
               completed = true
             }
 
-            console.log(
+            logger.debug(
               `${transactions.length} transactions processed for item: ${
                 item.alias ? item.alias : item.accessToken
               }`
@@ -96,7 +93,7 @@ export const refreshTransactionsSSE = async (
 
             txOffset += txCount
           } catch (err) {
-            console.log(
+            logger.error(
               `Error ${errorCount} in processing transactions for item ${
                 item.alias ? item.alias : item.accessToken
               }: ${err}`
@@ -129,34 +126,11 @@ export const refreshTransactionsSSE = async (
       })
     })
 
-    const txResults = await Promise.all(tokenProms)
-    // One DB insertion for all transactions, One DB insertion each per item for cards...can be ref
+    await Promise.all(tokenProms)
 
-    // Combine all results together
-    const { finalTransactions, finalCards } = txResults.reduce(
-      ({ finalCards, finalTransactions }, { transactions, cards, itemId }) => ({
-        finalTransactions: [...finalTransactions, ...transactions],
-        finalCards: [
-          ...finalCards,
-          ...convertPlaidCardsToDBCards(cards, userId, itemId),
-        ],
-      }),
-      {
-        finalTransactions: [],
-        finalCards: [],
-      } as {
-        finalTransactions: PlaidTransaction[]
-        finalCards: DBCard[]
-      }
-    )
+    // One DB insertion for all transactions, One DB insertion each per item for cards...can be refactored
 
-    // await insertTransactions({
-    //   plaidTransactions: finalTransactions,
-    //   userId,
-    // })
-    // await insertCards(finalCards)
-
-    console.log(
+    logger.info(
       `Transactions successfully processed for user ${userId} for items ${items.map(
         item => (item.alias ? item.alias : item.accessToken)
       )}`
@@ -164,7 +138,7 @@ export const refreshTransactionsSSE = async (
 
     next()
   } catch (error) {
-    console.log(`Transactions refresh failure for user ${userId}`)
+    logger.error(`Transactions refresh failure for user ${userId}`, error)
     res.status(500).json({
       status: 'Failed to refresh transactions',
       success: false,
@@ -175,6 +149,8 @@ export const refreshTransactionsSSE = async (
 
 export const retrieveTransactions = async (_: Request, res: Response) => {
   const { userId } = res.locals
+
+  logger.debug('In retrieveTransactions middlware.')
 
   try {
     const [cards, transactions, items] = await Promise.all([
@@ -196,10 +172,7 @@ export const retrieveTransactions = async (_: Request, res: Response) => {
 
     res.json(resBody)
   } catch (error) {
-    res.status(500).json({
-      status: 'Failed to retrieved transactions',
-      success: false,
-      error,
-    } as ContractRetrieveTransactions)
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
   }
 }

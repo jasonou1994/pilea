@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express'
 import { plaidGetAccessToken } from '../plaidAPI'
 import { insertItem, getItems, DBItem, deleteItem } from '../database/items'
-import { ContractResponse } from '.'
+import { ContractResponse, generateGenericErrorResponse } from '.'
 import { PileaCard, getCards, deleteCards } from '../database/cards'
 import { deleteTransactionsForGivenCardAndUser } from '../database/transactions'
+import { logger } from '../logger'
 
 export interface ContractItemAdd extends ContractResponse {
   items: DBItem[]
@@ -16,30 +17,17 @@ export const addItem = async (
   res: Response,
   next: NextFunction
 ) => {
+  logger.debug('In addItem middleware.')
   const { userId } = res.locals
   const { alias, publicToken } = req.body
-  console.log(publicToken, alias)
   try {
     const accessToken = await plaidGetAccessToken({ public_token: publicToken })
     await insertItem({ userId, accessToken, alias })
 
     next()
-    // const items = await getItems({ userId })
-
-    // const resBody = {
-    //   success: true,
-    //   status: 'Successfully added item',
-    //   items,
-    // } as ContractItemAdd
-
-    // res.json(resBody)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      status: 'Failed to add item.',
-      error,
-    } as ContractItemAdd)
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
   }
 }
 
@@ -48,6 +36,8 @@ export const removeItem = async (
   res: Response,
   next: NextFunction
 ) => {
+  logger.debug('In removeItem middleware.')
+
   try {
     const { userId } = res.locals
     const { itemId } = req.body
@@ -67,15 +57,15 @@ export const removeItem = async (
 
     next()
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      error,
-    })
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
   }
 }
 
 export const getAllItems = async (_: Request, res: Response) => {
   try {
+    logger.info('In getAllItems middleware.')
+
     const { userId } = res.locals
 
     const items = await getItems({ userId })
@@ -88,11 +78,7 @@ export const getAllItems = async (_: Request, res: Response) => {
 
     res.json(resBody)
   } catch (error) {
-    console.log(error)
-    res.status(500).json({
-      success: false,
-      status: 'Failed to add item.',
-      error,
-    } as ContractItemGet)
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
   }
 }

@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import {
-  refreshTransactionsSSE,
+  refreshTransactions,
   checkUpdateAuthToken,
   getUserId,
   retrieveTransactions,
@@ -12,7 +12,7 @@ transactions.post(
   '/refresh',
   checkUpdateAuthToken,
   getUserId,
-  refreshTransactionsSSE,
+  refreshTransactions,
   retrieveTransactions
 )
 

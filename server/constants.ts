@@ -27,6 +27,11 @@ export const nodemailerConfig = {
   },
 }
 
+export const NO_TOKEN_AUTH_ERROR =
+  'No Authorization: Bearer header present on request'
+export const INVALID_TOKEN_AUTH_ERROR =
+  'Invalid Authorization: Bearer token on request'
+
 //Password
 export const SALT_ROUNDS = 10
 

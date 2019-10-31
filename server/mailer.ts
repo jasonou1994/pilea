@@ -1,10 +1,12 @@
 import nodemailer from 'nodemailer'
-import { nodemailerConfig } from '../constants'
+import { nodemailerConfig } from './constants'
+import { logger } from './logger'
 
 export const sendSignUpEmail = async (
   address: string,
   confirmationString: string
 ) => {
+  logger.debug('In sendSignUpEmail.')
   await sendMail(address, {
     subject: 'Welcome to Pilea!',
     html: `<b>Welcome to Pilea! Please click on this <a href="http://localhost:8000/user/confirm/${confirmationString}">confirmation link</a> to finish signing-up.</b>`,
@@ -15,30 +17,23 @@ export const sendForgotPasswordEmail = async (
   address: string,
   passwordResetToken: string
 ) => {
+  logger.debug('In sendForgotPasswordEmail.')
   await sendMail(address, {
     subject: 'Forgot your password?',
     html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="http://localhost:8000/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
   })
 }
 
-const sendMail: (
-  address: string,
-  { subject, html }: { subject: string; html: string }
-) => Promise<boolean> = async (address, { subject, html }) => {
-  try {
-    const transporter = SMTPTransporter.getTransporter()
+const sendMail = async (address, { subject, html }) => {
+  logger.debug('In sendMail.')
 
-    await transporter.sendMail({
-      to: address,
-      subject,
-      html,
-    })
+  const transporter = SMTPTransporter.getTransporter()
 
-    return true
-  } catch (e) {
-    console.error('Error sending email: ', e)
-    return false
-  }
+  await transporter.sendMail({
+    to: address,
+    subject,
+    html,
+  })
 }
 
 const SMTPTransporter = {

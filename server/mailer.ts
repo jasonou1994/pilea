@@ -20,7 +20,7 @@ export const sendForgotPasswordEmail = async (
   logger.debug('In sendForgotPasswordEmail.')
   await sendMail(address, {
     subject: 'Forgot your password?',
-    html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="http://localhost:8000/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
+    html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="http://localhost:8000/user/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
   })
 }
 

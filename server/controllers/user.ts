@@ -10,6 +10,7 @@ import {
   getUserId,
   confirmUser,
   processForgotPassword,
+  resetPassword,
 } from '../middleware'
 
 export const user = Router()
@@ -29,3 +30,5 @@ user.post('/logout', checkDeleteAuthToken, sendEmptyResponse)
 user.post('/password/forgot', processForgotPassword)
 
 user.get('/confirm/:confirmationString', confirmUser)
+
+user.post('/password/reset/:resetToken', resetPassword)

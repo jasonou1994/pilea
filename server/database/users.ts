@@ -119,3 +119,28 @@ export const dbCheckIfUserVerified: ({ id }) => Promise<boolean> = async ({
 
   return result[0].count > 0
 }
+
+export const checkIfPasswordResetTokenMatches: ({
+  resetToken: string,
+}) => Promise<boolean> = async ({ resetToken }) => {
+  const result = await dbClient(USERS)
+    .where({ passwordResetToken: resetToken })
+    .count('*')
+
+  return result[0].count > 0
+}
+
+export const updatePassword: (
+  password: string,
+  resetToken: string
+) => Promise<boolean> = async (passwordHash, resetToken) => {
+  const result = await dbClient(USERS)
+    .update({ passwordHash })
+    .where({ passwordResetToken: resetToken })
+
+  await dbClient(USERS)
+    .update({ passwordResetToken: '' })
+    .where({ passwordResetToken: resetToken })
+
+  return result > 0
+}

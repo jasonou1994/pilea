@@ -10,6 +10,8 @@ import {
   confirmUserDB,
   dbCheckIfUserVerified,
   addPasswordResetTokenToUser,
+  checkIfPasswordResetTokenMatches,
+  updatePassword,
 } from '../database/users'
 import { encryptPassword } from '../utils'
 import { ContractResponse, generateGenericErrorResponse } from '.'
@@ -72,6 +74,37 @@ export const createUser = async (
     next()
   } catch (error) {
     logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  logger.debug('In resetPassword middleware.')
+
+  const { resetToken } = req.params
+  const { password } = req.body
+
+  try {
+    const matchingResetToken = await checkIfPasswordResetTokenMatches({
+      resetToken,
+    })
+    if (!matchingResetToken) {
+      throw new Error('Password reset token is invalid.')
+    }
+
+    const hash = await encryptPassword({ password })
+    const updateSuccess = await updatePassword(hash, resetToken)
+    if (!updateSuccess) {
+      throw new Error('Unknown error in resetting password.')
+    }
+
+    res.json({
+      status: 'Update password success.',
+      error: null,
+      success: true,
+    } as ContractResponse)
+  } catch (error) {
+    logger.info(error)
     res.status(500).json(generateGenericErrorResponse(error))
   }
 }

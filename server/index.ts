@@ -3,6 +3,8 @@ import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import { expressLogger, logger, logReq } from './logger'
+import fs from 'fs'
+import https from 'https'
 import { transactions } from './controllers/transactions'
 import { plaid } from './controllers/plaid'
 import { user } from './controllers/user'
@@ -30,13 +32,20 @@ app.use('/plaid', plaid)
 app.use('/user', user)
 app.use('/items', items)
 
-app.get('/bundle.js', (req: Request, res: Response) =>
+app.get('/bundle.js', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/bundle.js'))
 )
-app.get('/*', (req: Request, res: Response) =>
+app.get('/*', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/index.html'))
 )
 
+// https.createServer(
+//   {
+//     key: fs.readFileSync(path.join(__dirname, 'server.key')),
+//     cert: fs.readFileSync(path.join(__dirname, 'server.cert')),
+//   },
+//   app
+// )
 app.listen(PORT, () => {
-  logger.info('Express server listening on 8000.')
+  logger.info(`Express server listening on ${PORT}.`)
 })

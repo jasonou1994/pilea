@@ -26,13 +26,13 @@ ReactDOM.render(
   document.getElementById('root')
 )
 
-store.dispatch({
-  type: 'FETCH_LOG_IN',
-  payload: {
-    user: 'jasonou122894@gmail.com',
-    password: 'jasonou1',
-  },
-})
+// store.dispatch({
+//   type: 'FETCH_LOG_IN',
+//   payload: {
+//     user: 'jasonou122894@gmail.com',
+//     password: 'jasonou1',
+//   },
+// })
 
 // store.dispatch(transactions);
 // store.dispatch(accounts);

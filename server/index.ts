@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 8000
 const app = express()
 
 app.use(expressLogger)
+app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
@@ -32,9 +33,6 @@ app.use('/plaid', plaid)
 app.use('/user', user)
 app.use('/items', items)
 
-app.get('/bundle.js', (_: Request, res: Response) =>
-  res.sendFile(path.join(__dirname, '../build/bundle.js'))
-)
 app.get('/*', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/index.html'))
 )

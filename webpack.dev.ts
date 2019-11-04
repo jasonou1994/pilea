@@ -8,6 +8,11 @@ const htmlPlugin = new HtmlWebPackPlugin({
 const config: webpack.Configuration = {
   mode: 'development',
   entry: './ui/index.tsx',
+  output: {
+    // path: 'build',
+    filename: 'bundle.js',
+    publicPath: '/',
+  },
   resolve: {
     // Add '.ts' and '.tsx' as resolvable extensions.
     extensions: ['.ts', '.tsx', '.js', '.json'],
@@ -29,6 +34,7 @@ const config: webpack.Configuration = {
   // @ts-ignore
   devServer: {
     port: 3000,
+    historyApiFallback: true,
   },
   plugins: [htmlPlugin],
 }

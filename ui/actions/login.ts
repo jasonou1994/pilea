@@ -4,6 +4,7 @@ import {
   SET_USER_INFO,
   FETCH_LOG_OUT,
   FETCH_CREATE_USER,
+  FETCH_SEND_PASSWORD_RESET_EMAIL,
 } from '../konstants/index'
 import { Action } from 'redux'
 
@@ -13,6 +14,7 @@ type LogInActionTypes =
   | typeof SET_USER_INFO
   | typeof FETCH_LOG_OUT
   | typeof FETCH_CREATE_USER
+  | typeof FETCH_SEND_PASSWORD_RESET_EMAIL
 
 export type LogInActions =
   | FetchLogInAction
@@ -124,4 +126,19 @@ export const setUserInfo: SetUserInfoActionCreator = ({
 }) => ({
   type: SET_USER_INFO,
   payload: { userName, userId, confirmed },
+})
+
+export type FetchSendPasswordResetEmailActionCreator = LogInActionCreator<
+  { email: string },
+  typeof FETCH_SEND_PASSWORD_RESET_EMAIL
+>
+export type FetchSendPasswordResetEmailAction = LogInAction<
+  { email: string },
+  typeof FETCH_SEND_PASSWORD_RESET_EMAIL
+>
+export const fetchSendPasswordResetEmail: FetchSendPasswordResetEmailActionCreator = ({
+  email,
+}) => ({
+  type: FETCH_SEND_PASSWORD_RESET_EMAIL,
+  payload: { email },
 })

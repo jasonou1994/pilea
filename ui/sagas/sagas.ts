@@ -13,6 +13,7 @@ import {
   FetchRemoveItemInterface,
   setCards,
   setTransactions,
+  FetchSendPasswordResetEmailAction,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -26,14 +27,13 @@ import {
   API_USER_LOGOUT,
   API_USER_CREATE,
   FETCH_ADD_ITEM,
-  CARDS,
-  API_ITEMS_GET,
   API_TRANSACTIONS_REFRESH,
   API_ITEMS_REMOVE,
   FETCH_REMOVE_ITEM,
   LOGIN,
+  API_USER_SEND_PASSWORD_RESET_EMAIL,
+  FETCH_SEND_PASSWORD_RESET_EMAIL,
 } from '../konstants'
-import { parseSSEFields } from '../utilities/utils'
 import { services } from '../utilities/services'
 import {
   Account as PlaidCard,
@@ -272,6 +272,21 @@ function* refreshTransactions() {
   yield put(stopLoading(TRANSACTIONS))
 }
 
+function* sendPasswordResetEmail({
+  payload: { email },
+}: FetchSendPasswordResetEmailAction) {
+  try {
+    const { status, success, error }: APIResponse = yield call(
+      services[API_USER_SEND_PASSWORD_RESET_EMAIL],
+      { body: JSON.stringify({ email }) }
+    )
+
+    console.log(status, success, error)
+  } catch (e) {
+    console.error('Error in sendPasswordResetEmail:', e)
+  }
+}
+
 function* saga() {
   //@ts-ignore
   yield takeLatest(FETCH_CREATE_USER, fetchCreateUser)
@@ -285,6 +300,8 @@ function* saga() {
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
   //@ts-ignore
   yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
+  //@ts-ignore
+  yield takeLatest(FETCH_SEND_PASSWORD_RESET_EMAIL, sendPasswordResetEmail)
 }
 
 export default saga

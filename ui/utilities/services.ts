@@ -8,6 +8,7 @@ import {
   API_ITEMS_GET,
   API_ITEMS_REMOVE,
   API_TRANSACTIONS_REFRESH,
+  API_USER_SEND_PASSWORD_RESET_EMAIL,
 } from '../konstants'
 
 interface ServiceDefinition {
@@ -61,6 +62,10 @@ const serviceDefs: ServiceDefinition[] = [
   {
     name: API_ITEMS_REMOVE,
     url: 'http://localhost:8000/items/delete',
+  },
+  {
+    name: API_USER_SEND_PASSWORD_RESET_EMAIL,
+    url: 'http://localhost:8000/user/password/forgot',
   },
 ].map(def => ({ ...defaultOptions, ...def } as ServiceDefinition))
 

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
+import PasswordResetContainer from './PasswordResetContainer'
 import { MainView } from '../components/MainView'
 import {
   loggedInSelector,
@@ -21,23 +22,26 @@ class _App extends Component<AppProps> {
 
     return (
       <Router>
-        <Switch>
-          <Route path="/confirmed">
-            <>
-              <div>Thanks for confirming your email!</div>
-              <Link to="/">Please sign in.</Link>
-            </>
-          </Route>
-          <Route path="/forgot"></Route>
-          <Route path="/">
-            <HeaderContainer />
-            {!loggedIn ? (
-              <LogInContainer />
-            ) : (
-              <MainView {...{ isTransactionsLoading }} />
-            )}
-          </Route>
-        </Switch>
+        <Route path="/confirmed">
+          <>
+            <div>Thanks for confirming your email!</div>
+            <Link to="/">Please sign in.</Link>
+          </>
+        </Route>
+        <Route path="/password">
+          <>
+            Reset Container
+            <PasswordResetContainer></PasswordResetContainer>
+          </>
+        </Route>
+        <Route exact path="/">
+          <HeaderContainer />
+          {!loggedIn ? (
+            <LogInContainer />
+          ) : (
+            <MainView {...{ isTransactionsLoading }} />
+          )}
+        </Route>
       </Router>
     )
   }

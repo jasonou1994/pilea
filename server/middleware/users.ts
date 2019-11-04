@@ -199,7 +199,7 @@ export const getUserId = async (
 }
 
 export const processForgotPassword = async (req: Request, res: Response) => {
-  const { username } = req.body
+  const { email: username } = req.body
   logger.info('In processForgotPassword middleware.')
 
   try {

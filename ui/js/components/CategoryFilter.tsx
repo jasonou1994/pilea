@@ -53,11 +53,13 @@ export class CategoryFilter extends Component<
     api: GridApi
     columnApi: ColumnApi
   }) => {
+    api.selectAll()
+
     this.setState({ api, columnApi })
   }
 
   render() {
-    const { api, columnApi } = this.state
+    const { api } = this.state
     const {
       resetCategoriesSelectedAction,
       setCategoriesSelectedAction,
@@ -79,7 +81,9 @@ export class CategoryFilter extends Component<
           <AgGridReact
             onGridReady={this.setGridAPIs}
             onModelUpdated={() => {
+              console.log('hi')
               if (api) {
+                console.log('here')
                 resetCategoriesSelectedAction({})
                 api.selectAll()
               }

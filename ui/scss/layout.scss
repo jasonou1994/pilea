@@ -1,0 +1,31 @@
+#main-view {
+  display: flex;
+  flex-direction: column;
+}
+
+#item-panel {
+  max-height: 300px;
+  overflow: scroll;
+}
+
+#filters-analysis {
+  display: flex;
+}
+
+#filters {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+#analysis {
+  width: 100%;
+}
+
+* {
+  font-family: 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue',
+    Helvetica, Arial, 'Lucida Grande', sans-serif;
+}
+
+html {
+  font-size: 16px;
+}

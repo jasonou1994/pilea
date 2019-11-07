@@ -10,6 +10,7 @@ import {
   RootState,
   isTransactionsLoadingSelector,
 } from '../reducers'
+import '../../scss/index.scss'
 
 interface AppProps {
   loggedIn: boolean

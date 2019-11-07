@@ -28,6 +28,7 @@ import {
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
 } from '../konstants'
+import '../../scss/index.scss'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
@@ -64,12 +65,7 @@ class _AnalysisContainer extends Component<
     } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div id="analysis">
         <IncomeSpendingView
           {...{
             graphFidelity,

@@ -1,5 +1,6 @@
 import React, { SFC, useState, useEffect } from 'react'
 import { useLocation } from 'react-router'
+import { Link } from 'react-router-dom'
 
 interface Props {}
 
@@ -67,6 +68,7 @@ export const ResetPassword: SFC<Props> = props => {
       ) : (
         <div>Password change fail.</div>
       )}
+      <Link to="/">Go Home</Link>
     </div>
   )
 }

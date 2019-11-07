@@ -1,7 +1,7 @@
-/// <reference path="../../typings/react-vis.d.ts"/>
+/// <reference path="../../../typings/react-vis.d.ts"/>
 import React, { Component } from 'react'
 import { SetSelectedTransactionActionCreator } from '../actions'
-import '../../node_modules/react-vis/dist/style.css'
+import '../../../node_modules/react-vis/dist/style.css'
 import { isEmpty } from 'lodash'
 import moment from 'moment'
 import {
@@ -24,6 +24,7 @@ interface IncomeSpendingChartProps {
 
 interface IncomeSpendingChartState {
   currentX: number
+  ref: React.RefObject<any>
 }
 
 export class IncomeSpendingChart extends Component<
@@ -34,6 +35,7 @@ export class IncomeSpendingChart extends Component<
     super(props)
     this.state = {
       currentX: 0,
+      ref: React.createRef(),
     }
   }
 
@@ -83,20 +85,23 @@ export class IncomeSpendingChart extends Component<
 
   render() {
     const { currentX } = this.state
-    const {
-      setSelectedTransactionKeyAction,
-      transactionsByDayCountCombined,
-    } = this.props
+    const { setSelectedTransactionKeyAction } = this.props
 
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
 
+    if (this.state.ref.current) {
+      console.log(this.state.ref.current.offsetWidth)
+    }
+
     return (
-      <div>
+      <div ref={this.state.ref}>
         <div style={{ fontSize: '18px' }}>Transactions by Time</div>
         <XYPlot
           height={300}
-          width={600}
+          width={
+            this.state.ref.current ? this.state.ref.current.offsetWidth : 700
+          }
           xType="time"
           margin={{ left: 70, right: 10, top: 10, bottom: 70 }}
           style={{ cursor: 'pointer' }}

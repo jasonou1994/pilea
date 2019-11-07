@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
-import rootReducer from './reducers/index'
-import saga from './sagas/sagas'
+import rootReducer from './js/reducers/index'
+import saga from './js/sagas/sagas'
 import createSagaMiddleware from 'redux-saga'
-import App from './containers/App'
+import App from './js/containers/App'
 // import { accounts } from "./mockData/setAccounts";
 // import { transactions } from "./mockData/addTransactions";
 

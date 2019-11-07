@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "ui-dev": "webpack-dev-server --open --config webpack.dev.ts",
+    "ui-dev": "webpack-dev-server --config webpack.dev.ts",
     "ui-build": "webpack --mode production --config webpack.prod.ts",
     "server-dev": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c"
   },
@@ -31,6 +31,7 @@
     "knex": "^0.18.1",
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
+    "node-sass": "^4.13.0",
     "nodemailer": "^6.3.0",
     "pg": "^7.11.0",
     "pino": "^5.13.5",
@@ -47,6 +48,7 @@
     "redux-devtools-extension": "^2.13.8",
     "redux-saga": "^1.0.4",
     "reselect": "^4.0.0",
+    "sass-loader": "^8.0.0",
     "style-loader": "^0.23.1",
     "timm": "^1.6.1",
     "ts-node-dev": "^1.0.0-pre.40",

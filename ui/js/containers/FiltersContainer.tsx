@@ -21,6 +21,7 @@ import {
   setCategoriesSelected,
   SetCategoriesSelectedActionCreator,
 } from '../actions'
+import '../../scss/index.scss'
 
 interface FiltersContainerProps {
   cardsByItems: ItemWithCards[]
@@ -45,12 +46,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
     } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div id="filters">
         <CardFilter
           {...{
             cardsByItems,

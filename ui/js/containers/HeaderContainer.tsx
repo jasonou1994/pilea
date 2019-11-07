@@ -18,21 +18,24 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
   render() {
     const { fetchLogOutAction, loggedIn, user } = this.props
 
-    console.log(user)
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div>
         {loggedIn ? (
-          <>
+          <div className="welcome-bar">
+            <span className="welcome">
+              {`Welcome, ${user[USER_NAME]} to `}
+              <span className="pilea-logo">PILEA</span>
+            </span>
             <button onClick={() => fetchLogOutAction({})}>Log Out</button>
-            <div>{`Welcome, ${user[USER_NAME]}`}</div>
-          </>
-        ) : null}
-        <Breadcrumb />
+          </div>
+        ) : (
+          <div className="welcome-bar">
+            <span className="welcome">
+              {`Welcome to `}
+              <span className="pilea-logo">PILEA</span>.
+            </span>
+          </div>
+        )}
       </div>
     )
   }

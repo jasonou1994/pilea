@@ -22,22 +22,20 @@ class _LogInContainer extends Component<LogInContainerProps> {
     const { fetchLogIn, fetchCreateUser, isLoginLoading } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div>
         {isLoginLoading ? (
           <div style={{ color: 'blue', border: '1px solid blue' }}>
             Logging in...
           </div>
         ) : (
-          <>
-            <LogIn {...{ fetchLogIn }} />
-            <CreateUser {...{ fetchCreateUser }} />
+          <div>
+            <div className="login-container">
+              <CreateUser {...{ fetchCreateUser }} />
+              <LogIn {...{ fetchLogIn }} />
+            </div>
+
             <Link to="/password/forgot">Forgot password?</Link>
-          </>
+          </div>
         )}
       </div>
     )

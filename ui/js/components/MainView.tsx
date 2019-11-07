@@ -23,9 +23,7 @@ export class MainView extends Component<MainViewProps, MainViewState> {
           </div>
         ) : (
           <section id="main-view">
-            <div id="item-panel">
-              <ItemsContainer />
-            </div>
+            <ItemsContainer />
             <div id="filters-analysis">
               <FiltersContainer />
 

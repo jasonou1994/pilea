@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { CurrentItems } from '../components/CurrentItems'
+import { CurrentItems } from '../components/ItemCollection'
 import { AddNewItem } from '../components/AddNewItem'
 import { RefreshItemData } from '../components/RefreshItemData'
 import {
@@ -44,18 +44,7 @@ class _ItemsContainer extends Component<
     } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
-        <CurrentItems
-          {...{
-            cardsByItems,
-            fetchRemoveItemAction,
-          }}
-        />
+      <div id="item-panel">
         <AddNewItem
           {...{
             user,
@@ -70,6 +59,12 @@ class _ItemsContainer extends Component<
             }}
           />
         )}
+        <CurrentItems
+          {...{
+            cardsByItems,
+            fetchRemoveItemAction,
+          }}
+        />
       </div>
     )
   }

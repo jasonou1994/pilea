@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { FetchLogInActionCreator } from '../actions'
+import { Button } from './common/Button'
+import { TextInput } from './common/TextInput'
 
 interface LogInProps {
   fetchLogIn: FetchLogInActionCreator
@@ -36,32 +38,32 @@ export class LogIn extends Component<LogInProps, LogInState> {
     return (
       <div className="sign-in left-border">
         <div className="header">Sign In</div>
-        <div className="input-group">
-          <span>Username</span>
-          <input
-            type="text"
-            value={userInput}
-            placeholder="Username"
-            onChange={e => {
-              this.setState({ userInput: e.target.value })
-            }}
-          />
-        </div>
 
-        <div className="input-group">
-          <span>Password</span>
-          <input
-            type="text"
-            value={passwordInput}
-            placeholder="Password"
-            onChange={e => {
-              this.setState({ passwordInput: e.target.value })
-            }}
-          />
-        </div>
-        <button style={{ width: '60px' }} onClick={this.submitLogIn}>
-          Log In
-        </button>
+        <TextInput
+          label="Username"
+          invalid={false}
+          type="text"
+          placeholder="Username"
+          value={userInput}
+          onChange={userInput => this.setState({ userInput })}
+        />
+
+        <TextInput
+          label="Password"
+          invalid={false}
+          type="password"
+          placeholder="Password"
+          value={passwordInput}
+          onChange={passwordInput => this.setState({ passwordInput })}
+        />
+
+        <Button
+          onClick={this.submitLogIn}
+          type="primary"
+          disabled={passwordInput.length === 0 || userInput.length === 0}
+          text="Log In"
+          width={65}
+        />
       </div>
     )
   }

@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
-import {
-  FetchLogInActionCreator,
-  FetchSendPasswordResetEmailActionCreator,
-} from '../actions'
+import { FetchSendPasswordResetEmailActionCreator } from '../actions'
 
 interface Props {
   fetchSendPasswordResetEmailAction: FetchSendPasswordResetEmailActionCreator

@@ -1,3 +1,5 @@
+@import 'colors';
+
 .login-container {
   display: flex;
   margin: 20px 0px;
@@ -44,13 +46,10 @@
       border-radius: 3px;
       flex-shrink: 0;
       flex-grow: 0;
+      outline: none;
     }
-  }
-
-  button {
-    margin: 8px 0px;
-    height: 1.8em;
-    border: 2px solid black;
-    padding: 0px;
+    .invalid {
+      border: 1px solid $red;
+    }
   }
 }

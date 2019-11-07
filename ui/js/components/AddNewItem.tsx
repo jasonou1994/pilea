@@ -66,12 +66,7 @@ export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
         </button>
       </div>
     ) : (
-      <div
-        style={{
-          border: '1px solid green',
-          padding: '5px',
-        }}
-      >
+      <div>
         {confirmed ? (
           <PlaidLink
             clientName="Pilea"
@@ -79,6 +74,7 @@ export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
             product={['transactions']}
             publicKey={PLAID_PUBLIC_KEY}
             onSuccess={this.setAccessToken}
+            className=".button"
           >
             Add Institution
           </PlaidLink>

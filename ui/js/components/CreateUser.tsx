@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
+import classNames from 'classnames'
 import { FetchCreateUserActionCreator } from '../actions'
+import { Button } from './common/Button'
+import { TextInput } from './common/TextInput'
 
 interface CreateUserProps {
   fetchCreateUser: FetchCreateUserActionCreator
@@ -8,7 +11,13 @@ interface CreateUserProps {
 interface CreateUserState {
   userInput: string
   passwordInput: string
+  passwordRepeat: string
+  userInputValid: boolean
+  passwordInputValid: boolean
+  passwordMatch: boolean
 }
+
+const emailRegex = /^[a-z].*@.+\.[a-z]+/i
 
 export class CreateUser extends Component<CreateUserProps, CreateUserState> {
   constructor(props: CreateUserProps) {
@@ -16,6 +25,10 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
     this.state = {
       userInput: '',
       passwordInput: '',
+      passwordRepeat: '',
+      userInputValid: true,
+      passwordInputValid: true,
+      passwordMatch: true,
     }
   }
 
@@ -29,50 +42,80 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
     })
   }
 
+  updateUserInput = (input: string) =>
+    this.setState({
+      userInput: input,
+      userInputValid: input.match(emailRegex) !== null,
+    })
+
+  updateFirstPassword = (input: string) => {
+    const isValidPassword = input.length >= 8
+    this.setState({
+      passwordInput: input,
+      passwordInputValid: isValidPassword,
+    })
+  }
+
+  updateSecondPassword = (input: string) =>
+    this.setState({
+      passwordRepeat: input,
+      passwordMatch: this.state.passwordInput === input,
+    })
+
   render() {
-    const { userInput, passwordInput } = this.state
+    const {
+      userInput,
+      passwordInput,
+      userInputValid,
+      passwordMatch,
+      passwordInputValid,
+      passwordRepeat,
+    } = this.state
 
     return (
       <div className="sign-in right-padding">
         <div className="header">New Account</div>
-        <div className="input-group">
-          <span>Email address</span>
-          <input
-            type="text"
-            value={userInput}
-            placeholder="Email"
-            onChange={e => {
-              this.setState({ userInput: e.target.value })
-            }}
-          />
-        </div>
-        <div className="input-group">
-          <span>Enter password</span>
-          <input
-            type="text"
-            value={passwordInput}
-            placeholder="Password"
-            onChange={e => {
-              this.setState({ passwordInput: e.target.value })
-            }}
-          />
-        </div>
 
-        <div className="input-group">
-          <span>Re-enter password</span>
-          <input
-            type="text"
-            value={passwordInput}
-            placeholder="Password"
-            onChange={e => {
-              this.setState({ passwordInput: e.target.value })
-            }}
-          />
-        </div>
+        <TextInput
+          label="Email address"
+          invalid={!userInputValid}
+          type="text"
+          placeholder="Email"
+          value={userInput}
+          onChange={this.updateUserInput}
+        />
 
-        <button style={{ width: '60px' }} onClick={this.submitCreateAccount}>
-          Create
-        </button>
+        <TextInput
+          label="Enter password (8 char min)"
+          invalid={!passwordInputValid}
+          type="password"
+          placeholder="Password"
+          value={passwordInput}
+          onChange={this.updateFirstPassword}
+        />
+
+        <TextInput
+          label="Re-enter password"
+          invalid={!passwordMatch}
+          type="password"
+          placeholder="Password"
+          value={passwordRepeat}
+          onChange={this.updateSecondPassword}
+        />
+
+        <Button
+          onClick={this.submitCreateAccount}
+          type="primary"
+          disabled={
+            !userInputValid ||
+            !passwordMatch ||
+            !passwordInputValid ||
+            passwordRepeat.length === 0 ||
+            userInput.length === 0
+          }
+          text="Create"
+          width={65}
+        />
       </div>
     )
   }

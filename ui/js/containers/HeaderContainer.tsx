@@ -4,6 +4,7 @@ import { Breadcrumb } from '../components/Breadcrumb'
 import { RootState, loggedInSelector, userSelector } from '../reducers'
 import { fetchLogOut, FetchLogOutActionCreator } from '../actions'
 import { USER_ID, USER_NAME } from '../konstants'
+import { Button } from '../components/common/Button'
 
 interface HeaderContainerProps {
   fetchLogOutAction: FetchLogOutActionCreator
@@ -26,7 +27,13 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
               {`Welcome, ${user[USER_NAME]} to `}
               <span className="pilea-logo">PILEA</span>
             </span>
-            <button onClick={() => fetchLogOutAction({})}>Log Out</button>
+
+            <Button
+              type="normal"
+              disabled={false}
+              text="Log Out"
+              onClick={() => fetchLogOutAction({})}
+            />
           </div>
         ) : (
           <div className="welcome-bar">

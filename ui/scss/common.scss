@@ -1,20 +1,43 @@
-button {
-  display: inline-block;
+@import 'colors';
+
+.button {
+  // display: inline-block;
   border: none;
-  padding: 3px 5px;
-  margin: 0;
+  margin: 8px 0;
   text-decoration: none;
   cursor: pointer;
   text-align: center;
   -webkit-appearance: none;
   -moz-appearance: none;
-  font-size: 0.8em;
+  font-size: 14px;
   color: black;
   border-radius: 3px;
   border: 1px solid black;
-  height: 1.8em;
+  height: 22px;
 }
 
-.bold {
-  border: 2px solid black;
+.button-primary {
+  border: 3px solid black;
+}
+
+.button-disabled {
+  color: $disabled;
+  border-color: $disabled;
+  border-style: dotted;
+  border-width: 0.75px;
+  cursor: not-allowed;
+}
+
+h2 {
+  font-weight: normal;
+  margin: 8px 0;
+  padding: 0px;
+  font-size: 18px;
+  text-decoration: underline;
+}
+
+h4 {
+  font-weight: bold;
+  font-size: 16px;
+  margin: 10px 0;
 }

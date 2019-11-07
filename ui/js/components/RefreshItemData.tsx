@@ -18,12 +18,7 @@ export class RefreshItemData extends Component<
     const { cardsByItems, fetchRefreshTransactionsAction } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid green',
-          padding: '5px',
-        }}
-      >
+      <div>
         <div>
           Your data was last refreshed on:
           {moment(cardsByItems[0].lastUpdated.replace(/"/g, '')).format(

@@ -14,7 +14,7 @@ export interface ContractResponse {
 }
 
 export const generateGenericErrorResponse: (
-  error: any,
+  error: Error,
   status?: string
 ) => ContractResponse = (error, status = 'Server error.') => ({
   status,

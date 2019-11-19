@@ -81,9 +81,7 @@ export class CategoryFilter extends Component<
           <AgGridReact
             onGridReady={this.setGridAPIs}
             onModelUpdated={() => {
-              console.log('hi')
               if (api) {
-                console.log('here')
                 resetCategoriesSelectedAction({})
                 api.selectAll()
               }

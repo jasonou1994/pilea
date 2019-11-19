@@ -4,6 +4,7 @@ import {
   key,
   NO_TOKEN_AUTH_ERROR,
   INVALID_TOKEN_AUTH_ERROR,
+  EXPIRED_TOKEN_ERROR,
 } from '../constants'
 import jwt from 'jsonwebtoken'
 import uuidv4 from 'uuidv4'
@@ -88,14 +89,13 @@ export const checkUpdateAuthToken = async (
   } catch (error) {
     const errorStatusCode =
       error.message === NO_TOKEN_AUTH_ERROR ||
-      error.message === INVALID_TOKEN_AUTH_ERROR
+      error.message === INVALID_TOKEN_AUTH_ERROR ||
+      error.message === EXPIRED_TOKEN_ERROR
         ? 401
         : 500
 
-    logger.error('Cannot validate token.', error.message)
-    res
-      .status(errorStatusCode)
-      .json(generateGenericErrorResponse(error.message))
+    logger.error('Cannot validate token.', error.stack)
+    res.status(errorStatusCode).json(generateGenericErrorResponse(error))
   }
 }
 
@@ -128,13 +128,12 @@ export const checkDeleteAuthToken: (
   } catch (error) {
     const errorStatusCode =
       error.message === NO_TOKEN_AUTH_ERROR ||
-      error.message === INVALID_TOKEN_AUTH_ERROR
+      error.message === INVALID_TOKEN_AUTH_ERROR ||
+      error.message === EXPIRED_TOKEN_ERROR
         ? 401
         : 500
 
-    logger.error('Cannot validate token.', error.message)
-    res
-      .status(errorStatusCode)
-      .json(generateGenericErrorResponse(error.message))
+    logger.error('Cannot validate token.', error.stack)
+    res.status(errorStatusCode).json(generateGenericErrorResponse(error))
   }
 }

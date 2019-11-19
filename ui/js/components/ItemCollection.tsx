@@ -22,8 +22,9 @@ export class CurrentItems extends Component<
         <h2>Your Accounts</h2>
         {cardsByItems.length >= 0 ? (
           <div className="items-collection">
-            {cardsByItems.map(item => (
+            {cardsByItems.map((item, i) => (
               <ItemDisplay
+                key={i}
                 item={item}
                 fetchRemoveItemAction={fetchRemoveItemAction}
               ></ItemDisplay>

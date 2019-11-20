@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { updateIn, set, setIn, update } from 'timm'
 import { Notification } from './Notification'
 import { useInterval } from '../../utilities/utils'
 
@@ -57,7 +56,6 @@ export const NotificationsContainer: FunctionComponent<
 
   useEffect(() => {
     const { active, expired } = processNotifications(notifications)
-    console.log(active, expired)
     setActiveNotifs(active)
     setExpiredNotifs(expired)
   }, [])
@@ -65,14 +63,15 @@ export const NotificationsContainer: FunctionComponent<
   // Every second, update the expiry key and call callback for all expired notifications
   useInterval(() => {
     const { active, expired } = processNotifications(activeNotifs)
+    const allExpiredNotifs = [...expired, ...expiredNotifs]
 
     setActiveNotifs(active)
-
-    const allExpiredNotifs = [...expired, ...expiredNotifs]
     setExpiredNotifs(allExpiredNotifs)
 
-    onExpireHandler(allExpiredNotifs)
-  }, 1000)
+    if (allExpiredNotifs.length > 0) {
+      onExpireHandler(allExpiredNotifs)
+    }
+  }, 1500)
 
   const handleDismiss: (id: string) => void = id => {
     const newActive = activeNotifs.filter(

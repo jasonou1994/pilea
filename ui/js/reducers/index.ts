@@ -1,19 +1,28 @@
 import { combineReducers } from 'redux'
 import { createSelector } from 'reselect'
-import { cloneDeep, isEmpty } from 'lodash'
+import { isEmpty } from 'lodash'
 import moment from 'moment'
-import transactions, * as fromTransactions from './transactionsAccounts'
-import login, * as fromLogin from './login'
-import graph, * as fromGraph from './graph'
-import grid, * as fromGrid from './grid'
-import loading, * as fromLoading from './loading'
-import { TRANSACTIONS, LOGIN, GRAPH, GRID, LOADING } from '../konstants'
 import { Transaction as PlaidTransaction } from 'plaid'
+
+import {
+  TRANSACTIONS,
+  LOGIN,
+  GRAPH,
+  GRID,
+  LOADING,
+  NOTIFICATIONS,
+} from '../konstants'
 import {
   getTypeOfCard,
   shouldKeepTransaction,
   getOrderedDates,
 } from '../utilities/utils'
+import transactions, * as fromTransactions from './transactionsAccounts'
+import login, * as fromLogin from './login'
+import graph, * as fromGraph from './graph'
+import grid, * as fromGrid from './grid'
+import loading, * as fromLoading from './loading'
+import notifications, * as fromNotifications from './notifications'
 
 export interface RootState {
   [TRANSACTIONS]: fromTransactions.TransactionsAccountsState
@@ -21,6 +30,7 @@ export interface RootState {
   [GRAPH]: fromGraph.GraphState
   [GRID]: fromGrid.GridState
   [LOADING]: fromLoading.LoadingState
+  [NOTIFICATIONS]: fromNotifications.NotificationsState
 }
 
 const reducers = combineReducers({
@@ -29,6 +39,7 @@ const reducers = combineReducers({
   graph,
   grid,
   loading,
+  notifications,
 })
 export default reducers
 
@@ -69,6 +80,13 @@ export const graphHistoricalLengthSelector = (state: RootState) =>
 export const selectedTransactionKeySelector = (state: RootState) => {
   return fromGrid.selectedTransactionKeySelector(state[GRID])
 }
+
+//notifications
+export const activeNotificationsSelector = (state: RootState) => {
+  return fromNotifications.activeNotificationsSelector(state[NOTIFICATIONS])
+}
+export const expiredNotificationsSelector = (state: RootState) =>
+  fromNotifications.expiredNotificationsSelector(state[NOTIFICATIONS])
 
 /***********
  * TRANSFORMATION SELECTORS

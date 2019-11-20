@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
@@ -9,17 +9,33 @@ import {
   loggedInSelector,
   RootState,
   isTransactionsLoadingSelector,
+  activeNotificationsSelector,
 } from '../reducers'
 import '../../scss/index.scss'
+import {
+  expireNotifications,
+  ExpireNotificationsActionCreator,
+} from '../actions'
+import {
+  NotificationsContainer,
+  NotificationWithDuration,
+} from '../components/common/NotificationsContainer'
 
 interface AppProps {
   loggedIn: boolean
   isTransactionsLoading: boolean
+  activeNotifications: NotificationWithDuration[]
+  expireNotificationsAction: ExpireNotificationsActionCreator
 }
 
 class _App extends Component<AppProps> {
   render() {
-    const { loggedIn, isTransactionsLoading } = this.props
+    const {
+      loggedIn,
+      isTransactionsLoading,
+      activeNotifications,
+      expireNotificationsAction,
+    } = this.props
 
     return (
       <Router>
@@ -37,6 +53,13 @@ class _App extends Component<AppProps> {
         </Route>
         <Route exact path="/">
           <HeaderContainer />
+          <NotificationsContainer
+            {...{
+              notifications: activeNotifications,
+              onExpireHandler: (notifications: NotificationWithDuration[]) =>
+                expireNotificationsAction({ notifications }),
+            }}
+          ></NotificationsContainer>
           {!loggedIn ? (
             <LogInContainer />
           ) : (
@@ -52,6 +75,9 @@ export default connect(
   (state: RootState) => ({
     loggedIn: loggedInSelector(state),
     isTransactionsLoading: isTransactionsLoadingSelector(state),
+    activeNotifications: activeNotificationsSelector(state),
   }),
-  {}
+  {
+    expireNotificationsAction: expireNotifications,
+  }
 )(_App)

@@ -1,5 +1,7 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import moment from 'moment'
+// @ts-ignore
+import uuid from 'uuid'
 import {
   addTransactions,
   readdTransactions,
@@ -14,6 +16,7 @@ import {
   setCards,
   setTransactions,
   FetchSendPasswordResetEmailAction,
+  addActiveNotifications,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -43,6 +46,10 @@ import {
   TransactionPaymentMeta,
 } from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
+import {
+  TEMPORARY,
+  NotificationDurationType,
+} from '../components/common/NotificationsContainer'
 
 export interface DBItem {
   id: number
@@ -170,7 +177,6 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
         confirmed,
       })
     )
-
     yield put(stopLoading(LOGIN))
 
     // 2. Immediately request accounts + tx stored in DB
@@ -188,6 +194,23 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     yield put(setItems(items))
 
     yield put(stopLoading(TRANSACTIONS))
+
+    // 3. Notification
+    yield put(
+      addActiveNotifications({
+        notifications: [
+          {
+            timeCreated: Date.now(),
+            durationType: TEMPORARY as NotificationDurationType,
+            durationInSeconds: 5,
+            id: uuid(),
+            success: true,
+            title: 'Login Success',
+            message: 'You have successfully logged in. Welcome!',
+          },
+        ],
+      })
+    )
   } catch (e) {
     yield put(stopLoading(LOGIN))
     yield put(stopLoading(TRANSACTIONS))

@@ -14,9 +14,7 @@ interface CardFilterProps {
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
-interface CardFilterState {}
-
-export class CardFilter extends Component<CardFilterProps, CardFilterState> {
+export class CardFilter extends Component<CardFilterProps> {
   render() {
     const {
       cardsByItems,
@@ -58,12 +56,8 @@ export class CardFilter extends Component<CardFilterProps, CardFilterState> {
     }, [])
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div>
+        <h4>Cards</h4>
         {filterRows}
       </div>
     )

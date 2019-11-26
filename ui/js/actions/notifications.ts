@@ -7,7 +7,7 @@ type NotificationActionTypes =
   | typeof EXPIRE_NOTIFICATIONS
 
 export type NotificationActions =
-  | AddActiveNotificationsAction
+  | addActiveNotificationAction
   | ExpireNotificationsAction
 
 // Generics
@@ -23,21 +23,21 @@ export type NotificationsActionCreator<
 > = (payload: P) => NotificationsAction<P, AT>
 
 // Actions
-export type AddActiveNotificationsActionCreator = NotificationsActionCreator<
+export type addActiveNotificationActionCreator = NotificationsActionCreator<
   {
-    notifications: NotificationWithDuration[]
+    notification: NotificationWithDuration
   },
   typeof ADD_ACTIVE_NOTIFICATIONS
 >
-export type AddActiveNotificationsAction = NotificationsAction<
+export type addActiveNotificationAction = NotificationsAction<
   {
-    notifications: NotificationWithDuration[]
+    notification: NotificationWithDuration
   },
   typeof ADD_ACTIVE_NOTIFICATIONS
 >
-export const addActiveNotifications: AddActiveNotificationsActionCreator = ({
-  notifications,
-}) => ({ payload: { notifications }, type: ADD_ACTIVE_NOTIFICATIONS })
+export const addActiveNotification: addActiveNotificationActionCreator = ({
+  notification,
+}) => ({ payload: { notification }, type: ADD_ACTIVE_NOTIFICATIONS })
 
 export type ExpireNotificationsActionCreator = NotificationsActionCreator<
   {

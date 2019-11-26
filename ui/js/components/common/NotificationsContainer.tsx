@@ -58,9 +58,8 @@ export const NotificationsContainer: FunctionComponent<
     const { active, expired } = processNotifications(notifications)
     setActiveNotifs(active)
     setExpiredNotifs(expired)
-  }, [])
+  }, [notifications])
 
-  // Every second, update the expiry key and call callback for all expired notifications
   useInterval(() => {
     const { active, expired } = processNotifications(activeNotifs)
     const allExpiredNotifs = [...expired, ...expiredNotifs]

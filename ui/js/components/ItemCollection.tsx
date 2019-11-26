@@ -19,7 +19,6 @@ export class CurrentItems extends Component<
 
     return (
       <div>
-        <h2>Your Accounts</h2>
         {cardsByItems.length >= 0 ? (
           <div className="items-collection">
             {cardsByItems.map((item, i) => (

@@ -59,6 +59,7 @@ export class IncomeSpendingDetailsGrid extends Component<
 
     return (
       <div>
+        <h2>Transactions</h2>
         <div>Income: {`${input}`}</div>
         <div>Spending: {`${output}`}</div>
         <div

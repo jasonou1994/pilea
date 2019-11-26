@@ -18,10 +18,6 @@ export const services = serviceDefs.reduce(
         try {
           const url = host + path
 
-          console.log(url, {
-            ...options,
-            body,
-          })
           const rawResponse = await fetch(url, {
             ...options,
             ...(options.method === 'POST' ? { body } : {}),
@@ -29,11 +25,22 @@ export const services = serviceDefs.reduce(
           const response = await rawResponse.json()
           const { error, success, status, ...contents } = response
 
-          console.log(response)
+          if (success) {
+            resolve({ ...contents, status })
+          } else {
+            reject(
+              error
+                ? { status, error }
+                : {
+                    status: 'Unknown server error',
+                    error: `Unknown server error occured: ${{ ...contents }}`,
+                  }
+            )
+          }
 
           success ? resolve({ ...contents, status }) : reject({ status, error })
-        } catch (error) {
-          reject({ error, status: `Error in ${name}` })
+        } catch (e) {
+          reject({ error: `Unknown error: ${e}`, status: `Error in ${name}` })
         }
       })
     }

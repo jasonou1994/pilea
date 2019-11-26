@@ -28,7 +28,7 @@ const notifications: (
     case ADD_ACTIVE_NOTIFICATIONS: {
       newState = update(state, ACTIVE_NOTIFICATIONS, prevActiveNotifs => [
         ...prevActiveNotifs,
-        action.payload.notifications,
+        action.payload.notification,
       ])
 
       break
@@ -45,14 +45,13 @@ const notifications: (
           true as boolean
         )
       )
-
       const newExpiredNotifs = [
         ...state[EXPIRED_NOTIFICATIONS],
         ...action.payload.notifications,
       ]
 
-      newState = set(state, ACTIVE_NOTIFICATIONS, newActiveNotifs)
-      newState = set(state, EXPIRED_NOTIFICATIONS, newExpiredNotifs)
+      newState = setIn(state, [ACTIVE_NOTIFICATIONS], newActiveNotifs)
+      newState = setIn(newState, [EXPIRED_NOTIFICATIONS], newExpiredNotifs)
 
       break
     }

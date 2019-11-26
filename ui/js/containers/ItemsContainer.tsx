@@ -45,12 +45,7 @@ class _ItemsContainer extends Component<
 
     return (
       <div id="item-panel">
-        <AddNewItem
-          {...{
-            user,
-            fetchAddItemAction,
-          }}
-        />
+        <h2>Your Accounts</h2>
         {cardsByItems.length > 0 && (
           <RefreshItemData
             {...{
@@ -59,6 +54,10 @@ class _ItemsContainer extends Component<
             }}
           />
         )}
+        <AddNewItem
+          {...{ onClick: fetchAddItemAction, hidden: !user.confirmed }}
+        />
+
         <CurrentItems
           {...{
             cardsByItems,

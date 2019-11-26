@@ -8,24 +8,20 @@ interface RefreshItemDataProps {
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
 }
 
-interface RefreshItemDataState {}
-
-export class RefreshItemData extends Component<
-  RefreshItemDataProps,
-  RefreshItemDataState
-> {
+export class RefreshItemData extends Component<RefreshItemDataProps> {
   render() {
     const { cardsByItems, fetchRefreshTransactionsAction } = this.props
 
     return (
       <div>
         <div>
-          Your data was last refreshed on:
-          {moment(cardsByItems[0].lastUpdated.replace(/"/g, '')).format(
-            'dddd, MMMM Do YYYY, h:mm:ss a'
-          )}
+          {`Your data was last refreshed on: ${moment(
+            cardsByItems[0].lastUpdated.replace(/"/g, '')
+          ).format('dddd, MMMM Do YYYY, h:mm a')}`}
         </div>
-        <button onClick={fetchRefreshTransactionsAction}>Refresh now</button>
+        <button className="button" onClick={fetchRefreshTransactionsAction}>
+          Refresh now
+        </button>
       </div>
     )
   }

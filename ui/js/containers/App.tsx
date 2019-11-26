@@ -37,36 +37,41 @@ class _App extends Component<AppProps> {
       expireNotificationsAction,
     } = this.props
 
+    // console.log(activeNotifications)
+
     return (
-      <Router>
-        <Route path="/confirmed">
-          <>
-            <div>Thanks for confirming your email!</div>
-            <Link to="/">Please sign in.</Link>
-          </>
-        </Route>
-        <Route path="/password">
-          <>
-            Reset Container
-            <PasswordResetContainer></PasswordResetContainer>
-          </>
-        </Route>
-        <Route exact path="/">
-          <HeaderContainer />
-          <NotificationsContainer
-            {...{
-              notifications: activeNotifications,
-              onExpireHandler: (notifications: NotificationWithDuration[]) =>
-                expireNotificationsAction({ notifications }),
-            }}
-          ></NotificationsContainer>
-          {!loggedIn ? (
-            <LogInContainer />
-          ) : (
-            <MainView {...{ isTransactionsLoading }} />
-          )}
-        </Route>
-      </Router>
+      <>
+        <NotificationsContainer
+          {...{
+            notifications: activeNotifications,
+            onExpireHandler: (notifications: NotificationWithDuration[]) =>
+              expireNotificationsAction({ notifications }),
+          }}
+        />
+        <Router>
+          <Route path="/confirmed">
+            <>
+              <div>Thanks for confirming your email!</div>
+              <Link to="/">Please sign in.</Link>
+            </>
+          </Route>
+          <Route path="/password">
+            <>
+              Reset Container
+              <PasswordResetContainer></PasswordResetContainer>
+            </>
+          </Route>
+          <Route exact path="/">
+            <HeaderContainer />
+
+            {!loggedIn ? (
+              <LogInContainer />
+            ) : (
+              <MainView {...{ isTransactionsLoading }} />
+            )}
+          </Route>
+        </Router>
+      </>
     )
   }
 }

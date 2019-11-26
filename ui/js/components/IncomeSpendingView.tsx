@@ -56,13 +56,8 @@ export class IncomeSpendingView extends Component<
     } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
-        IncomeSpendingView
+      <div>
+        <h2>Income and Spending</h2>
         <IncomeSpendingChart
           {...{
             transactionsByDayCountCombined,

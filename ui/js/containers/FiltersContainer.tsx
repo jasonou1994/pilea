@@ -47,6 +47,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
 
     return (
       <div id="filters">
+        <h2>Filters</h2>
         <CardFilter
           {...{
             cardsByItems,

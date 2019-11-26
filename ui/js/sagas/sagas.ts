@@ -1,13 +1,9 @@
 import { call, put, takeLatest } from 'redux-saga/effects'
 import moment from 'moment'
-// @ts-ignore
-import uuid from 'uuid'
 import {
-  addTransactions,
   readdTransactions,
   setLoggedIn,
   setUserInfo,
-  addCards,
   setItems,
   FetchCreateUserAction,
   FetchAddItemInterface,
@@ -16,7 +12,7 @@ import {
   setCards,
   setTransactions,
   FetchSendPasswordResetEmailAction,
-  addActiveNotifications,
+  addActiveNotification,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -40,16 +36,12 @@ import {
 import { services } from '../utilities/services'
 import {
   Account as PlaidCard,
-  Transaction as PlaidTransaction,
   Iso8601DateString,
   TransactionLocation,
   TransactionPaymentMeta,
 } from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
-import {
-  TEMPORARY,
-  NotificationDurationType,
-} from '../components/common/NotificationsContainer'
+import { createNotification } from '../utilities/utils'
 
 export interface DBItem {
   id: number
@@ -66,7 +58,7 @@ export interface PileaCard extends PlaidCard {
 export interface APIResponse {
   success: boolean
   status: string
-  error: any
+  error: string
 }
 
 export interface GetItemsResponse extends AddItemResponse {}
@@ -132,8 +124,27 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Add Account',
+          `Account ${alias} successfully added. Data for all accounts refreshed.`,
+          true
+        ),
+      })
+    )
   } catch ({ error, status }) {
     console.error(status, error)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Add Account',
+          `Failed to add account ${alias}: ${error}`,
+          false
+        ),
+      })
+    )
   }
 }
 
@@ -149,8 +160,27 @@ function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
-  } catch (error) {
-    console.error(error)
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Remove Account',
+          `Account successfully removed. Data for all accounts refreshed.`,
+          true
+        ),
+      })
+    )
+  } catch ({ error, status }) {
+    console.error(error, status)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Remove Account',
+          `Failed to remove account: ${error}`,
+          false
+        ),
+      })
+    )
   }
 }
 
@@ -197,25 +227,23 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
 
     // 3. Notification
     yield put(
-      addActiveNotifications({
-        notifications: [
-          {
-            timeCreated: Date.now(),
-            durationType: TEMPORARY as NotificationDurationType,
-            durationInSeconds: 5,
-            id: uuid(),
-            success: true,
-            title: 'Login Success',
-            message: 'You have successfully logged in. Welcome!',
-          },
-        ],
+      addActiveNotification({
+        notification: createNotification(
+          'Login Success',
+          'You have successfully logged in. Welcome!',
+          true
+        ),
       })
     )
-  } catch (e) {
+  } catch ({ error, status }) {
     yield put(stopLoading(LOGIN))
     yield put(stopLoading(TRANSACTIONS))
 
-    console.error(e)
+    yield put(
+      addActiveNotification({
+        notification: createNotification('Login Error', error, false),
+      })
+    )
   }
 }
 
@@ -231,8 +259,26 @@ function* fetchLogOut() {
         confirmed: false,
       })
     )
-  } catch (e) {
-    console.error(e)
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Log Out',
+          `Successfully logged out.`,
+          true
+        ),
+      })
+    )
+  } catch ({ error, status }) {
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Failed to Log Out',
+          `Please refresh this page to log out properly.`,
+          false
+        ),
+      })
+    )
   }
 }
 
@@ -258,8 +304,27 @@ function* fetchCreateUser({
         confirmed: false,
       })
     )
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Create Pilea Account',
+          `Pilea account ${username} successfully created!`,
+          true
+        ),
+      })
+    )
   } catch ({ status, error }) {
     console.error(status, error)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Create Pilea Account',
+          `Failed to create Pilea account: ${error}.`,
+          false
+        ),
+      })
+    )
   }
 }
 
@@ -288,8 +353,27 @@ function* refreshTransactions() {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
-  } catch (e) {
-    console.error('Error in refreshTransactions:', e)
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Transactions',
+          `Successfully refreshed data for all accounts.`,
+          true
+        ),
+      })
+    )
+  } catch ({ error, status }) {
+    console.error('Error in refreshTransactions:', error, status)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Transactions',
+          `Failed to refresh transactions: ${error}`,
+          false
+        ),
+      })
+    )
   }
 
   yield put(stopLoading(TRANSACTIONS))
@@ -299,14 +383,31 @@ function* sendPasswordResetEmail({
   payload: { email },
 }: FetchSendPasswordResetEmailAction) {
   try {
-    const { status, success, error }: APIResponse = yield call(
+    const { status, success }: APIResponse = yield call(
       services[API_USER_SEND_PASSWORD_RESET_EMAIL],
       { body: JSON.stringify({ email }) }
     )
 
-    console.log(status, success, error)
-  } catch (e) {
-    console.error('Error in sendPasswordResetEmail:', e)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Password Reset',
+          `If account exists, password reset email will be sent to ${email}`,
+          true
+        ),
+      })
+    )
+  } catch ({ error, status }) {
+    console.error('Error in sendPasswordResetEmail:', error, status)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Password Reset',
+          `Failed to generate password reset email: ${error}`,
+          false
+        ),
+      })
+    )
   }
 }
 

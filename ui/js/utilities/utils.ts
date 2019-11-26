@@ -18,6 +18,12 @@ import {
   TimeConsolidatedTransactionGroups,
 } from '../reducers'
 import { useEffect, useRef } from 'react'
+import {
+  NotificationWithDuration,
+  TEMPORARY,
+  PERSISTENT,
+} from '../components/common/NotificationsContainer'
+import uuid from 'uuid'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')
@@ -260,4 +266,28 @@ export const useInterval = (callback: any, delay: any) => {
       return () => clearInterval(id)
     }
   }, [delay])
+}
+
+export const createNotification: (
+  title: string,
+  message: string,
+  success: boolean,
+  duration?: number,
+  temporary?: boolean
+) => NotificationWithDuration = (
+  title,
+  message,
+  success,
+  duration = 5,
+  temporary = true
+) => {
+  return {
+    timeCreated: Date.now(),
+    durationType: temporary ? TEMPORARY : PERSISTENT,
+    durationInSeconds: duration,
+    id: uuid(),
+    success,
+    title,
+    message,
+  }
 }

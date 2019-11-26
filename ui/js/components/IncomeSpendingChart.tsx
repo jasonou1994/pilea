@@ -96,7 +96,6 @@ export class IncomeSpendingChart extends Component<
 
     return (
       <div ref={this.state.ref}>
-        <div style={{ fontSize: '18px' }}>Transactions by Time</div>
         <XYPlot
           height={300}
           width={

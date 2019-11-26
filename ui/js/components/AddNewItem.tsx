@@ -1,89 +1,37 @@
-import React, { Component } from 'react'
-// @ts-ignore
-import PlaidLink from 'react-plaid-link'
-import { PLAID_PUBLIC_KEY } from '../konstants'
+import React, { FunctionComponent, useState } from 'react'
 import { FetchAddItemActionCreator } from '../actions'
-import { User } from '../reducers/login'
+import { AddNewItemButton } from './AddNewItemButton'
+import { AddNewItemModal } from './AddNewItemModal'
 
 interface AddNewItemProps {
-  fetchAddItemAction: FetchAddItemActionCreator
-  user: User
+  hidden: boolean
+  onClick: FetchAddItemActionCreator
 }
 
-interface AddNewItemState {
-  isShownItemAliasEntry: boolean
-  accessToken?: string
-  alias?: string
-}
+export const AddNewItem: FunctionComponent<AddNewItemProps> = props => {
+  const [alias, setAlias] = useState('')
+  const [token, setToken] = useState('')
+  const [modalShown, setModalShown] = useState(false)
 
-export class AddNewItem extends Component<AddNewItemProps, AddNewItemState> {
-  constructor(props: AddNewItemProps) {
-    super(props)
-    this.state = {
-      isShownItemAliasEntry: false,
-    }
-  }
-
-  hideItemAliasEntry: () => void = () =>
-    this.setState({ isShownItemAliasEntry: false })
-
-  showItemAliasEntry: () => void = () =>
-    this.setState({ isShownItemAliasEntry: true })
-
-  setAccessToken: (token: string) => void = token =>
-    this.setState(
-      {
-        accessToken: token,
-      },
-      this.showItemAliasEntry
-    )
-
-  setAliasText: (alias: string) => void = alias => this.setState({ alias })
-
-  render: () => JSX.Element = () => {
-    const { isShownItemAliasEntry } = this.state
-    const {
-      fetchAddItemAction,
-      user: { confirmed },
-    } = this.props
-
-    return isShownItemAliasEntry ? (
-      <div>
-        <input
-          type="text"
-          placeholder="Enter a nickname for this financial institution."
-          onChange={({ target: { value } }) => this.setAliasText(value)}
-        />
-        <button
-          onClick={() => {
-            const { alias, accessToken } = this.state
-            fetchAddItemAction({ accessToken, alias })
-            this.hideItemAliasEntry()
-            this.setAliasText('')
+  return (
+    <div>
+      {!modalShown ? (
+        <AddNewItemButton
+          hidden={props.hidden}
+          onSuccess={(token: string) => {
+            setToken(token)
+            setModalShown(true)
           }}
-        >
-          Confirm
-        </button>
-      </div>
-    ) : (
-      <div>
-        {confirmed ? (
-          <PlaidLink
-            clientName="Pilea"
-            env={'development'}
-            product={['transactions']}
-            publicKey={PLAID_PUBLIC_KEY}
-            onSuccess={this.setAccessToken}
-            className=".button"
-          >
-            Add Institution
-          </PlaidLink>
-        ) : (
-          <div>
-            Please confirm account to add institutions. Check your email!
-          </div>
-        )}
-      </div>
-    )
-  }
+        />
+      ) : (
+        <AddNewItemModal
+          {...{
+            setAlias,
+            hideModal: () => setModalShown(false),
+            onClick: () => props.onClick({ accessToken: token, alias }),
+          }}
+        />
+      )}
+    </div>
+  )
 }

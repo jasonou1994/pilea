@@ -66,12 +66,8 @@ export class CategoryFilter extends Component<
     } = this.props
 
     return (
-      <div
-        style={{
-          border: '1px solid black',
-          padding: '5px',
-        }}
-      >
+      <div>
+        <h4>Categories</h4>
         <div
           className="ag-theme-balham"
           style={{

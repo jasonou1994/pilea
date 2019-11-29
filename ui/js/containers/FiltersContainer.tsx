@@ -7,7 +7,7 @@ import {
   ItemWithCards,
   RootState,
   categoryDataSelector,
-  CategoryData,
+  CategoriesWithTxData,
 } from '../reducers'
 import {
   toggleCardSelected,
@@ -20,17 +20,20 @@ import {
   ResetCategoriesSelectedActionCreator,
   setCategoriesSelected,
   SetCategoriesSelectedActionCreator,
+  toggleCategorySelected,
+  ToggleCategorySelectedActionCreator,
 } from '../actions'
 import '../../scss/index.scss'
 
 interface FiltersContainerProps {
   cardsByItems: ItemWithCards[]
-  categoryData: CategoryData
+  categoryData: CategoriesWithTxData
   toggleItemSelectedAction: ToggleItemSelectedActionCreator
   toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   resetCategoriesSelectedAction: ResetCategoriesSelectedActionCreator
   setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
+  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
 }
 
 class _FiltersContainer extends Component<FiltersContainerProps> {
@@ -43,6 +46,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
       resetSelectedTransactionKeyAction,
       resetCategoriesSelectedAction,
       setCategoriesSelectedAction,
+      toggleCategorySelectedAction,
     } = this.props
 
     return (
@@ -62,6 +66,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
             categoryData,
             resetCategoriesSelectedAction,
             setCategoriesSelectedAction,
+            toggleCategorySelectedAction,
           }}
         />
       </div>
@@ -80,5 +85,6 @@ export default connect(
     resetSelectedTransactionKeyAction: resetSelectedTransactionKey,
     resetCategoriesSelectedAction: resetCategoriesSelected,
     setCategoriesSelectedAction: setCategoriesSelected,
+    toggleCategorySelectedAction: toggleCategorySelected,
   }
 )(_FiltersContainer)

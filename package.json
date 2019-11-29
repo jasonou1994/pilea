@@ -5,7 +5,7 @@
   "repository": "",
   "main": "index.js",
   "scripts": {
-    "ui-dev": "webpack-dev-server --config webpack.dev.ts",
+    "ui-dev": "webpack-dev-server --config webpack.dev.ts --env.API_PORT=8000 --env.API_HOST=localhost",
     "ui-build": "webpack --mode production --config webpack.prod.ts",
     "server-dev": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c"
   },

@@ -95,23 +95,17 @@ export const expiredNotificationsSelector = (state: RootState) =>
 // Filtering
 export const allowedCardsSelector: (
   state: RootState
-) => { [key: string]: boolean } = createSelector(
-  cardsSelector,
-  cards => {
-    const allowedCards = cards.reduce(
-      (acc, card) => {
-        if (card.selected) {
-          acc[card.account_id] = true
-        }
+) => { [key: string]: boolean } = createSelector(cardsSelector, cards => {
+  const allowedCards = cards.reduce((acc, card) => {
+    if (card.selected) {
+      acc[card.account_id] = true
+    }
 
-        return acc
-      },
-      {} as { [key: string]: boolean }
-    )
+    return acc
+  }, {} as { [key: string]: boolean })
 
-    return allowedCards
-  }
-)
+  return allowedCards
+})
 
 // transaction filtering and combination
 export interface TxWithCardType extends PlaidTransaction {
@@ -188,15 +182,12 @@ export const categoryFilteredTransactionsSelector: (
   categoriesSelector,
   (transactions, categories) => {
     return transactions.filter(tx => {
-      const keepTx = tx.category.reduce(
-        (acc, cur) => {
-          if (!categories[cur]) {
-            acc = false
-          }
-          return acc
-        },
-        true as boolean
-      )
+      const keepTx = tx.category.reduce((acc, cur) => {
+        if (!categories[cur]) {
+          acc = false
+        }
+        return acc
+      }, true as boolean)
       return keepTx
     })
   }
@@ -214,15 +205,12 @@ export const dailyTransactionsSelector: (
       },
       {} as DailyTransactions
     )
-    const txByDates = transactions.reduce(
-      (acc, cur) => {
-        const { date } = cur
+    const txByDates = transactions.reduce((acc, cur) => {
+      const { date } = cur
 
-        acc[date].push(cur)
-        return acc
-      },
-      uniqueDates as DailyTransactions
-    )
+      acc[date].push(cur)
+      return acc
+    }, uniqueDates as DailyTransactions)
 
     return txByDates
   }
@@ -233,39 +221,36 @@ export const transactionsByDateInputOutputSelector: (
 ) => TimeConsolidatedTransactionGroups = createSelector(
   dailyTransactionsSelector,
   transactions => {
-    return Object.keys(transactions).reduce(
-      (finalResult, date) => {
-        finalResult[date] = transactions[date].reduce(
-          (dailyInfo, tx) => {
-            const { cardType, amount } = tx
+    return Object.keys(transactions).reduce((finalResult, date) => {
+      finalResult[date] = transactions[date].reduce(
+        (dailyInfo, tx) => {
+          const { cardType, amount } = tx
 
-            if (cardType === 'credit' && amount >= 0) {
-              dailyInfo.output += amount
-            }
-            if (cardType === 'credit' && amount <= 0) {
-              dailyInfo.input += -amount
-            }
-            if (cardType === 'depository' && amount >= 0) {
-              dailyInfo.output += amount
-            }
-            if (cardType === 'depository' && amount <= 0) {
-              dailyInfo.input += -amount
-            }
+          if (cardType === 'credit' && amount >= 0) {
+            dailyInfo.output += amount
+          }
+          if (cardType === 'credit' && amount <= 0) {
+            dailyInfo.input += -amount
+          }
+          if (cardType === 'depository' && amount >= 0) {
+            dailyInfo.output += amount
+          }
+          if (cardType === 'depository' && amount <= 0) {
+            dailyInfo.input += -amount
+          }
 
-            dailyInfo.transactions.push(tx)
+          dailyInfo.transactions.push(tx)
 
-            return dailyInfo
-          },
-          {
-            input: 0,
-            output: 0,
-            transactions: [],
-          } as TimeConsolidatedTransactionGroup
-        )
-        return finalResult
-      },
-      {} as TimeConsolidatedTransactionGroups
-    )
+          return dailyInfo
+        },
+        {
+          input: 0,
+          output: 0,
+          transactions: [],
+        } as TimeConsolidatedTransactionGroup
+      )
+      return finalResult
+    }, {} as TimeConsolidatedTransactionGroups)
   }
 )
 
@@ -375,24 +360,21 @@ export const transactionsBycardsSelector: (
 ) => TxGroupedByDateAndCards = createSelector(
   dailyTransactionsSelector,
   transactions => {
-    return Object.keys(transactions).reduce(
-      (result, date) => {
-        result[date] = transactions[date].reduce(
-          (acc, cur) => {
-            acc[cur.account_id]
-              ? acc[cur.account_id].push(cur)
-              : (acc[cur.account_id] = [cur])
-            return acc
-          },
-          {} as {
-            [card: string]: TxWithCardType[]
-          }
-        )
+    return Object.keys(transactions).reduce((result, date) => {
+      result[date] = transactions[date].reduce(
+        (acc, cur) => {
+          acc[cur.account_id]
+            ? acc[cur.account_id].push(cur)
+            : (acc[cur.account_id] = [cur])
+          return acc
+        },
+        {} as {
+          [card: string]: TxWithCardType[]
+        }
+      )
 
-        return result
-      },
-      {} as TxGroupedByDateAndCards
-    )
+      return result
+    }, {} as TxGroupedByDateAndCards)
   }
 )
 
@@ -412,9 +394,9 @@ export const cardsByItemsSelector: (
 )
 
 // Categories
-
-export interface CategoryData {
+export interface CategoriesWithTxData {
   [key: string]: {
+    selected: boolean
     spending: number
     txCount: number
   }
@@ -422,25 +404,32 @@ export interface CategoryData {
 
 export const categoryDataSelector: (
   state: RootState
-) => CategoryData = createSelector(
+) => CategoriesWithTxData = createSelector(
   cardAndTimeFilteredTransactionsSelector,
-  transactions =>
-    transactions.reduce(
-      (acc, tx) => {
-        tx.category.forEach(category => {
-          if (acc[category]) {
-            acc[category].spending += tx.amount
-            acc[category].txCount += 1
-          } else {
-            acc[category] = {
-              spending: tx.amount,
-              txCount: 1,
-            }
-          }
-        })
+  categoriesSelector,
 
-        return acc
-      },
-      {} as CategoryData
+  (transactions, categories) => {
+    const categoriesSetUp: CategoriesWithTxData = Object.entries(
+      categories
+    ).reduce(
+      (acc, [category, selected]) => ({
+        ...acc,
+        [category]: {
+          selected,
+          spending: 0,
+          txCount: 0,
+        },
+      }),
+      {} as CategoriesWithTxData
     )
+
+    return transactions.reduce((acc, tx) => {
+      tx.category.forEach(category => {
+        acc[category].spending += tx.amount
+        acc[category].txCount += 1
+      })
+
+      return acc
+    }, categoriesSetUp)
+  }
 )

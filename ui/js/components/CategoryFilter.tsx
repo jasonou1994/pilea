@@ -1,103 +1,65 @@
-import React, { Component } from 'react'
-import { CategoryData } from '../reducers'
-import {
-  CATEGORY_GRID_FIELD_INCLUDED,
-  CATEGORY_GRID_FIELD_CATEGORY,
-  CATEGORY_GRID_FIELD_TX_COUNT,
-  CATEGORY_GRID_FIELD_AMOUNT,
-} from '../konstants'
-import { AgGridReact } from 'ag-grid-react/lib/agGridReact'
-import { categoryGridColDefs } from '../utilities/layout'
-import { GridApi, ColumnApi, SelectionChangedEvent } from 'ag-grid-community'
-import {
-  ResetCategoriesSelectedActionCreator,
-  SetCategoriesSelectedActionCreator,
-} from '../actions'
+import React, { FunctionComponent, useState, useEffect } from 'react'
+import numeral from 'numeral'
+
+import { CategoriesWithTxData } from '../reducers'
+import { ToggleCategorySelectedActionCreator } from '../actions'
 
 interface CategoryFilterProps {
-  categoryData: CategoryData
-  resetCategoriesSelectedAction: ResetCategoriesSelectedActionCreator
-  setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
+  categoryData: CategoriesWithTxData
+  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
 }
 
-interface CategoryFilterState {
-  api?: GridApi
-  columnApi?: ColumnApi
-}
+type CategoryRowData = Array<{
+  category: string
+  selected: boolean
+  txCount: number
+  spending: number
+}>
 
-export class CategoryFilter extends Component<
-  CategoryFilterProps,
-  CategoryFilterState
-> {
-  constructor(props: CategoryFilterProps) {
-    super(props)
+export const CategoryFilter: FunctionComponent<CategoryFilterProps> = props => {
+  const [rowData, setRowData] = useState<CategoryRowData>([])
 
-    this.state = {}
-  }
+  useEffect(
+    () =>
+      setRowData(
+        Object.entries(props.categoryData)
+          .filter(([_, { spending }]) => spending > 0)
+          .map(([category, { spending, txCount, selected }]) => ({
+            category,
+            selected,
+            txCount,
+            spending,
+          }))
+          .sort((a, b) => b.spending - a.spending)
+      ),
+    [props.categoryData]
+  )
 
-  convertToRowData = () =>
-    Object.entries(this.props.categoryData)
-      .map(([categoryName, { spending, txCount }]) => ({
-        [CATEGORY_GRID_FIELD_CATEGORY]: categoryName,
-        [CATEGORY_GRID_FIELD_TX_COUNT]: txCount,
-        [CATEGORY_GRID_FIELD_AMOUNT]: spending,
-      }))
-      .sort(
-        (a, b) => b[CATEGORY_GRID_FIELD_AMOUNT] - a[CATEGORY_GRID_FIELD_AMOUNT]
-      )
-
-  setGridAPIs = ({
-    api,
-    columnApi,
-  }: {
-    api: GridApi
-    columnApi: ColumnApi
-  }) => {
-    api.selectAll()
-
-    this.setState({ api, columnApi })
-  }
-
-  render() {
-    const { api } = this.state
-    const {
-      resetCategoriesSelectedAction,
-      setCategoriesSelectedAction,
-    } = this.props
-
-    return (
-      <div>
-        <h4>Categories</h4>
-        <div
-          className="ag-theme-balham"
-          style={{
-            height: '250px',
-          }}
-        >
-          <AgGridReact
-            onGridReady={this.setGridAPIs}
-            onModelUpdated={() => {
-              if (api) {
-                resetCategoriesSelectedAction({})
-                api.selectAll()
-              }
-            }}
-            onSelectionChanged={({ api }: SelectionChangedEvent) => {
-              const currentSelectedRows = api.getSelectedRows()
-
-              setCategoriesSelectedAction(
-                currentSelectedRows.map(
-                  catRow => catRow[CATEGORY_GRID_FIELD_CATEGORY]
-                )
-              )
-            }}
-            rowSelection="multiple"
-            rowMultiSelectWithClick={true}
-            columnDefs={categoryGridColDefs}
-            rowData={this.convertToRowData()}
-          />
-        </div>
+  return (
+    <>
+      <h4>Categories</h4>
+      <div className="category-table">
+        {rowData.map(({ category, spending, txCount, selected }) => {
+          return (
+            <div className="category-row">
+              <input
+                style={{ backgroundColor: 'yellow' }}
+                type="checkbox"
+                checked={selected}
+                onChange={() => {
+                  props.toggleCategorySelectedAction({ category })
+                }}
+              />
+              <div className="category-row-items">
+                <div className="category-name category-item">{category}</div>
+                <div className="category-name category-item">
+                  {numeral(spending).format('$0,0')}
+                </div>
+              </div>
+            </div>
+          )
+        })}
       </div>
-    )
-  }
+    </>
+  )
 }

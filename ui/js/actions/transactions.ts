@@ -96,11 +96,11 @@ export const readdTransactions: ReaddTransactionsActionCreator = () => ({
 })
 
 export type ToggleCategorySelectedActionCreator = TransactionsActionCreator<
-  string,
+  { category: string },
   typeof TOGGLE_CATEGORY_SELECTED
 >
 export type ToggleCategorySelectedInterface = TransactionsAction<
-  string,
+  { category: string },
   typeof TOGGLE_CATEGORY_SELECTED
 >
 export const toggleCategorySelected: ToggleCategorySelectedActionCreator = category => ({

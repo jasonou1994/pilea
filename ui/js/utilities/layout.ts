@@ -65,31 +65,3 @@ export const getDataGridColumnDefs: (
       sortable,
       filter,
     }))
-
-export const categoryGridColDefs: GridColumnDef[] = [
-  {
-    headerName: CATEGORY_GRID_HEADER_INCLUDED,
-    field: CATEGORY_GRID_FIELD_INCLUDED,
-    checkboxSelection: true,
-    sortable: true,
-    filter: true,
-  },
-  {
-    headerName: CATEGORY_GRID_HEADER_CATEGORY,
-    field: CATEGORY_GRID_FIELD_CATEGORY,
-    sortable: true,
-    filter: true,
-  },
-  {
-    headerName: CATEGORY_GRID_HEADER_TX_COUNT,
-    field: CATEGORY_GRID_FIELD_TX_COUNT,
-    sortable: true,
-    filter: true,
-  },
-  {
-    headerName: CATEGORY_GRID_HEADER_AMOUNT,
-    field: CATEGORY_GRID_FIELD_AMOUNT,
-    sortable: true,
-    filter: true,
-  },
-]

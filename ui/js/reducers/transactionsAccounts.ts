@@ -67,17 +67,14 @@ const transactions: (
       const newCategories = [
         ...translatedTxs.map(tx => tx.category),
         ...Object.keys(state[CATEGORIES]).map(category => [category]),
-      ].reduce(
-        (acc, catStringArr) => {
-          catStringArr.forEach(cat => {
-            if (!acc[cat]) {
-              acc[cat] = true
-            }
-          })
-          return acc
-        },
-        {} as Categories
-      )
+      ].reduce((acc, catStringArr) => {
+        catStringArr.forEach(cat => {
+          if (!acc[cat]) {
+            acc[cat] = true
+          }
+        })
+        return acc
+      }, {} as Categories)
 
       newState = setIn(newState, [CATEGORIES], newCategories)
       break
@@ -93,17 +90,14 @@ const transactions: (
       // Everytime we get new data, we refresh all categories to be selected
       const newCategories = translatedTxs
         .map(tx => tx.category)
-        .reduce(
-          (acc, catStringArr) => {
-            catStringArr.forEach(cat => {
-              if (!acc[cat]) {
-                acc[cat] = true
-              }
-            })
-            return acc
-          },
-          {} as Categories
-        )
+        .reduce((acc, catStringArr) => {
+          catStringArr.forEach(cat => {
+            if (!acc[cat]) {
+              acc[cat] = true
+            }
+          })
+          return acc
+        }, {} as Categories)
 
       newState = setIn(newState, [CATEGORIES], newCategories)
       break
@@ -112,7 +106,7 @@ const transactions: (
     case TOGGLE_CATEGORY_SELECTED: {
       newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) => ({
         ...oldCategories,
-        [action.payload]: !oldCategories[action.payload],
+        [action.payload.category]: !oldCategories[action.payload.category],
       }))
 
       break
@@ -120,13 +114,10 @@ const transactions: (
 
     case RESET_CATEGORIES_SELECTED: {
       newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) =>
-        Object.keys(oldCategories).reduce(
-          (acc, cur) => {
-            acc[cur] = true
-            return acc
-          },
-          {} as Categories
-        )
+        Object.keys(oldCategories).reduce((acc, cur) => {
+          acc[cur] = true
+          return acc
+        }, {} as Categories)
       )
 
       break
@@ -136,13 +127,10 @@ const transactions: (
       newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) => {
         const allFalseCategories: Categories = Object.keys(
           oldCategories
-        ).reduce(
-          (acc, cur) => {
-            acc[cur] = false
-            return acc
-          },
-          {} as Categories
-        )
+        ).reduce((acc, cur) => {
+          acc[cur] = false
+          return acc
+        }, {} as Categories)
 
         const updatedCategories: Categories = action.payload.reduce(
           (acc, cur) => {
@@ -180,19 +168,14 @@ const transactions: (
       newState = setIn(
         state,
         [CARDS],
-        action.payload.reduce(
-          (acc, newCard) => {
-            if (
-              !acc.find(
-                existCard => existCard.account_id === newCard.account_id
-              )
-            ) {
-              acc.push({ ...newCard, selected: true } as CardWithFilter)
-            }
-            return acc
-          },
-          [] as PlaidCard[]
-        )
+        action.payload.reduce((acc, newCard) => {
+          if (
+            !acc.find(existCard => existCard.account_id === newCard.account_id)
+          ) {
+            acc.push({ ...newCard, selected: true } as CardWithFilter)
+          }
+          return acc
+        }, [] as PlaidCard[])
       )
       break
     }

@@ -2,20 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { CurrentItems } from '../components/ItemCollection'
 import { AddNewItem } from '../components/AddNewItem'
-import { RefreshData } from '../components/RefreshData'
-import {
-  cardsByItemsSelector,
-  ItemWithCards,
-  RootState,
-  userSelector,
-} from '../reducers'
+
 import {
   fetchAddItem,
   FetchAddItemActionCreator,
   fetchRemoveItem,
   FetchRemoveItemActionCreator,
 } from '../actions'
-import { User } from '../reducers/login'
+import { User, userSelector } from '../reducers/login'
+import { ItemWithCards, RootState, cardsByItemsSelector } from '../reducers'
 
 interface ItemsContainerProps {
   cardsByItems: ItemWithCards[]

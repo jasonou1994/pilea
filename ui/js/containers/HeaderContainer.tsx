@@ -1,13 +1,5 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Breadcrumb } from '../components/Breadcrumb'
-import {
-  RootState,
-  loggedInSelector,
-  userSelector,
-  cardsByItemsSelector,
-  ItemWithCards,
-} from '../reducers'
 import {
   fetchLogOut,
   FetchLogOutActionCreator,
@@ -17,6 +9,8 @@ import {
 import { USER_ID, USER_NAME } from '../konstants'
 import { Button } from '../components/common/Button'
 import { RefreshData } from '../components/RefreshData'
+import { ItemWithCards, RootState, cardsByItemsSelector } from '../reducers'
+import { loggedInSelector, userSelector } from '../reducers/login'
 
 interface HeaderContainerProps {
   fetchLogOutAction: FetchLogOutActionCreator

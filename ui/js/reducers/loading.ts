@@ -1,6 +1,7 @@
 import { Loaders, LoadingActions } from '../actions/loading'
 import { set } from 'timm'
-import { LOGIN, TRANSACTIONS, START, STOP } from '../konstants'
+import { LOGIN, TRANSACTIONS, START, STOP, LOADING } from '../konstants'
+import { RootState } from '.'
 
 export type LoadingState = {
   [key in Loaders]: boolean
@@ -39,9 +40,9 @@ const loading = (
 
 export default loading
 
-export const isLoginLoadingSelector = (state: LoadingState): boolean =>
-  state[LOGIN]
-export const isTransactionsLoadingSelector = (state: LoadingState): boolean =>
-  state[TRANSACTIONS]
-export const isAnythingLoadingSelector = (state: LoadingState): boolean =>
-  Object.values(state).reduce((acc, cur) => cur || acc, false)
+export const isLoginLoadingSelector = (state: RootState): boolean =>
+  state[LOADING][LOGIN]
+export const isTransactionsLoadingSelector = (state: RootState): boolean =>
+  state[LOADING][TRANSACTIONS]
+export const isAnythingLoadingSelector = (state: RootState): boolean =>
+  Object.values(state[LOADING]).reduce((acc, cur) => cur || acc, false)

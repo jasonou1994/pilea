@@ -8,8 +8,10 @@ import {
   fetchCreateUser,
   FetchCreateUserActionCreator,
 } from '../actions'
-import { isLoginLoadingSelector, RootState } from '../reducers'
+
 import { Link } from 'react-router-dom'
+import { RootState } from '../reducers'
+import { isLoginLoadingSelector } from '../reducers/loading'
 
 interface LogInContainerProps {
   fetchLogIn: FetchLogInActionCreator

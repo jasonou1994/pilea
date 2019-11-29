@@ -20,6 +20,7 @@ import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 import { parseRawTransaction } from '../utilities/translation'
+import { RootState } from '.'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean
@@ -251,17 +252,14 @@ const transactions: (
 export default transactions
 
 export const transactionsSelector: (
-  state: TransactionsAccountsState
-) => PlaidTransaction[] = state => state[TRANSACTIONS]
+  state: RootState
+) => PlaidTransaction[] = state => state[TRANSACTIONS][TRANSACTIONS]
 
-export const cardsSelector: (
-  state: TransactionsAccountsState
-) => CardWithFilter[] = state => state[CARDS]
+export const cardsSelector: (state: RootState) => CardWithFilter[] = state =>
+  state[TRANSACTIONS][CARDS]
 
-export const itemsSelector: (
-  state: TransactionsAccountsState
-) => ItemWithFilter[] = state => state[ITEMS]
+export const itemsSelector: (state: RootState) => ItemWithFilter[] = state =>
+  state[TRANSACTIONS][ITEMS]
 
-export const categoriesSelector: (
-  state: TransactionsAccountsState
-) => Categories = state => state[CATEGORIES]
+export const categoriesSelector: (state: RootState) => Categories = state =>
+  state[TRANSACTIONS][CATEGORIES]

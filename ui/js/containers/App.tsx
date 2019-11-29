@@ -5,12 +5,7 @@ import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
 import PasswordResetContainer from './PasswordResetContainer'
 import { MainView } from '../components/MainView'
-import {
-  loggedInSelector,
-  RootState,
-  isTransactionsLoadingSelector,
-  activeNotificationsSelector,
-} from '../reducers'
+import { RootState } from '../reducers'
 import '../../scss/index.scss'
 import {
   expireNotifications,
@@ -19,7 +14,10 @@ import {
 import {
   NotificationsContainer,
   NotificationWithDuration,
-} from '../components/common/NotificationsContainer'
+} from '../components/NotificationsContainer'
+import { loggedInSelector } from '../reducers/login'
+import { isTransactionsLoadingSelector } from '../reducers/loading'
+import { activeNotificationsSelector } from '../reducers/notifications'
 
 interface AppProps {
   loggedIn: boolean

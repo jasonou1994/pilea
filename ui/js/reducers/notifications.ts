@@ -3,10 +3,12 @@ import {
   EXPIRED_NOTIFICATIONS,
   ADD_ACTIVE_NOTIFICATIONS,
   EXPIRE_NOTIFICATIONS,
+  NOTIFICATIONS,
 } from '../konstants/index'
-import { setIn, set, update } from 'timm'
+import { setIn, update } from 'timm'
 import { NotificationActions } from '../actions'
-import { NotificationWithDuration } from '../components/common/NotificationsContainer'
+import { NotificationWithDuration } from '../components/NotificationsContainer'
+import { RootState } from '.'
 
 export interface NotificationsState {
   [ACTIVE_NOTIFICATIONS]: NotificationWithDuration[]
@@ -35,15 +37,12 @@ const notifications: (
     }
     case EXPIRE_NOTIFICATIONS: {
       const newActiveNotifs = state[ACTIVE_NOTIFICATIONS].filter(activeNotif =>
-        action.payload.notifications.reduce(
-          (acc, expiredNotif) => {
-            if (expiredNotif.id === activeNotif.id) {
-              acc = false
-            }
-            return acc
-          },
-          true as boolean
-        )
+        action.payload.notifications.reduce((acc, expiredNotif) => {
+          if (expiredNotif.id === activeNotif.id) {
+            acc = false
+          }
+          return acc
+        }, true as boolean)
       )
       const newExpiredNotifs = [
         ...state[EXPIRED_NOTIFICATIONS],
@@ -64,9 +63,9 @@ const notifications: (
 }
 export default notifications
 
-export const activeNotificationsSelector = (state: NotificationsState) => {
-  return state[ACTIVE_NOTIFICATIONS]
+export const activeNotificationsSelector = (state: RootState) => {
+  return state[NOTIFICATIONS][ACTIVE_NOTIFICATIONS]
 }
-export const expiredNotificationsSelector = (state: NotificationsState) => {
-  return state[EXPIRED_NOTIFICATIONS]
+export const expiredNotificationsSelector = (state: RootState) => {
+  return state[NOTIFICATIONS][EXPIRED_NOTIFICATIONS]
 }

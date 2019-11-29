@@ -2,9 +2,11 @@ import {
   SELECTED_TRANSACTION_KEY,
   SET_SELECTED_TRANSACTION_KEY,
   RESET_SELECTED_TRANSACTION_KEY,
+  GRID,
 } from '../konstants/index'
 import { setIn } from 'timm'
 import { GridActions } from '../actions'
+import { RootState } from '.'
 
 export interface GridState {
   [SELECTED_TRANSACTION_KEY]: string
@@ -39,6 +41,6 @@ const grid: (state: GridState, action: GridActions) => GridState = (
 }
 export default grid
 
-export const selectedTransactionKeySelector = (state: typeof initialState) => {
-  return state[SELECTED_TRANSACTION_KEY]
+export const selectedTransactionKeySelector = (state: RootState) => {
+  return state[GRID][SELECTED_TRANSACTION_KEY]
 }

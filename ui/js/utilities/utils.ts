@@ -22,7 +22,7 @@ import {
   NotificationWithDuration,
   TEMPORARY,
   PERSISTENT,
-} from '../components/common/NotificationsContainer'
+} from '../components/NotificationsContainer'
 import uuid from 'uuid'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
@@ -74,13 +74,10 @@ const nonCountedCategories = [
   // { accountType: 'depository', amount: 'negative', category: 'Transfer' },
   { accountType: 'depository', amount: 'positive', category: 'CreditCard' },
   { accountType: 'depository', amount: 'positive', category: 'Deposit' },
-].reduce(
-  (acc, { accountType, amount, category }) => {
-    acc[`${accountType}-${amount}-${category}`] = true
-    return acc
-  },
-  {} as { [category: string]: true }
-)
+].reduce((acc, { accountType, amount, category }) => {
+  acc[`${accountType}-${amount}-${category}`] = true
+  return acc
+}, {} as { [category: string]: true })
 
 export const shouldKeepTransaction: (
   tx: {
@@ -101,20 +98,17 @@ export const shouldKeepTransaction: (
           .split(',')
           .map(cat => cat.trim())
 
-  return cleanedCategories.reduce(
-    (acc, category) => {
-      const tryMatch = `${accountType}-${
-        amount >= 0 ? 'positive' : 'negative'
-      }-${category}`
+  return cleanedCategories.reduce((acc, category) => {
+    const tryMatch = `${accountType}-${
+      amount >= 0 ? 'positive' : 'negative'
+    }-${category}`
 
-      if (nonCountedCategories[tryMatch]) {
-        acc = false
-      }
+    if (nonCountedCategories[tryMatch]) {
+      acc = false
+    }
 
-      return acc
-    },
-    true as boolean
-  )
+    return acc
+  }, true as boolean)
 }
 
 export const convertDateSelectString: (
@@ -231,18 +225,15 @@ export const getOrderedDates: (
         .format('YYYY-MM-DD')
     )
 
-  const orderedDatesMap = orderedDatesArray.reduce(
-    (result, date) => {
-      result[date] = {
-        input: 0,
-        output: 0,
-        transactions: [],
-      } as TimeConsolidatedTransactionGroup
+  const orderedDatesMap = orderedDatesArray.reduce((result, date) => {
+    result[date] = {
+      input: 0,
+      output: 0,
+      transactions: [],
+    } as TimeConsolidatedTransactionGroup
 
-      return result
-    },
-    {} as TimeConsolidatedTransactionGroups
-  )
+    return result
+  }, {} as TimeConsolidatedTransactionGroups)
 
   return { orderedDatesArray, orderedDatesMap }
 }

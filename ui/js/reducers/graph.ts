@@ -8,8 +8,10 @@ import {
   AvailableTimeUnits,
   SET_GRAPH_HISTORICAL_LENGTH,
   MONTH,
+  GRAPH,
 } from '../konstants/index'
 import { GraphInterfaces } from '../actions'
+import { RootState } from '.'
 
 export interface GraphState {
   [GRAPH_FIDELITY]: AvailableTimeUnits
@@ -59,8 +61,8 @@ const graph: (state: GraphState, action: GraphInterfaces) => GraphState = (
 }
 export default graph
 
-export const graphFidelitySelector = (state: typeof initialState) =>
-  state[GRAPH_FIDELITY]
+export const graphFidelitySelector = (state: RootState) =>
+  state[GRAPH][GRAPH_FIDELITY]
 
-export const graphHistoricalLengthSelector = (state: typeof initialState) =>
-  state[HISTORICAL_LENGTH]
+export const graphHistoricalLengthSelector = (state: RootState) =>
+  state[GRAPH][HISTORICAL_LENGTH]

@@ -1,6 +1,6 @@
 import { set } from 'timm'
 import { SizingActions } from '../actions'
-import { WINDOW_WIDTH, SET_CURRENT_WINDOW_WIDTH } from '../konstants'
+import { WINDOW_WIDTH, SET_CURRENT_WINDOW_WIDTH, SIZING } from '../konstants'
 import { RootState } from '.'
 
 export interface SizingState {
@@ -33,4 +33,5 @@ const sizing = (
 }
 export default sizing
 
-export const windowWidthSelector = (state: SizingState) => state[WINDOW_WIDTH]
+export const windowWidthSelector = (state: RootState) =>
+  state[SIZING][WINDOW_WIDTH]

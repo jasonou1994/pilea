@@ -12,16 +12,12 @@ import {
   ResetSelectedTransactionActionCreator,
 } from '../actions'
 import {
-  graphFidelitySelector,
-  transactionsByDayCountCombinedSelector,
-  cardsSelector,
-  selectedTransactionsSelector,
-  cardsByItemsSelector,
-  graphHistoricalLengthSelector,
   TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
   RootState,
-  windowWidthSelector,
+  transactionsByDayCountCombinedSelector,
+  cardsByItemsSelector,
+  selectedTransactionsSelector,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
 import {
@@ -30,6 +26,12 @@ import {
   AvailableTimeUnits,
 } from '../konstants'
 import '../../scss/index.scss'
+import {
+  graphFidelitySelector,
+  graphHistoricalLengthSelector,
+} from '../reducers/graph'
+import { cardsSelector } from '../reducers/transactionsAccounts'
+import { windowWidthSelector } from '../reducers/sizing'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits

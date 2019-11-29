@@ -6,9 +6,11 @@ import {
   SET_LOGGED_IN,
   SET_USER_INFO,
   CONFIRMED,
+  LOGIN,
 } from '../konstants/index'
 import { set } from 'timm'
 import { LogInActions } from '../actions'
+import { RootState } from '.'
 
 export interface User {
   [USER_ID]: string
@@ -63,5 +65,5 @@ const login = (
 }
 export default login
 
-export const loggedInSelector = (state: typeof initialState) => state[LOGGED_IN]
-export const userSelector = (state: typeof initialState) => state[USER]
+export const loggedInSelector = (state: RootState) => state[LOGIN][LOGGED_IN]
+export const userSelector = (state: RootState) => state[LOGIN][USER]

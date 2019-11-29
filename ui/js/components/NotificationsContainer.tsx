@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { Notification } from './Notification'
-import { useInterval } from '../../utilities/utils'
+import { Notification } from './common/Notification'
+import { useInterval } from '../utilities/utils'
 
 export const PERSISTENT = 'persistent'
 export const TEMPORARY = 'temporary'
@@ -44,9 +44,10 @@ const processNotifications: (
   )
 }
 
-export const NotificationsContainer: FunctionComponent<
-  NotificationsContainerProps
-> = ({ notifications, onExpireHandler }) => {
+export const NotificationsContainer: FunctionComponent<NotificationsContainerProps> = ({
+  notifications,
+  onExpireHandler,
+}) => {
   const [expiredNotifs, setExpiredNotifs] = useState<
     NotificationWithDuration[]
   >([])

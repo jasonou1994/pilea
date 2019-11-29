@@ -1,5 +1,5 @@
 import { Action } from 'redux'
-import { NotificationWithDuration } from '../components/common/NotificationsContainer'
+import { NotificationWithDuration } from '../components/NotificationsContainer'
 import { ADD_ACTIVE_NOTIFICATIONS, EXPIRE_NOTIFICATIONS } from '../konstants'
 
 type NotificationActionTypes =

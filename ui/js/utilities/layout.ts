@@ -1,17 +1,9 @@
 import numeral from 'numeral'
 import { AvailableGridLayouts, GRID_LAYOUT_BY_TIME } from '../konstants'
+import { AgGridColumnProps } from 'ag-grid-react'
 
-export interface GridColumnDef {
-  headerName: string
-  field: string
-  sortable: boolean
-  filter: boolean
-  checkboxSelection?: boolean
-  resizable: boolean
-  width?: number
-  sort?: 'asc' | 'desc'
-  valueGetter?: any
-  cellStyle?: any
+export interface GridColumnDef extends AgGridColumnProps {
+  widthRatio?: number
 }
 
 interface GridColumnDefWithShown extends GridColumnDef {
@@ -25,7 +17,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     sort: 'desc',
     sortable: true,
     filter: true,
-    width: 100,
+    widthRatio: 1,
     resizable: false,
     shown: [GRID_LAYOUT_BY_TIME],
   },
@@ -35,7 +27,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     sortable: true,
     filter: true,
     resizable: true,
-    width: 250,
+    widthRatio: 2.5,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {
@@ -44,7 +36,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     sortable: true,
     filter: true,
     resizable: true,
-    width: 300,
+    widthRatio: 3,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {
@@ -53,11 +45,11 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     sortable: true,
     filter: true,
     resizable: true,
-    width: 100,
+    widthRatio: 1,
     shown: [GRID_LAYOUT_BY_TIME],
 
     cellStyle: { display: 'flex', 'justify-content': 'flex-end' },
-    valueGetter: (colData: any) => {
+    valueGetter: colData => {
       return numeral(colData.data.amount).format('$0,0.00')
     },
   },

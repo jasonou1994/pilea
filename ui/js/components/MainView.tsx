@@ -7,7 +7,7 @@ import '../../scss/index.scss'
 import {
   NotificationsContainer,
   NotificationWithDuration,
-} from './common/NotificationsContainer'
+} from './NotificationsContainer'
 
 interface MainViewProps {
   isTransactionsLoading: boolean

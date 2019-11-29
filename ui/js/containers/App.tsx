@@ -59,7 +59,7 @@ class _App extends Component<AppProps> {
               <PasswordResetContainer></PasswordResetContainer>
             </>
           </Route>
-          <Route exact path="/">
+          <Route exact path="(/|/view|/view/accounts|/view/transactions)">
             <HeaderContainer />
 
             {!loggedIn ? (

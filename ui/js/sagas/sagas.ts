@@ -260,6 +260,10 @@ function* fetchLogOut() {
       })
     )
 
+    yield put(setCards([]))
+    yield put(setTransactions([]))
+    yield put(setItems([]))
+
     yield put(
       addActiveNotification({
         notification: createNotification(

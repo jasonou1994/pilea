@@ -11,8 +11,9 @@ import { Button } from '../components/common/Button'
 import { RefreshData } from '../components/RefreshData'
 import { ItemWithCards, RootState, cardsByItemsSelector } from '../reducers'
 import { loggedInSelector, userSelector } from '../reducers/login'
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 
-interface HeaderContainerProps {
+interface HeaderContainerProps extends RouteComponentProps {
   fetchLogOutAction: FetchLogOutActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
 
@@ -32,7 +33,10 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       user,
       fetchRefreshTransactionsAction,
       cardsByItems,
+      location: { pathname },
     } = this.props
+
+    console.log(pathname)
 
     return (
       <div>
@@ -59,12 +63,33 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
           </div>
         )}
         {cardsByItems.length > 0 && (
-          <RefreshData
-            {...{
-              cardsByItems,
-              fetchRefreshTransactionsAction,
-            }}
-          />
+          <>
+            <RefreshData
+              {...{
+                cardsByItems,
+                fetchRefreshTransactionsAction,
+              }}
+            />
+            <Link to="/view/transactions">
+              <span
+                style={{
+                  fontWeight:
+                    pathname === '/view/transactions' ? 'bold' : 'normal',
+                }}
+              >
+                Transactions
+              </span>
+            </Link>
+            <Link to="/view/accounts">
+              <span
+                style={{
+                  fontWeight: pathname === '/view/accounts' ? 'bold' : 'normal',
+                }}
+              >
+                Accounts
+              </span>
+            </Link>
+          </>
         )}
         <hr color="black"></hr>
       </div>
@@ -81,4 +106,4 @@ export default connect(
     user: userSelector(state),
   }),
   { fetchLogOutAction: fetchLogOut }
-)(_HeaderContainer)
+)(withRouter(_HeaderContainer))

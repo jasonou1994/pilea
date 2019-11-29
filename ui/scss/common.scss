@@ -42,3 +42,21 @@ h4 {
   font-size: 16px;
   margin: 10px 0;
 }
+
+a {
+  color: black;
+  text-decoration: none;
+  margin-right: 7px;
+}
+a:visited {
+  color: black;
+}
+a:hover {
+  color: black;
+  text-decoration: underline;
+}
+a:focus {
+  color: black;
+  // text-decoration: underline;
+  font-weight: bold;
+}

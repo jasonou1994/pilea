@@ -15,7 +15,7 @@ import {
   SET_CARDS,
   SET_TRANSACTIONS,
 } from '../konstants'
-import { updateIn, set, setIn, update } from 'timm'
+import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'

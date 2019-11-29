@@ -19,7 +19,7 @@ export const ItemDisplay: FunctionComponent<ItemDisplayProps> = ({
       <Button
         type="normal"
         disabled={false}
-        text="Remove Item"
+        text="Remove "
         onClick={() => {
           fetchRemoveItemAction(id)
         }}

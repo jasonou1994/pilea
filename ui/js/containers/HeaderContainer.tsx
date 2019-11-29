@@ -1,13 +1,28 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Breadcrumb } from '../components/Breadcrumb'
-import { RootState, loggedInSelector, userSelector } from '../reducers'
-import { fetchLogOut, FetchLogOutActionCreator } from '../actions'
+import {
+  RootState,
+  loggedInSelector,
+  userSelector,
+  cardsByItemsSelector,
+  ItemWithCards,
+} from '../reducers'
+import {
+  fetchLogOut,
+  FetchLogOutActionCreator,
+  fetchRefreshTransactions,
+  FetchRefreshTransactionsActionCreator,
+} from '../actions'
 import { USER_ID, USER_NAME } from '../konstants'
 import { Button } from '../components/common/Button'
+import { RefreshData } from '../components/RefreshData'
 
 interface HeaderContainerProps {
   fetchLogOutAction: FetchLogOutActionCreator
+  fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
+
+  cardsByItems: ItemWithCards[]
   loggedIn: boolean
   user: {
     [USER_ID]: string
@@ -17,7 +32,13 @@ interface HeaderContainerProps {
 
 class _HeaderContainer extends Component<HeaderContainerProps> {
   render() {
-    const { fetchLogOutAction, loggedIn, user } = this.props
+    const {
+      fetchLogOutAction,
+      loggedIn,
+      user,
+      fetchRefreshTransactionsAction,
+      cardsByItems,
+    } = this.props
 
     return (
       <div>
@@ -43,6 +64,15 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             </span>
           </div>
         )}
+        {cardsByItems.length > 0 && (
+          <RefreshData
+            {...{
+              cardsByItems,
+              fetchRefreshTransactionsAction,
+            }}
+          />
+        )}
+        <hr color="black"></hr>
       </div>
     )
   }
@@ -50,6 +80,9 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
 
 export default connect(
   (state: RootState) => ({
+    cardsByItems: cardsByItemsSelector(state),
+    fetchRefreshTransactionsAction: fetchRefreshTransactions,
+
     loggedIn: loggedInSelector(state),
     user: userSelector(state),
   }),

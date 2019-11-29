@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import { AgGridReact } from 'ag-grid-react'
+
 import { GridColumnDef, getDataGridColumnDefs } from '../utilities/layout'
 import { GRID_LAYOUT_BY_TIME } from '../konstants'
 import { PileaCard } from '../sagas/sagas'
@@ -11,6 +12,7 @@ import { getCardName } from '../utilities/utils'
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
+  windowWidth: number
 }
 
 interface IncomeSpendingDetailsGridState {
@@ -52,7 +54,7 @@ export class IncomeSpendingDetailsGrid extends Component<
 
   render() {
     const { columnDefs } = this.state
-    const { selectedTransactions } = this.props
+    const { selectedTransactions, windowWidth } = this.props
 
     const { input, output } = selectedTransactions
     const rowData = this.convertToRowData()
@@ -66,6 +68,8 @@ export class IncomeSpendingDetailsGrid extends Component<
           className="ag-theme-balham"
           style={{
             height: '500px',
+            width: `${windowWidth - 330}px`,
+            margin: '0',
           }}
         >
           <AgGridReact columnDefs={columnDefs} rowData={rowData} />

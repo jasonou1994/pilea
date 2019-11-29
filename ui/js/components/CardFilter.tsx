@@ -56,10 +56,10 @@ export class CardFilter extends Component<CardFilterProps> {
     }, [])
 
     return (
-      <div>
+      <>
         <h4>Cards</h4>
-        {filterRows}
-      </div>
+        <div id="card-filter-contents">{filterRows}</div>
+      </>
     )
   }
 }

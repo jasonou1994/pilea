@@ -7,6 +7,7 @@ import rootReducer from './js/reducers/index'
 import saga from './js/sagas/sagas'
 import createSagaMiddleware from 'redux-saga'
 import App from './js/containers/App'
+import { setCurrentWindowWidth } from './js/actions'
 // import { accounts } from "./mockData/setAccounts";
 // import { transactions } from "./mockData/addTransactions";
 
@@ -19,12 +20,10 @@ const store = createStore(
 
 sagaMiddleware.run(saga)
 
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById('root')
-)
+store.dispatch(setCurrentWindowWidth({ width: window.innerWidth }))
+window.onresize = () => {
+  store.dispatch(setCurrentWindowWidth({ width: window.innerWidth }))
+}
 
 store.dispatch({
   type: 'FETCH_LOG_IN',
@@ -34,5 +33,9 @@ store.dispatch({
   },
 })
 
-// store.dispatch(transactions);
-// store.dispatch(accounts);
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+)

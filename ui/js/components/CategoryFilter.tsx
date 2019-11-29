@@ -39,9 +39,9 @@ export const CategoryFilter: FunctionComponent<CategoryFilterProps> = props => {
     <>
       <h4>Categories</h4>
       <div className="category-table">
-        {rowData.map(({ category, spending, txCount, selected }) => {
+        {rowData.map(({ category, spending, txCount, selected }, i) => {
           return (
-            <div className="category-row">
+            <div className="category-row" key={i}>
               <input
                 style={{ backgroundColor: 'yellow' }}
                 type="checkbox"

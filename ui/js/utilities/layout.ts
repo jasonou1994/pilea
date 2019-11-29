@@ -1,15 +1,5 @@
-import {
-  AvailableGridLayouts,
-  GRID_LAYOUT_BY_TIME,
-  CATEGORY_GRID_HEADER_INCLUDED,
-  CATEGORY_GRID_FIELD_INCLUDED,
-  CATEGORY_GRID_HEADER_CATEGORY,
-  CATEGORY_GRID_FIELD_CATEGORY,
-  CATEGORY_GRID_HEADER_TX_COUNT,
-  CATEGORY_GRID_FIELD_TX_COUNT,
-  CATEGORY_GRID_HEADER_AMOUNT,
-  CATEGORY_GRID_FIELD_AMOUNT,
-} from '../konstants'
+import numeral from 'numeral'
+import { AvailableGridLayouts, GRID_LAYOUT_BY_TIME } from '../konstants'
 
 export interface GridColumnDef {
   headerName: string
@@ -17,6 +7,11 @@ export interface GridColumnDef {
   sortable: boolean
   filter: boolean
   checkboxSelection?: boolean
+  resizable: boolean
+  width?: number
+  sort?: 'asc' | 'desc'
+  valueGetter?: any
+  cellStyle?: any
 }
 
 interface GridColumnDefWithShown extends GridColumnDef {
@@ -27,8 +22,11 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
   {
     headerName: 'Date',
     field: 'date',
+    sort: 'desc',
     sortable: true,
     filter: true,
+    width: 100,
+    resizable: false,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {
@@ -36,6 +34,8 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     field: 'account',
     sortable: true,
     filter: true,
+    resizable: true,
+    width: 250,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {
@@ -43,6 +43,8 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     field: 'merchant',
     sortable: true,
     filter: true,
+    resizable: true,
+    width: 300,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {
@@ -50,7 +52,14 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     field: 'amount',
     sortable: true,
     filter: true,
+    resizable: true,
+    width: 100,
     shown: [GRID_LAYOUT_BY_TIME],
+
+    cellStyle: { display: 'flex', 'justify-content': 'flex-end' },
+    valueGetter: (colData: any) => {
+      return numeral(colData.data.amount).format('$0,0.00')
+    },
   },
 ]
 
@@ -59,9 +68,4 @@ export const getDataGridColumnDefs: (
 ) => GridColumnDef[] = layout =>
   dataGridColumnDefs
     .filter(def => def.shown.includes(layout))
-    .map(({ headerName, field, sortable, filter }) => ({
-      headerName,
-      field,
-      sortable,
-      filter,
-    }))
+    .map(({ shown, ...def }) => ({ ...def }))

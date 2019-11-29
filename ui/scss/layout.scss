@@ -9,16 +9,23 @@
 
 #filters-analysis {
   display: flex;
+  align-items: flex-start;
 }
 
 #filters {
-  width: 300px;
+  width: 250px;
   flex-shrink: 0;
-  margin-right: 10px;
+  margin-right: 5px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0 10px;
 }
 
 #analysis {
+  padding: 0 10px 10px 10px;
   width: 100%;
+  border: 1px solid black;
+  border-radius: 5px;
 }
 
 * {

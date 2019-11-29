@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { CurrentItems } from '../components/ItemCollection'
 import { AddNewItem } from '../components/AddNewItem'
-import { RefreshItemData } from '../components/RefreshItemData'
+import { RefreshData } from '../components/RefreshData'
 import {
   cardsByItemsSelector,
   ItemWithCards,
@@ -12,8 +12,6 @@ import {
 import {
   fetchAddItem,
   FetchAddItemActionCreator,
-  fetchRefreshTransactions,
-  FetchRefreshTransactionsActionCreator,
   fetchRemoveItem,
   FetchRemoveItemActionCreator,
 } from '../actions'
@@ -24,7 +22,6 @@ interface ItemsContainerProps {
   user: User
 
   fetchAddItemAction: FetchAddItemActionCreator
-  fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
   fetchRemoveItemAction: FetchRemoveItemActionCreator
 }
 
@@ -38,7 +35,6 @@ class _ItemsContainer extends Component<
     const {
       cardsByItems,
       fetchAddItemAction,
-      fetchRefreshTransactionsAction,
       fetchRemoveItemAction,
       user,
     } = this.props
@@ -46,14 +42,6 @@ class _ItemsContainer extends Component<
     return (
       <div id="item-panel">
         <h2>Your Accounts</h2>
-        {cardsByItems.length > 0 && (
-          <RefreshItemData
-            {...{
-              cardsByItems,
-              fetchRefreshTransactionsAction,
-            }}
-          />
-        )}
         <AddNewItem
           {...{ onClick: fetchAddItemAction, hidden: !user.confirmed }}
         />
@@ -76,7 +64,6 @@ export default connect(
   }),
   {
     fetchAddItemAction: fetchAddItem,
-    fetchRefreshTransactionsAction: fetchRefreshTransactions,
     fetchRemoveItemAction: fetchRemoveItem,
   }
 )(_ItemsContainer)

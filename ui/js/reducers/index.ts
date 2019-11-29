@@ -11,6 +11,7 @@ import {
   GRID,
   LOADING,
   NOTIFICATIONS,
+  SIZING,
 } from '../konstants'
 import {
   getTypeOfCard,
@@ -23,6 +24,7 @@ import graph, * as fromGraph from './graph'
 import grid, * as fromGrid from './grid'
 import loading, * as fromLoading from './loading'
 import notifications, * as fromNotifications from './notifications'
+import sizing, * as fromSizing from './sizing'
 
 export interface RootState {
   [TRANSACTIONS]: fromTransactions.TransactionsAccountsState
@@ -31,6 +33,7 @@ export interface RootState {
   [GRID]: fromGrid.GridState
   [LOADING]: fromLoading.LoadingState
   [NOTIFICATIONS]: fromNotifications.NotificationsState
+  [SIZING]: fromSizing.SizingState
 }
 
 const reducers = combineReducers({
@@ -40,6 +43,7 @@ const reducers = combineReducers({
   grid,
   loading,
   notifications,
+  sizing,
 })
 export default reducers
 
@@ -87,6 +91,10 @@ export const activeNotificationsSelector = (state: RootState) => {
 }
 export const expiredNotificationsSelector = (state: RootState) =>
   fromNotifications.expiredNotificationsSelector(state[NOTIFICATIONS])
+
+//sizing
+export const windowWidthSelector = (state: RootState) =>
+  fromSizing.windowWidthSelector(state[SIZING])
 
 /***********
  * TRANSFORMATION SELECTORS

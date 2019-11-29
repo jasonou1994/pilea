@@ -20,6 +20,7 @@ import { TimeConsolidatedTransactionGroups } from '../reducers'
 interface IncomeSpendingChartProps {
   transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
+  windowWidth: number
 }
 
 interface IncomeSpendingChartState {
@@ -85,7 +86,7 @@ export class IncomeSpendingChart extends Component<
 
   render() {
     const { currentX } = this.state
-    const { setSelectedTransactionKeyAction } = this.props
+    const { setSelectedTransactionKeyAction, windowWidth } = this.props
 
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
@@ -98,9 +99,7 @@ export class IncomeSpendingChart extends Component<
       <div ref={this.state.ref}>
         <XYPlot
           height={300}
-          width={
-            this.state.ref.current ? this.state.ref.current.offsetWidth : 700
-          }
+          width={windowWidth - 330}
           xType="time"
           margin={{ left: 70, right: 10, top: 10, bottom: 70 }}
           style={{ cursor: 'pointer' }}
@@ -118,6 +117,7 @@ export class IncomeSpendingChart extends Component<
           />
           <YAxis tickFormat={amount => `$${amount}`} />
           <LineMarkSeries
+            color={'#00b44b'}
             data={incomeSeries}
             onNearestX={value => {
               const { currentX } = this.state
@@ -126,7 +126,7 @@ export class IncomeSpendingChart extends Component<
               }
             }}
           />
-          <LineMarkSeries data={spendingSeries} />
+          <LineMarkSeries color="#bb0120" data={spendingSeries} />
           <Crosshair values={[{ x: currentX }]}>
             <CrosshairDisplay
               time={currentX}

@@ -32,6 +32,7 @@ interface IncomeSpendingViewProps {
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  windowWidth: number
 }
 
 interface IncomeSpendingViewState {}
@@ -53,6 +54,7 @@ export class IncomeSpendingView extends Component<
       setGraphHistoricalLengthAction,
       graphHistoricalLength,
       resetSelectedTransactionKeyAction,
+      windowWidth,
     } = this.props
 
     return (
@@ -60,6 +62,7 @@ export class IncomeSpendingView extends Component<
         <h2>Income and Spending</h2>
         <IncomeSpendingChart
           {...{
+            windowWidth,
             transactionsByDayCountCombined,
             setSelectedTransactionKeyAction,
           }}
@@ -73,7 +76,13 @@ export class IncomeSpendingView extends Component<
             resetSelectedTransactionKeyAction,
           }}
         />
-        <IncomeSpendingDetailsGrid {...{ cards, selectedTransactions }} />
+        <IncomeSpendingDetailsGrid
+          {...{
+            windowWidth,
+            cards,
+            selectedTransactions,
+          }}
+        />
       </div>
     )
   }

@@ -21,6 +21,7 @@ import {
   TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
   RootState,
+  windowWidthSelector,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
 import {
@@ -43,6 +44,7 @@ interface AnalysisContainerProps {
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  windowWidth: number
 }
 
 interface AnalysisContainerState {}
@@ -62,6 +64,7 @@ class _AnalysisContainer extends Component<
       setGraphHistoricalLengthAction,
       graphHistoricalLength,
       resetSelectedTransactionKeyAction,
+      windowWidth,
     } = this.props
 
     return (
@@ -77,6 +80,7 @@ class _AnalysisContainer extends Component<
             setGraphHistoricalLengthAction,
             graphHistoricalLength,
             resetSelectedTransactionKeyAction,
+            windowWidth,
           }}
         />
       </div>
@@ -94,6 +98,7 @@ export default connect(
     cardsByItems: cardsByItemsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),
     graphHistoricalLength: graphHistoricalLengthSelector(state),
+    windowWidth: windowWidthSelector(state),
   }),
   {
     setGraphFidelityAction: setGraphFidelity,

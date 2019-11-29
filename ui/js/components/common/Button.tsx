@@ -7,6 +7,7 @@ interface ButtonProps {
   disabled: boolean
   text: string
   width?: number
+  style?: React.CSSProperties
 }
 
 export const Button: FunctionComponent<ButtonProps> = ({
@@ -15,6 +16,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   type,
   text,
   width,
+  style,
 }) => (
   <button
     onClick={onClick}
@@ -24,7 +26,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
       { 'button-primary': type === 'primary' },
       { 'button-disabled': disabled }
     )}
-    style={{ width: width ? width : 'inherit' }}
+    style={{ width: width ? width : 'inherit', ...style }}
   >
     {text}
   </button>

@@ -15,8 +15,8 @@ export const AddNewItemButton: FunctionComponent<AddNewItemButtonProps> = props 
       product={['transactions']}
       publicKey={PLAID_PUBLIC_KEY}
       onSuccess={props.onSuccess}
-      className="button button-primary"
-      style={{}}
+      className="button"
+      style={{ marginTop: '-10px' }}
     >
       Add Institution
     </PlaidLink>

@@ -1,3 +1,8 @@
+#card-filter-contents {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 .category-table {
   height: 360px;
   overflow: scroll;
@@ -18,7 +23,7 @@
   flex-shrink: 0;
 }
 .category-name {
-  max-width: 200px;
+  max-width: 160px;
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;

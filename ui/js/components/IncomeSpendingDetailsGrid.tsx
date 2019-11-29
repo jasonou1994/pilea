@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState, useEffect } from 'react'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import { AgGridReact } from 'ag-grid-react'
+import numeral from 'numeral'
 
 import { PileaCard } from '../sagas/sagas'
 import { TimeConsolidatedTransactionGroup } from '../reducers'
@@ -12,19 +13,46 @@ import { getCardName } from '../utilities/utils'
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
-  windowWidth: number
+  allowedWidth: number
 }
 
 export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsGridProps> = ({
   cards,
   selectedTransactions,
   selectedTransactions: { transactions, input, output },
-  windowWidth,
+  allowedWidth,
 }) => {
   const [columnDefs, setColumnDefs] = useState<GridColumnDef[]>([])
   const [rowData, setRowData] = useState([])
 
-  useEffect(() => setColumnDefs(getDataGridColumnDefs(GRID_LAYOUT_BY_TIME)), [])
+  useEffect(() => {
+    const rawColumnDefs: GridColumnDef[] = getDataGridColumnDefs(
+      GRID_LAYOUT_BY_TIME
+    )
+
+    const totalWidthRatio = rawColumnDefs.reduce(
+      (acc, cur) => acc + (cur.widthRatio ? cur.widthRatio : 0),
+      0
+    )
+
+    const columnDefsWithWidth = rawColumnDefs.map(
+      ({ widthRatio, minWidth, width, ...col }) => {
+        const calculatedWidth = (widthRatio / totalWidthRatio) * allowedWidth
+
+        // const minWidth = minWidth ? minWidth : 0
+
+        return {
+          ...col,
+          width:
+            calculatedWidth >= (minWidth ? minWidth : 0)
+              ? calculatedWidth
+              : minWidth,
+        }
+      }
+    )
+
+    setColumnDefs(columnDefsWithWidth)
+  }, [allowedWidth])
   useEffect(() => {
     const rows = transactions.map(
       ({ name: merchant, account_id, amount, date }) => ({
@@ -38,17 +66,20 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
     setRowData(rows)
   }, [selectedTransactions])
 
+  console.log(allowedWidth)
+
   return (
     <div>
       <h2>Transactions</h2>
-      <div>Income: {`${input}`}</div>
-      <div>Spending: {`${output}`}</div>
+      <div>Income: {numeral(input).format('$0,0.00')}</div>
+      <div>Spending: {numeral(output).format('$0,0.00')}</div>
       <div
         className="ag-theme-balham"
         style={{
           height: '500px',
-          width: `${windowWidth - 330}px`,
+          width: `${allowedWidth}px`,
           margin: '0',
+          marginTop: '10px',
         }}
       >
         <AgGridReact columnDefs={columnDefs} rowData={rowData} />

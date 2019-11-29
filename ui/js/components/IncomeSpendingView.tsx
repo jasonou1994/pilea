@@ -33,6 +33,7 @@ interface IncomeSpendingViewProps {
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   windowWidth: number
+  filterSidebarWidth: number
 }
 
 interface IncomeSpendingViewState {}
@@ -55,6 +56,7 @@ export class IncomeSpendingView extends Component<
       graphHistoricalLength,
       resetSelectedTransactionKeyAction,
       windowWidth,
+      filterSidebarWidth,
     } = this.props
 
     return (
@@ -78,7 +80,7 @@ export class IncomeSpendingView extends Component<
         />
         <IncomeSpendingDetailsGrid
           {...{
-            windowWidth,
+            allowedWidth: windowWidth - filterSidebarWidth - 70,
             cards,
             selectedTransactions,
           }}

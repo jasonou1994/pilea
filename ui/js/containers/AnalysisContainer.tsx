@@ -31,7 +31,10 @@ import {
   graphHistoricalLengthSelector,
 } from '../reducers/graph'
 import { cardsSelector } from '../reducers/transactionsAccounts'
-import { windowWidthSelector } from '../reducers/sizing'
+import {
+  windowWidthSelector,
+  filterSidebarWidthSelector,
+} from '../reducers/sizing'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
@@ -47,6 +50,7 @@ interface AnalysisContainerProps {
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   windowWidth: number
+  filterSidebarWidth: number
 }
 
 interface AnalysisContainerState {}
@@ -67,12 +71,14 @@ class _AnalysisContainer extends Component<
       graphHistoricalLength,
       resetSelectedTransactionKeyAction,
       windowWidth,
+      filterSidebarWidth,
     } = this.props
 
     return (
       <div id="analysis">
         <IncomeSpendingView
           {...{
+            filterSidebarWidth,
             graphFidelity,
             transactionsByDayCountCombined,
             cards,
@@ -101,6 +107,7 @@ export default connect(
     selectedTransactions: selectedTransactionsSelector(state),
     graphHistoricalLength: graphHistoricalLengthSelector(state),
     windowWidth: windowWidthSelector(state),
+    filterSidebarWidth: filterSidebarWidthSelector(state),
   }),
   {
     setGraphFidelityAction: setGraphFidelity,

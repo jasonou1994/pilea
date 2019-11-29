@@ -19,6 +19,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     filter: true,
     widthRatio: 1,
     resizable: false,
+    // minWidth: 100,
     shown: [GRID_LAYOUT_BY_TIME],
   },
   {

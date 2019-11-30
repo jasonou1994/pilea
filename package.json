@@ -31,6 +31,7 @@
     "css-loader": "^3.0.0",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "express-http-to-https": "^1.1.4",
     "express-pino-logger": "^4.0.0",
     "immutable": "^4.0.0-rc.12",
     "jest": "^24.8.0",

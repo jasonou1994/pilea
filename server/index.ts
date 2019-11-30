@@ -4,21 +4,24 @@ import fs from 'fs'
 import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import { redirectToHTTPS } from 'express-http-to-https'
 import { expressLogger, logger, logReq } from './logger'
 import { transactions } from './controllers/transactions'
 import { plaid } from './controllers/plaid'
 import { user } from './controllers/user'
 import { items } from './controllers/items'
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 443
+const INSECURE_PORT = process.env.INSECURE_PORT || 80
 const app = express()
 
+app.use(redirectToHTTPS())
 app.use(expressLogger)
 app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
-app.use(function(_, res: Response, next: NextFunction) {
+app.use((_, res: Response, next: NextFunction) => {
   res.header('Access-Control-Allow-Origin', 'http://mypilea.com')
   res.header(
     'Access-Control-Allow-Headers',
@@ -48,3 +51,8 @@ https
   .listen(443, () => {
     logger.info(`Express server listening on ${PORT}.`)
   })
+
+// Only for redirection
+app.listen(INSECURE_PORT, () => {
+  logger.info(`Redirection Express server listening on ${INSECURE_PORT}.`)
+})

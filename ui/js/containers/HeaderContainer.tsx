@@ -36,8 +36,6 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       location: { pathname },
     } = this.props
 
-    console.log(pathname)
-
     return (
       <div>
         {loggedIn ? (
@@ -73,6 +71,15 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
 
         {loggedIn && (
           <>
+            <Link to="/view/accounts">
+              <span
+                style={{
+                  fontWeight: pathname === '/view/accounts' ? 'bold' : 'normal',
+                }}
+              >
+                Accounts
+              </span>
+            </Link>
             <Link to="/view/transactions">
               <span
                 style={{
@@ -81,15 +88,6 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
                 }}
               >
                 Transactions
-              </span>
-            </Link>
-            <Link to="/view/accounts">
-              <span
-                style={{
-                  fontWeight: pathname === '/view/accounts' ? 'bold' : 'normal',
-                }}
-              >
-                Accounts
               </span>
             </Link>
           </>

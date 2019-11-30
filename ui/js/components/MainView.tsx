@@ -13,7 +13,7 @@ const _MainView: FunctionComponent<MainViewProps> = ({
   history,
 }) => {
   useEffect(() => {
-    history.push('/view/transactions')
+    history.push('/view/accounts')
     return () => {
       history.push('/')
     }

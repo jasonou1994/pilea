@@ -30,16 +30,13 @@ export interface ContractCreateUser extends ContractResponse {
 }
 
 const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT || 8000
-
-const host = `${HOST}${PORT === '80' ? '' : ':' + PORT}`
 
 export const confirmUser = async (req: Request, res: Response) => {
   logger.debug('In confirmUser middleware.')
   try {
     await confirmUserDB(req.params.confirmationString)
 
-    res.redirect(`http://${host}/confirmed`)
+    res.redirect(`https://${HOST}/confirmed`)
   } catch (e) {
     logger.error(e)
     res

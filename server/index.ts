@@ -17,7 +17,7 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
 app.use(function(_, res: Response, next: NextFunction) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.header('Access-Control-Allow-Origin', 'http://mypilea.com')
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'

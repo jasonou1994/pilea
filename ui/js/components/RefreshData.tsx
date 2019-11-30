@@ -20,7 +20,10 @@ export class RefreshData extends Component<RefreshDataProps> {
             type: 'normal',
             disabled: false,
             text: 'Refresh Now',
-            onClick: () => fetchRefreshTransactionsAction({}),
+            onClick: () => {
+              console.log('here')
+              fetchRefreshTransactionsAction({})
+            },
             style: { marginRight: '10px' },
           }}
         />

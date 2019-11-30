@@ -102,10 +102,12 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
 export default connect(
   (state: RootState) => ({
     cardsByItems: cardsByItemsSelector(state),
-    fetchRefreshTransactionsAction: fetchRefreshTransactions,
 
     loggedIn: loggedInSelector(state),
     user: userSelector(state),
   }),
-  { fetchLogOutAction: fetchLogOut }
+  {
+    fetchLogOutAction: fetchLogOut,
+    fetchRefreshTransactionsAction: fetchRefreshTransactions,
+  }
 )(withRouter(_HeaderContainer))

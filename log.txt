@@ -1,0 +1,258 @@
+Using ts-node version 8.3.0, typescript version 3.5.2
+[2019-11-29 20:59:23.813 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mExpress server listening on 8000.[39m
+[2019-11-29 20:59:29.825 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mRequest received:[39m
+[2019-11-29 20:59:29.825 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com):
+    url: "/view/transactions"
+    params: {}
+    body: {}
+[2019-11-29 20:59:29.830 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 1,
+      "method": "GET",
+      "url": "/view/transactions",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "cache-control": "max-age=0",
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "sec-fetch-user": "?1",
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3MzMsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTEzM30.icShPl247Mleci9BSC_WNFAHYqeJ5MX5AorRV7KdNYU",
+        "if-none-match": "W/\"169-16eb9fbd8e9\"",
+        "if-modified-since": "Sat, 30 Nov 2019 01:45:20 GMT"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59114
+    }
+    res: {
+      "statusCode": 304,
+      "headers": {
+        "x-powered-by": "Express",
+        "access-control-allow-origin": "http://localhost:3000",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-credentials": "true",
+        "accept-ranges": "bytes",
+        "cache-control": "public, max-age=0",
+        "last-modified": "Sat, 30 Nov 2019 01:45:20 GMT",
+        "etag": "W/\"169-16eb9fbd8e9\""
+      }
+    }
+    responseTime: 8
+[2019-11-29 20:59:29.860 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 2,
+      "method": "GET",
+      "url": "/bundle.js",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "if-none-match": "W/\"1e038a-16eb9fbd8e9\"",
+        "if-modified-since": "Sat, 30 Nov 2019 01:45:20 GMT",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "no-cors",
+        "referer": "http://localhost:8000/view/transactions",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3MzMsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTEzM30.icShPl247Mleci9BSC_WNFAHYqeJ5MX5AorRV7KdNYU"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59114
+    }
+    res: {
+      "statusCode": 304,
+      "headers": {
+        "x-powered-by": "Express",
+        "accept-ranges": "bytes",
+        "cache-control": "public, max-age=0",
+        "last-modified": "Sat, 30 Nov 2019 01:45:20 GMT",
+        "etag": "W/\"1e038a-16eb9fbd8e9\""
+      }
+    }
+    responseTime: 1
+[2019-11-29 20:59:29.995 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mRequest received:[39m
+[2019-11-29 20:59:29.995 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com):
+    url: "/user/login"
+    params: {}
+    body: {
+      "username": "jasonou122894@gmail.com",
+      "password": "jasonou1"
+    }
+[2019-11-29 20:59:29.996 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn processLogIn middleware.[39m
+[2019-11-29 20:59:30.033 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mRequest received:[39m
+[2019-11-29 20:59:30.033 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com):
+    url: "/favicon.ico"
+    params: {}
+    body: {}
+[2019-11-29 20:59:30.036 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 4,
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "pragma": "no-cache",
+        "cache-control": "no-cache",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "no-cors",
+        "referer": "http://localhost:8000/view/transactions",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3MzMsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTEzM30.icShPl247Mleci9BSC_WNFAHYqeJ5MX5AorRV7KdNYU"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59115
+    }
+    res: {
+      "statusCode": 200,
+      "headers": {
+        "x-powered-by": "Express",
+        "access-control-allow-origin": "http://localhost:3000",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-credentials": "true",
+        "accept-ranges": "bytes",
+        "cache-control": "public, max-age=0",
+        "last-modified": "Sat, 30 Nov 2019 01:45:20 GMT",
+        "etag": "W/\"169-16eb9fbd8e9\"",
+        "content-type": "text/html; charset=UTF-8",
+        "content-length": 361
+      }
+    }
+    responseTime: 3
+[2019-11-29 20:59:30.207 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn addAuthToken middleware.[39m
+[2019-11-29 20:59:30.259 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mToken successfully added: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWwifSwiaWF0IjoxNTc1MDc5MTcwfQ.otdotJEfMAPlX98uaDBJM_oOgEm4LxpVr57IDycSmrk[39m
+[2019-11-29 20:59:30.259 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn sendLogInResponse middleware.[39m
+[2019-11-29 20:59:30.261 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 3,
+      "method": "POST",
+      "url": "/user/login",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "content-length": "60",
+        "origin": "http://localhost:8000",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "content-type": "application/json",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "referer": "http://localhost:8000/view/transactions",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3MzMsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTEzM30.icShPl247Mleci9BSC_WNFAHYqeJ5MX5AorRV7KdNYU"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59114
+    }
+    res: {
+      "statusCode": 200,
+      "headers": {
+        "x-powered-by": "Express",
+        "access-control-allow-origin": "http://localhost:3000",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-credentials": "true",
+        "set-cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWwifSwiaWF0IjoxNTc1MDc5MTcwfQ.otdotJEfMAPlX98uaDBJM_oOgEm4LxpVr57IDycSmrk; Path=/",
+        "content-type": "application/json; charset=utf-8",
+        "content-length": "129",
+        "etag": "W/\"81-vYc0QTDYmPCPflocX9HbOTx6SlI\""
+      }
+    }
+    responseTime: 274
+[2019-11-29 20:59:30.330 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mRequest received:[39m
+[2019-11-29 20:59:30.330 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com):
+    url: "/favicon.ico"
+    params: {}
+    body: {}
+[2019-11-29 20:59:30.331 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 5,
+      "method": "GET",
+      "url": "/favicon.ico",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "accept": "image/webp,image/apng,image/*,*/*;q=0.8",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "no-cors",
+        "referer": "http://localhost:8000/view/transactions",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWwifSwiaWF0IjoxNTc1MDc5MTcwfQ.otdotJEfMAPlX98uaDBJM_oOgEm4LxpVr57IDycSmrk",
+        "if-none-match": "W/\"169-16eb9fbd8e9\"",
+        "if-modified-since": "Sat, 30 Nov 2019 01:45:20 GMT"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59114
+    }
+    res: {
+      "statusCode": 304,
+      "headers": {
+        "x-powered-by": "Express",
+        "access-control-allow-origin": "http://localhost:3000",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-credentials": "true",
+        "accept-ranges": "bytes",
+        "cache-control": "public, max-age=0",
+        "last-modified": "Sat, 30 Nov 2019 01:45:20 GMT",
+        "etag": "W/\"169-16eb9fbd8e9\""
+      }
+    }
+    responseTime: 1
+[2019-11-29 20:59:30.337 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mRequest received:[39m
+[2019-11-29 20:59:30.337 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com):
+    url: "/transactions/retrieve"
+    params: {}
+    body: {}
+[2019-11-29 20:59:30.338 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn checkUpdateAuthToken middleware.[39m
+[2019-11-29 20:59:30.394 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mAuthentication token is valid.[39m
+[2019-11-29 20:59:30.454 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mAdded new token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTE3MH0.aX9PUDZBOVIePWtZCoP-GfxaU0jx5xdJmsw9ADl55Ik[39m
+[2019-11-29 20:59:30.455 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn getUserId middleware.[39m
+[2019-11-29 20:59:30.532 -0500] [34mDEBUG[39m (23647 on a483e75dee9f.ant.amazon.com): [36mIn retrieveTransactions middlware.[39m
+[2019-11-29 20:59:31.458 -0500] [32mINFO [39m (23647 on a483e75dee9f.ant.amazon.com): [36mrequest completed[39m
+    req: {
+      "id": 6,
+      "method": "POST",
+      "url": "/transactions/retrieve",
+      "headers": {
+        "host": "localhost:8000",
+        "connection": "keep-alive",
+        "content-length": "2",
+        "origin": "http://localhost:8000",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
+        "content-type": "application/json",
+        "accept": "*/*",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "referer": "http://localhost:8000/view/transactions",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "en-US,en;q=0.9",
+        "cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWwifSwiaWF0IjoxNTc1MDc5MTcwfQ.otdotJEfMAPlX98uaDBJM_oOgEm4LxpVr57IDycSmrk"
+      },
+      "remoteAddress": "::1",
+      "remotePort": 59114
+    }
+    res: {
+      "statusCode": 200,
+      "headers": {
+        "x-powered-by": "Express",
+        "access-control-allow-origin": "http://localhost:3000",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-credentials": "true",
+        "set-cookie": "Authorization=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NzUwODI3NzAsImRhdGEiOnsiYWNjIjoidG90YWxzIn0sImlhdCI6MTU3NTA3OTE3MH0.aX9PUDZBOVIePWtZCoP-GfxaU0jx5xdJmsw9ADl55Ik; Path=/",
+        "content-type": "application/json; charset=utf-8",
+        "content-length": "2126635",
+        "etag": "W/\"20732b-4aYtiTw1ygKOBIgUmmyxGlwc0Yo\""
+      }
+    }
+    responseTime: 1121

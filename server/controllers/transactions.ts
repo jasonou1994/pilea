@@ -18,10 +18,6 @@ transactions.post(
 
 transactions.post(
   '/retrieve',
-  (_, __, next) => {
-    console.log('In /transactions/retrieve')
-    next()
-  },
   checkUpdateAuthToken,
   getUserId,
   retrieveTransactions

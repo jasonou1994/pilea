@@ -34,7 +34,6 @@ const _MainView: FunctionComponent<MainViewProps> = ({
           <Route exact path="/view/transactions">
             <div id="filters-analysis">
               <FiltersContainer />
-
               <AnalysisContainer />
             </div>
           </Route>

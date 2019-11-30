@@ -63,13 +63,16 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
           </div>
         )}
         {cardsByItems.length > 0 && (
+          <RefreshData
+            {...{
+              cardsByItems,
+              fetchRefreshTransactionsAction,
+            }}
+          />
+        )}
+
+        {loggedIn && (
           <>
-            <RefreshData
-              {...{
-                cardsByItems,
-                fetchRefreshTransactionsAction,
-              }}
-            />
             <Link to="/view/transactions">
               <span
                 style={{
@@ -91,6 +94,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             </Link>
           </>
         )}
+
         <hr color="black"></hr>
       </div>
     )

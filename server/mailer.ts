@@ -16,7 +16,7 @@ export const sendSignUpEmail = async (
   logger.debug('In sendSignUpEmail.')
   await sendMail(address, {
     subject: 'Welcome to Pilea!',
-    html: `<b>Welcome to Pilea! Please click on this <a href="http://${host}/user/confirm/${confirmationString}">confirmation link</a> to finish signing-up.</b>`,
+    html: `<b>Welcome to Pilea! Please click on this <a href="https://${HOST}/user/confirm/${confirmationString}">confirmation link</a> to finish signing-up.</b>`,
   })
 }
 
@@ -27,7 +27,7 @@ export const sendForgotPasswordEmail = async (
   logger.debug('In sendForgotPasswordEmail.')
   await sendMail(address, {
     subject: 'Forgot your password?',
-    html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="http://${host}/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
+    html: `<b>Please disregard this email if you have not attempted to reset your Pilea account. Click <a href="https://${host}/password/reset/${passwordResetToken}">here</a> to choose a new password.</b>`,
   })
 }
 

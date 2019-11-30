@@ -1,4 +1,6 @@
 import path from 'path'
+import https from 'https'
+import fs from 'fs'
 import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
@@ -35,6 +37,14 @@ app.get('/*', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/index.html'))
 )
 
-app.listen(PORT, () => {
-  logger.info(`Express server listening on ${PORT}.`)
-})
+https
+  .createServer(
+    {
+      cert: fs.readFileSync('./sslcert/fullchain.pem'),
+      key: fs.readFileSync('./sslcert/privkey.pem'),
+    },
+    app
+  )
+  .listen(443, () => {
+    logger.info(`Express server listening on ${PORT}.`)
+  })

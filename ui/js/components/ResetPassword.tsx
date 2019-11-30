@@ -21,7 +21,7 @@ export const ResetPassword: SFC<Props> = props => {
   const submitNewPassword = async () => {
     const passwordToken = pathname.replace('/password/reset/', '')
     const rawResult = await fetch(
-      `http://localhost:8000/user/password/reset/${passwordToken}`,
+      `http://34.73.90.109:80/user/password/reset/${passwordToken}`,
       {
         method: 'POST',
         body: JSON.stringify({ password: firstPassword }),

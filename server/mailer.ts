@@ -3,7 +3,7 @@ import { nodemailerConfig } from './constants'
 import { logger } from './logger'
 
 const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 443
 
 const host = `${HOST}${PORT === '80' ? '' : ':' + PORT}`
 

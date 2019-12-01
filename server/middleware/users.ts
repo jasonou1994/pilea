@@ -29,7 +29,7 @@ export interface ContractCreateUser extends ContractResponse {
   userId: number
 }
 
-const HOST = process.env.HOST || 'localhost'
+const HOST = process.env.HOST || 'mypilea.com'
 
 export const confirmUser = async (req: Request, res: Response) => {
   logger.debug('In confirmUser middleware.')

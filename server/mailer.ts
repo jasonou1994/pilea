@@ -2,12 +2,9 @@ import nodemailer from 'nodemailer'
 import { nodemailerConfig } from './constants'
 import { logger } from './logger'
 
-const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT || 8000
+const HOST = process.env.HOST || 'mypilea.com'
 
-const host = `${HOST}${PORT === '80' ? '' : ':' + PORT}`
-
-logger.debug(`Email sent to following url: ${host}`)
+logger.debug(`Email sent to following url: ${HOST}`)
 
 export const sendSignUpEmail = async (
   address: string,

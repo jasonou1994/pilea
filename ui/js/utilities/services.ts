@@ -1,11 +1,13 @@
 import { AvailableAPIs } from '../konstants'
 import { serviceDefs } from './serviceDefs'
 
-type Services = { [name in AvailableAPIs]: any }
+type Services = {
+  [name in AvailableAPIs]: any
+}
 
 const API_PORT = process.env.API_PORT
 const API_HOST = process.env.API_HOST
-const API_PROTOCOL = 'https'
+const API_PROTOCOL = process.env.API_PROTOCOL
 
 const host = `${API_PROTOCOL}://${API_HOST}:${API_PORT}`
 

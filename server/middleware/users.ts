@@ -56,7 +56,7 @@ export const createUser = async (
   try {
     const rows = await getUsers({ username })
     if (rows.length > 0) {
-      throw 'Username already exists in database.'
+      throw new Error('Username already exists in database.')
     }
 
     const hash = await encryptPassword({ password })
@@ -141,14 +141,18 @@ export const processLogIn = async (
   try {
     const rows = await getUsers({ username })
     if (rows.length === 0) {
-      throw 'Username or password does not match that of an existing user'
+      throw new Error(
+        'Username or password does not match that of an existing user'
+      )
     }
 
     const { passwordHash, id, confirmed } = rows[0]
 
     const authorized = await bcrypt.compare(password, passwordHash)
     if (!authorized) {
-      throw 'Username or password does not match that of an existing user'
+      throw new Error(
+        'Username or password does not match that of an existing user'
+      )
     }
 
     res.locals.confirmed = confirmed

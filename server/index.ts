@@ -13,16 +13,23 @@ import { items } from './controllers/items'
 
 const PORT = process.env.PORT || 443
 const INSECURE_PORT = process.env.INSECURE_PORT || 80
+const MODE = process.env.MODE || 'PRODUCTION'
+
 const app = express()
 
-app.use(redirectToHTTPS())
+if (MODE === 'PRODUCTION') {
+  app.use(redirectToHTTPS([/http:\/\/localhost:3000/]))
+}
 app.use(expressLogger)
 app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
 app.use((_, res: Response, next: NextFunction) => {
-  res.header('Access-Control-Allow-Origin', 'http://mypilea.com')
+  res.header(
+    'Access-Control-Allow-Origin',
+    MODE === 'PRODUCTION' ? 'https://mypilea.com' : 'http://localhost:3000'
+  )
   res.header(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept'

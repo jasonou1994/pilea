@@ -2,26 +2,21 @@ import React from 'react'
 import { Store } from 'redux'
 import { mount, ReactWrapper } from 'enzyme'
 import { Provider } from 'react-redux'
-import { History } from 'history'
-import { ConnectedRouter } from 'connected-react-router'
-import App from '../../src/js/containers/App'
+import App from '../../js/containers/App'
 import { integrationSetup } from '../setup/integrationSetup'
 
 describe('Sample test group', () => {
   let store: Store,
     sagaFinished: Promise<any>,
     restartSaga: () => void,
-    wrapper: ReactWrapper,
-    history: History
+    wrapper: ReactWrapper
 
   beforeEach(() => {
-    ;({ store, sagaFinished, restartSaga, history } = integrationSetup())
+    ;({ store, sagaFinished, restartSaga } = integrationSetup())
 
     wrapper = mount(
       <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <App />
-        </ConnectedRouter>
+        <App />
       </Provider>
     )
   })

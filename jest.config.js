@@ -9,11 +9,11 @@ module.exports = {
   testMatch: ['**/?(*.)(spec|test).(ts|tsx|js|jsx)'],
   verbose: true,
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['<rootDir>/test/setup/setupTestFramework.ts'],
+  setupFilesAfterEnv: ['<rootDir>/ui/test/setup/setupTestFramework.ts'],
   moduleFileExtensions: ['ts', 'tsx', 'json', 'js', 'jsx'],
   // moduleDirectories: ['node_modules'],
   moduleNameMapper: {
-    '\\.(css|scss)$': '<rootDir>/test/setup/stub.css',
+    '\\.(css|scss)$': '<rootDir>/ui/test/setup/stub.css',
   },
   modulePaths: ['<rootDir>/src', '<rootDir>/node_modules'],
   transformIgnorePatterns: ['/node_modules/(?!@amzn/awsui-).+\\.js$'],

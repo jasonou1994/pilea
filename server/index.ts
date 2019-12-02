@@ -15,6 +15,7 @@ const PORT = process.env.PORT || 443
 const HOST = process.env.HOST || 'mypilea.com'
 const INSECURE_PORT = process.env.INSECURE_PORT || 80
 const MODE = process.env.MODE || 'PRODUCTION'
+const CORS_URL = process.env.CORS_URL || undefined
 
 const app = express()
 
@@ -29,7 +30,11 @@ app.use(logReq)
 app.use((_, res: Response, next: NextFunction) => {
   res.header(
     'Access-Control-Allow-Origin',
-    MODE === 'PRODUCTION' ? 'https://mypilea.com' : 'http://localhost:3000'
+    MODE === CORS_URL
+      ? CORS_URL
+      : MODE === 'PRODUCTION'
+      ? 'https://mypilea.com'
+      : 'http://localhost:3000'
   )
   res.header(
     'Access-Control-Allow-Headers',

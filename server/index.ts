@@ -30,7 +30,7 @@ app.use(logReq)
 app.use((_, res: Response, next: NextFunction) => {
   res.header(
     'Access-Control-Allow-Origin',
-    MODE === CORS_URL
+    CORS_URL
       ? CORS_URL
       : MODE === 'PRODUCTION'
       ? 'https://mypilea.com'

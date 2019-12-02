@@ -9,6 +9,8 @@ const API_PORT = process.env.API_PORT
 const API_HOST = process.env.API_HOST
 const API_PROTOCOL = process.env.API_PROTOCOL
 
+console.log(API_HOST, API_HOST, API_PROTOCOL)
+
 const host = `${API_PROTOCOL}://${API_HOST}:${API_PORT}`
 
 export const services = serviceDefs.reduce((acc, service) => {

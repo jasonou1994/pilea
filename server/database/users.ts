@@ -144,3 +144,19 @@ export const updatePassword: (
 
   return result > 0
 }
+
+export const deleteUserByUsername: (
+  username: string
+) => Promise<void> = async username => {
+  await dbClient(USERS)
+    .del()
+    .where({ username })
+}
+
+export const confirmUserBypassDB: (
+  username: string
+) => Promise<void> = async username => {
+  await dbClient(USERS)
+    .update({ confirmed: true })
+    .where({ username })
+}

@@ -35,13 +35,14 @@ const config = (env: any): webpack.Configuration => {
       new webpack.DefinePlugin({
         'env.API_PORT': API_PORT
           ? JSON.stringify(API_PORT)
-          : JSON.stringify('80'),
+          : JSON.stringify('8000'),
         'env.API_HOST': API_HOST
           ? JSON.stringify(API_HOST)
           : JSON.stringify('localhost'),
         'env.API_PROTOCOL': API_PROTOCOL
           ? JSON.stringify(API_PROTOCOL)
           : JSON.stringify('http'),
+        'env.NODE_ENV': JSON.stringify('development'),
       }),
     ],
   }

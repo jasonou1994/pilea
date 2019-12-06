@@ -77,6 +77,7 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
         <div className="header">New Account</div>
 
         <TextInput
+          id="new-account-user"
           label="Email address"
           invalid={!userInputValid}
           type="text"
@@ -86,6 +87,7 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
         />
 
         <TextInput
+          id="new-account-password-1"
           label="Enter password (8 char min)"
           invalid={!passwordInputValid}
           type="password"
@@ -95,6 +97,7 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
         />
 
         <TextInput
+          id="new-account-password-2"
           label="Re-enter password"
           invalid={!passwordMatch}
           type="password"
@@ -104,6 +107,7 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
         />
 
         <Button
+          id="new-account-button"
           onClick={this.submitCreateAccount}
           type="primary"
           disabled={

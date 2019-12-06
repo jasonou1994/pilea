@@ -2,6 +2,13 @@ import React, { SFC, useState, useEffect } from 'react'
 import { useLocation } from 'react-router'
 import { Link } from 'react-router-dom'
 
+// @ts-ignore
+const API_PORT = env.API_PORT
+// @ts-ignore
+const API_HOST = env.API_HOST
+// @ts-ignore
+const API_PROTOCOL = env.API_PROTOCOL
+
 interface Props {}
 
 export const ResetPassword: SFC<Props> = props => {
@@ -21,7 +28,7 @@ export const ResetPassword: SFC<Props> = props => {
   const submitNewPassword = async () => {
     const passwordToken = pathname.replace('/password/reset/', '')
     const rawResult = await fetch(
-      `http://34.73.90.109:80/user/password/reset/${passwordToken}`,
+      `${API_PROTOCOL}://${API_HOST}:${API_PORT}/user/password/reset/${passwordToken}`,
       {
         method: 'POST',
         body: JSON.stringify({ password: firstPassword }),

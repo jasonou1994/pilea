@@ -36,7 +36,9 @@ class _LogInContainer extends Component<LogInContainerProps> {
               <LogIn {...{ fetchLogIn }} />
             </div>
 
-            <Link to="/password/forgot">Forgot password?</Link>
+            <Link id="forgot-password-link" to="/password/forgot">
+              Forgot password?
+            </Link>
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@ module.exports = {
   globals: {
     NODE_ENV: 'test',
     env: {
-      API_PORT: 80,
+      API_PORT: 8000,
       API_HOST: 'localhost',
       API_PROTOCOL: 'http',
       NODE_ENV: 'TEST',

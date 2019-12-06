@@ -12,6 +12,8 @@ import {
   addPasswordResetTokenToUser,
   checkIfPasswordResetTokenMatches,
   updatePassword,
+  deleteUserByUsername,
+  confirmUserBypassDB,
 } from '../database/users'
 import { encryptPassword } from '../utils'
 import { ContractResponse, generateGenericErrorResponse } from '.'
@@ -253,6 +255,51 @@ export const checkIfVerifiedAccount = async (
         error: null,
       })
     }
+  } catch (error) {
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
+  }
+}
+
+export const deleteAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  logger.debug('In deleteAccount middleware.')
+
+  const { username } = req.body
+
+  try {
+    await deleteUserByUsername(username)
+    logger.info(`User ${username} successfully deleted.`)
+
+    const body: ContractResponse = {
+      status: `User ${username} successfully deleted.`,
+      error: null,
+      success: true,
+    }
+
+    res.json(body)
+  } catch (error) {
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
+  }
+}
+
+export const confirmUserBypass = async (req: Request, res: Response) => {
+  logger.debug('In confirmUserBypass middleware.')
+  try {
+    const { username } = req.body
+    await confirmUserBypassDB(username)
+
+    const body: ContractResponse = {
+      status: `User ${username} successfully deleted.`,
+      error: null,
+      success: true,
+    }
+
+    res.json(body)
   } catch (error) {
     logger.error(error)
     res.status(500).json(generateGenericErrorResponse(error))

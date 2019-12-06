@@ -46,6 +46,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             </span>
 
             <Button
+              id="log-out-button"
               type="normal"
               disabled={false}
               text="Log Out"

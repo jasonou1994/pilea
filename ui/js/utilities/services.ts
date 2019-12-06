@@ -18,7 +18,9 @@ console.log(API_PORT, API_HOST, API_PROTOCOL, NODE_ENV)
 let cookie = ''
 const parseCookies: (response: Response) => void = response => {
   const raw = response.headers.get('set-cookie')
-  cookie = raw.split(';')[0]
+  if (raw) {
+    cookie = raw.split(';')[0]
+  }
 }
 
 export const services = serviceDefs.reduce((acc, service) => {
@@ -31,8 +33,6 @@ export const services = serviceDefs.reduce((acc, service) => {
 
         const url = host + path
 
-        console.log(url, body)
-
         const rawResponse = await fetch(url, {
           ...options,
           ...(options.method === 'POST' ? { body } : {}),
@@ -42,7 +42,7 @@ export const services = serviceDefs.reduce((acc, service) => {
           },
         })
 
-        if (NODE_ENV === 'TEST') {
+        if (NODE_ENV === 'TEST' && rawResponse.ok) {
           parseCookies(rawResponse)
         }
 

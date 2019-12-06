@@ -189,8 +189,6 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     // 1. Attempt log in
     yield put(startLoading(LOGIN))
 
-    console.log('here2')
-
     const { username, userId, confirmed }: UserLogInResponse = yield call(
       services[API_USER_LOGIN],
       {
@@ -200,8 +198,6 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
         }),
       }
     )
-
-    console.log(username)
 
     yield put(setLoggedIn({ status: true }))
     yield put(
@@ -253,6 +249,7 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
 
 function* fetchLogOut() {
   try {
+    console.log('logout')
     yield call(services[API_USER_LOGOUT])
 
     yield put(setLoggedIn({ status: false }))
@@ -278,6 +275,7 @@ function* fetchLogOut() {
       })
     )
   } catch ({ error, status }) {
+    console.log(error, status)
     yield put(
       addActiveNotification({
         notification: createNotification(
@@ -391,10 +389,12 @@ function* sendPasswordResetEmail({
   payload: { email },
 }: FetchSendPasswordResetEmailAction) {
   try {
+    console.log('here')
     const { status, success }: APIResponse = yield call(
       services[API_USER_SEND_PASSWORD_RESET_EMAIL],
       { body: JSON.stringify({ email }) }
     )
+    console.log('here2')
 
     yield put(
       addActiveNotification({

@@ -10,16 +10,12 @@ import { transactions } from './controllers/transactions'
 import { plaid } from './controllers/plaid'
 import { user } from './controllers/user'
 import { items } from './controllers/items'
-
-const PORT = process.env.PORT || 443
-const INSECURE_PORT = process.env.INSECURE_PORT || 80
-const MODE = process.env.MODE || 'PRODUCTION'
-const CORS_URL = process.env.CORS_URL || undefined
+import { PORT, INSECURE_PORT, MODE, CORS_URL } from './env'
 
 const app = express()
 
 if (MODE === 'PRODUCTION') {
-  app.use(redirectToHTTPS([/http:\/\/localhost:3000/]))
+  app.use(redirectToHTTPS())
 }
 app.use(expressLogger)
 app.use(express.static('build'))
@@ -29,11 +25,7 @@ app.use(logReq)
 app.use((_, res: Response, next: NextFunction) => {
   res.header(
     'Access-Control-Allow-Origin',
-    CORS_URL
-      ? CORS_URL
-      : MODE === 'PRODUCTION'
-      ? 'https://mypilea.com'
-      : 'http://localhost:3000'
+    MODE === 'PRODUCTION' ? 'https://mypilea.com' : CORS_URL
   )
   res.header(
     'Access-Control-Allow-Headers',
@@ -60,7 +52,7 @@ https
     },
     app
   )
-  .listen(443, () => {
+  .listen(PORT, () => {
     logger.info(`Express server listening on ${PORT}.`)
   })
 

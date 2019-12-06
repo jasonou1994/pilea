@@ -23,7 +23,6 @@ export class LogIn extends Component<LogInProps, LogInState> {
   }
 
   submitLogIn = () => {
-    console.log('here')
     const { userInput, passwordInput } = this.state
     const { fetchLogIn } = this.props
 

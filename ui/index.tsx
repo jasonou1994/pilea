@@ -33,8 +33,6 @@ window.onresize = () => {
 //   },
 // })
 
-console.log('pipeline test')
-
 ReactDOM.render(
   <Provider store={store}>
     <App />

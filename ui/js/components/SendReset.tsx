@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { FetchSendPasswordResetEmailActionCreator } from '../actions'
+import { TextInput } from './common/TextInput'
+import { Button } from './common/Button'
 
 interface Props {
   fetchSendPasswordResetEmailAction: FetchSendPasswordResetEmailActionCreator
@@ -42,15 +44,23 @@ export class SendReset extends Component<Props, State> {
         {!sent ? (
           <>
             Send password reset email:
-            <input
+            <TextInput
+              id="password-reset-email-input"
+              invalid={false}
               type="text"
               value={emailInput}
               placeholder="Email"
-              onChange={e => {
-                this.setState({ emailInput: e.target.value })
+              onChange={userInput => {
+                this.setState({ emailInput: userInput })
               }}
             />
-            <button onClick={this.submit}>Send email</button>
+            <Button
+              id="password-reset-email-button"
+              onClick={this.submit}
+              text="Send Email"
+              type="normal"
+              disabled={false}
+            />
           </>
         ) : (
           <div>If email exists, password reset link will be sent.</div>

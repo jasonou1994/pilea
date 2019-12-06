@@ -12,7 +12,6 @@ import { user } from './controllers/user'
 import { items } from './controllers/items'
 
 const PORT = process.env.PORT || 443
-const HOST = process.env.HOST || 'mypilea.com'
 const INSECURE_PORT = process.env.INSECURE_PORT || 80
 const MODE = process.env.MODE || 'PRODUCTION'
 const CORS_URL = process.env.CORS_URL || undefined

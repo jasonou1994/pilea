@@ -23,6 +23,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
   }
 
   submitLogIn = () => {
+    console.log('here')
     const { userInput, passwordInput } = this.state
     const { fetchLogIn } = this.props
 
@@ -40,6 +41,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
         <div className="header">Sign In</div>
 
         <TextInput
+          id="sign-in-user"
           label="Username"
           invalid={false}
           type="text"
@@ -49,6 +51,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
         />
 
         <TextInput
+          id="sign-in-password"
           label="Password"
           invalid={false}
           type="password"
@@ -58,6 +61,7 @@ export class LogIn extends Component<LogInProps, LogInState> {
         />
 
         <Button
+          id="sign-in-button"
           onClick={this.submitLogIn}
           type="primary"
           disabled={passwordInput.length === 0 || userInput.length === 0}

@@ -5,13 +5,21 @@ type Services = {
   [name in AvailableAPIs]: any
 }
 
-const API_PORT = process.env.API_PORT
-const API_HOST = process.env.API_HOST
-const API_PROTOCOL = process.env.API_PROTOCOL
+// @ts-ignore
+const API_PORT = env.API_PORT
+// @ts-ignore
+const API_HOST = env.API_HOST
+// @ts-ignore
+const API_PROTOCOL = env.API_PROTOCOL
+// @ts-ignore
+const NODE_ENV = env.NODE_ENV
+console.log(API_PORT, API_HOST, API_PROTOCOL, NODE_ENV)
 
-console.log(API_HOST, API_HOST, API_PROTOCOL)
-
-const host = `${API_PROTOCOL}://${API_HOST}:${API_PORT}`
+let cookie = ''
+const parseCookies: (response: Response) => void = response => {
+  const raw = response.headers.get('set-cookie')
+  cookie = raw.split(';')[0]
+}
 
 export const services = serviceDefs.reduce((acc, service) => {
   const { name, path, ...options } = service
@@ -19,12 +27,25 @@ export const services = serviceDefs.reduce((acc, service) => {
   acc[name] = ({ body }: { body: any } = { body: '{}' }) => {
     return new Promise(async (resolve, reject) => {
       try {
+        const host = `${API_PROTOCOL}://${API_HOST}:${API_PORT}`
+
         const url = host + path
+
+        console.log(url, body)
 
         const rawResponse = await fetch(url, {
           ...options,
           ...(options.method === 'POST' ? { body } : {}),
+          headers: {
+            ...options.headers,
+            ...(NODE_ENV === 'TEST' ? { cookie } : {}),
+          },
         })
+
+        if (NODE_ENV === 'TEST') {
+          parseCookies(rawResponse)
+        }
+
         const response = await rawResponse.json()
         const { error, success, status, ...contents } = response
 
@@ -43,6 +64,7 @@ export const services = serviceDefs.reduce((acc, service) => {
 
         success ? resolve({ ...contents, status }) : reject({ status, error })
       } catch (e) {
+        console.log(e)
         reject({ error: `Unknown error: ${e}`, status: `Error in ${name}` })
       }
     })

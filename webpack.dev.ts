@@ -41,13 +41,13 @@ const config = (env: any): webpack.Configuration => {
         template: './ui/index.html',
       }),
       new webpack.DefinePlugin({
-        'process.env.API_PORT': API_PORT
+        'env.API_PORT': API_PORT
           ? JSON.stringify(API_PORT)
           : JSON.stringify('80'),
-        'process.env.API_HOST': API_HOST
+        'env.API_HOST': API_HOST
           ? JSON.stringify(API_HOST)
           : JSON.stringify('localhost'),
-        'process.env.API_PROTOCOL': API_PROTOCOL
+        'env.API_PROTOCOL': API_PROTOCOL
           ? JSON.stringify(API_PROTOCOL)
           : JSON.stringify('http'),
       }),

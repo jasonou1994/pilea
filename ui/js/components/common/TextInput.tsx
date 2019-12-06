@@ -1,8 +1,8 @@
 import React, { FunctionComponent } from 'react'
 import classNames from 'classnames'
-import { placeholder } from '@babel/types'
 
 interface TextInputProps {
+  id?: string
   label?: string
   invalid: boolean
   type: 'text' | 'password'
@@ -12,6 +12,7 @@ interface TextInputProps {
 }
 
 export const TextInput: FunctionComponent<TextInputProps> = ({
+  id,
   label,
   invalid,
   type,
@@ -22,6 +23,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   <div className="input-group">
     {label && <span>{label}</span>}
     <input
+      id={id}
       className={classNames({ invalid })}
       type={type}
       value={value}

@@ -2,6 +2,12 @@ module.exports = {
   preset: 'ts-jest/presets/js-with-ts',
   globals: {
     NODE_ENV: 'test',
+    env: {
+      API_PORT: 80,
+      API_HOST: 'localhost',
+      API_PROTOCOL: 'http',
+      NODE_ENV: 'TEST',
+    },
     'ts-jest': {
       babelConfig: true,
     },

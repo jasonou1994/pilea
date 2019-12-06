@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react'
 import classNames from 'classnames'
 
 interface ButtonProps {
+  id?: string
   onClick: (...args: any[]) => any
   type: 'normal' | 'primary'
   disabled: boolean
@@ -11,6 +12,7 @@ interface ButtonProps {
 }
 
 export const Button: FunctionComponent<ButtonProps> = ({
+  id,
   onClick,
   disabled,
   type,
@@ -19,6 +21,7 @@ export const Button: FunctionComponent<ButtonProps> = ({
   style,
 }) => (
   <button
+    id={id}
     onClick={onClick}
     disabled={disabled}
     className={classNames(

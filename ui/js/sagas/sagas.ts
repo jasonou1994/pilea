@@ -189,6 +189,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     // 1. Attempt log in
     yield put(startLoading(LOGIN))
 
+    console.log('here2')
+
     const { username, userId, confirmed }: UserLogInResponse = yield call(
       services[API_USER_LOGIN],
       {
@@ -198,6 +200,8 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
         }),
       }
     )
+
+    console.log(username)
 
     yield put(setLoggedIn({ status: true }))
     yield put(

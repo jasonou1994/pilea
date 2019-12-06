@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import App from '../../js/containers/App'
 import { integrationSetup } from '../setup/integrationSetup'
 
-describe('Sample test group', () => {
+describe('Log in tests', () => {
   let store: Store,
     sagaFinished: Promise<any>,
     restartSaga: () => void,
@@ -21,7 +21,7 @@ describe('Sample test group', () => {
     )
   })
 
-  test('sample test', () => {
+  test('Log in button is disabled without input ', () => {
     const incrementOnClick = wrapper
       .find('#redux-increment')
       .first()

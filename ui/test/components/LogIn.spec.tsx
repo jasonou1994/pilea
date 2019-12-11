@@ -8,6 +8,7 @@ import {
   API_HOST,
   API_PORT,
   API_PROTOCOL,
+  NEW_USER_UPDATED_PASSWORD,
 } from '../constants'
 import {
   render,
@@ -86,7 +87,13 @@ describe('Log in tests', () => {
     expect(getByText('Log Out')).toBeTruthy()
   })
 
-  test('User creation, confirmation, and password reset flow', async done => {
+  test('User creation, confirmation, and password reset flow', async () => {
+    // Prep
+    await dbClient
+      .del()
+      .from('users')
+      .where({ username: NEW_USER_EMAIL })
+
     // Create User
     const userInput = getById('new-account-user') as HTMLInputElement
     const passwordInput1 = getById('new-account-password-1') as HTMLInputElement
@@ -131,13 +138,42 @@ describe('Log in tests', () => {
     expect(getByText('Forgot password?')).toBeTruthy()
 
     // Reset password
+    fireEvent.click(getByText('Forgot password?'))
+    fireEvent.change(getById('password-reset-email-input'), {
+      target: { value: NEW_USER_EMAIL },
+    })
+    fireEvent.click(getByText('Send Email'))
+
+    await new Promise(resolve => setTimeout(() => resolve(), 2000))
+
+    const dbResetToken = await dbClient
+      .select('passwordResetToken')
+      .from('users')
+      .where({ username: NEW_USER_EMAIL })
+    expect(dbResetToken[0].passwordResetToken).toBeTruthy()
+
+    const resetToken = dbResetToken[0].passwordResetToken
+    const resetURL = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/user/password/reset/${resetToken}`
+
+    await fetch(resetURL, {
+      body: JSON.stringify({ password: NEW_USER_UPDATED_PASSWORD }),
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      redirect: 'manual',
+    })
+
+    const dbConfirmPasswordUpdate = await dbClient
+      .select('passwordResetToken')
+      .from('users')
+      .where({ username: NEW_USER_EMAIL })
+    expect(dbConfirmPasswordUpdate[0].passwordResetToken).toBe('')
 
     // Clean up
     await dbClient
       .del()
       .from('users')
       .where({ username: NEW_USER_EMAIL })
-
-    done()
   })
 })

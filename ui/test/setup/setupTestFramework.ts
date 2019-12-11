@@ -1,2 +1,2 @@
 // @ts-ignore
-global.fetch = require('isomorphic-fetch')
+global.fetch = require('node-fetch')

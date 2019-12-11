@@ -394,7 +394,6 @@ function* sendPasswordResetEmail({
       services[API_USER_SEND_PASSWORD_RESET_EMAIL],
       { body: JSON.stringify({ email }) }
     )
-    console.log('here2')
 
     yield put(
       addActiveNotification({

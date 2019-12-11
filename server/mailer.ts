@@ -10,12 +10,15 @@ export const sendSignUpEmail = async (
   confirmationString: string
 ) => {
   logger.debug('In sendSignUpEmail.')
+
+  const url = `${HOST}/user/confirm/${confirmationString}`
   if (MODE !== 'TEST') {
     await sendMail(address, {
       subject: 'Welcome to Pilea!',
-      html: `<b>Welcome to Pilea! Please click on this <a href="${HOST}/user/confirm/${confirmationString}">confirmation link</a> to finish signing-up.</b>`,
+      html: `<b>Welcome to Pilea! Please click on this <a href="${url}">confirmation link</a> to finish signing-up.</b>`,
     })
   }
+  logger.debug(`Email was sent to ${url}`)
 }
 
 export const sendForgotPasswordEmail = async (

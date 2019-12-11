@@ -63,7 +63,7 @@ export const createUser = async (
 
     const hash = await encryptPassword({ password })
 
-    const confirmationString = uuid()
+    const confirmationString = uuid().replace(/-/g, '')
 
     await sendSignUpEmail(username, confirmationString)
 

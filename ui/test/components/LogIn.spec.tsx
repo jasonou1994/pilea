@@ -35,6 +35,8 @@ describe('Log in tests', () => {
 
   afterEach(cleanup)
 
+  afterAll(() => dbClient.destroy())
+
   test('Log in button is disabled without input', () => {
     const signInButton = getById('sign-in-button') as HTMLButtonElement
 
@@ -84,7 +86,8 @@ describe('Log in tests', () => {
     expect(getByText('Log Out')).toBeTruthy()
   })
 
-  test('User creation and password reset flow', async () => {
+  test('User creation, confirmation, and password reset flow', async done => {
+    // Create User
     const userInput = getById('new-account-user') as HTMLInputElement
     const passwordInput1 = getById('new-account-password-1') as HTMLInputElement
     const passwordInput2 = getById('new-account-password-2') as HTMLInputElement
@@ -105,7 +108,29 @@ describe('Log in tests', () => {
       .select('*')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
-    expect(dbCreateUserCheck.length).toBeGreaterThan(0)
+    expect(dbCreateUserCheck.length).toBe(1)
+
+    // Confirm User
+    const confirmationString: string = dbCreateUserCheck[0].confirmationString.trim()
+    const confirmationURL = `${API_PROTOCOL}://${API_HOST}:${API_PORT}/user/confirm/${confirmationString}`
+
+    await fetch(confirmationURL, {
+      redirect: 'manual',
+    })
+
+    const dbConfirmationCheck = await dbClient
+      .select('confirmed')
+      .from('users')
+      .where({ username: NEW_USER_EMAIL })
+    expect(Boolean(dbConfirmationCheck[0].confirmed)).toBe(true)
+
+    // Log Out
+    fireEvent.click(getById('log-out-button'))
+
+    await wait(() => getByText('Forgot password?'))
+    expect(getByText('Forgot password?')).toBeTruthy()
+
+    // Reset password
 
     // Clean up
     await dbClient
@@ -113,74 +138,6 @@ describe('Log in tests', () => {
       .from('users')
       .where({ username: NEW_USER_EMAIL })
 
-    // const button = wrapper.find('#new-account-button').last()
-    // expect(button.props().disabled).toBe(false)
-    // button.simulate('click')
-    // store.dispatch(END)
-    // await sagaFinished
-    // restartSaga()
-    // expect(store.getState().login.loggedIn).toBe(true)
-    // await fetch(`${API_PROTOCOL}://${API_HOST}:${API_PORT}/user/admin/delete`, {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ username: NEW_USER_EMAIL }),
-    // })
+    done()
   })
-  // test('Password reset flow', async () => {
-  //   // Create User
-  //   const userInput = wrapper.find('#new-account-user').last()
-  //   userInput.simulate('change', {
-  //     target: { value: NEW_USER_EMAIL },
-  //   })
-  //   expect((userInput.props().value = NEW_USER_EMAIL))
-  //   const userPassword1 = wrapper.find('#new-account-password-1').last()
-  //   userPassword1.simulate('change', { target: { value: NEW_USER_PASSWORD } })
-  //   expect((userPassword1.props().value = NEW_USER_PASSWORD))
-  //   const userPassword2 = wrapper.find('#new-account-password-2').last()
-  //   userPassword2.simulate('change', { target: { value: NEW_USER_PASSWORD } })
-  //   expect((userPassword2.props().value = NEW_USER_PASSWORD))
-  //   const button = wrapper.find('#new-account-button').last()
-  //   expect(button.props().disabled).toBe(false)
-  //   button.simulate('click')
-  //   await asyncFlush()
-  //   wrapper.update()
-  //   expect(store.getState().login.loggedIn).toBe(true)
-  //   // Log Out
-  //   wrapper
-  //     .find('#log-out-button')
-  //     .last()
-  //     .simulate('click')
-  //   await asyncFlush()
-  //   wrapper.update()
-  //   // Click password reset
-  //   wrapper
-  //     .find('a')
-  //     .findWhere(el => el.props().id === 'forgot-password-link')
-  //     .simulate('click', { button: 0 })
-  //   const resetEmail = wrapper.find('#password-reset-email-input').last()
-  //   resetEmail.simulate('change', {
-  //     target: { value: NEW_USER_EMAIL },
-  //   })
-  //   wrapper
-  //     .find('#password-reset-email-button')
-  //     .last()
-  //     .simulate('click')
-  //   await asyncFlush()
-  //   wrapper.update()
-  //   // console.log(wrapper.debug())
-  //   // await setTimeout(() => {}, 3000)
-  //   // store.dispatch(END)
-  //   // await sagaFinished
-  //   // restartSaga()
-  //   // Clean up
-  //   // await fetch(`${API_PROTOCOL}://${API_HOST}:${API_PORT}/user/admin/delete`, {
-  //   //   method: 'POST',
-  //   //   headers: {
-  //   //     'Content-Type': 'application/json',
-  //   //   },
-  //   //   body: JSON.stringify({ username: NEW_USER_EMAIL }),
-  //   // })
-  // })
 })

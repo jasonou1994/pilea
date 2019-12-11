@@ -6,6 +6,7 @@ export const parseRawTransaction: (
 ) => PlaidTransaction[] = rawTxs =>
   rawTxs.map(tx => ({
     ...tx,
+    unofficial_currency_code: '',
     category: tx.category
       ? typeof tx.category === 'string'
         ? tx.category

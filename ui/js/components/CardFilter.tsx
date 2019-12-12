@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import { ItemWithCards } from '../reducers'
 import { FilterRow } from './FilterRow'
 import {
@@ -14,52 +14,50 @@ interface CardFilterProps {
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
-export class CardFilter extends Component<CardFilterProps> {
-  render() {
-    const {
-      cardsByItems,
-      toggleCardSelectedAction,
-      toggleItemSelectedAction,
-      resetSelectedTransactionKeyAction,
-    } = this.props
+export const CardFilter: FunctionComponent<CardFilterProps> = props => {
+  const {
+    cardsByItems,
+    toggleCardSelectedAction,
+    toggleItemSelectedAction,
+    resetSelectedTransactionKeyAction,
+  } = props
 
-    const filterRows = cardsByItems.reduce((acc, item) => {
-      acc.push(
+  const filterRows = cardsByItems.reduce((acc, item) => {
+    acc.push(
+      <FilterRow
+        key={item.accessToken}
+        selected={item.selected}
+        indentLevel={0}
+        displayName={item.alias ? item.alias : item.accessToken}
+        onCheckboxClick={() => {
+          resetSelectedTransactionKeyAction()
+          toggleItemSelectedAction(item.id)
+        }}
+      />
+    )
+
+    acc.push(
+      item.cards.map((card, i) => (
         <FilterRow
-          key={item.accessToken}
-          selected={item.selected}
-          indentLevel={0}
-          displayName={item.alias ? item.alias : item.accessToken}
+          key={i}
+          selected={card.selected}
+          indentLevel={1}
+          displayName={card.official_name || card.name}
           onCheckboxClick={() => {
             resetSelectedTransactionKeyAction()
-            toggleItemSelectedAction(item.id)
+            toggleCardSelectedAction(card.account_id)
           }}
         />
-      )
-
-      acc.push(
-        item.cards.map((card, i) => (
-          <FilterRow
-            key={i}
-            selected={card.selected}
-            indentLevel={1}
-            displayName={card.official_name || card.name}
-            onCheckboxClick={() => {
-              resetSelectedTransactionKeyAction()
-              toggleCardSelectedAction(card.account_id)
-            }}
-          />
-        ))
-      )
-
-      return acc
-    }, [])
-
-    return (
-      <>
-        <h4>Cards</h4>
-        <div id="card-filter-contents">{filterRows}</div>
-      </>
+      ))
     )
-  }
+
+    return acc
+  }, [])
+
+  return (
+    <>
+      <h4>Cards</h4>
+      <div id="card-filter-contents">{filterRows}</div>
+    </>
+  )
 }

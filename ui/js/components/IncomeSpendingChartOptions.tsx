@@ -34,14 +34,9 @@ interface IncomeSpendingChartOptionsProps {
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
 }
 
-interface IncomeSpendingChartOptionsState {}
-
 export class IncomeSpendingChartOptions extends Component<
-  IncomeSpendingChartOptionsProps,
-  IncomeSpendingChartOptionsState
+  IncomeSpendingChartOptionsProps
 > {
-  static state = {}
-
   render() {
     const {
       setGraphFidelityAction,
@@ -78,8 +73,9 @@ export class IncomeSpendingChartOptions extends Component<
               const {
                 historicalTimeCount,
                 historicalTimeUnit,
-              } = convertDateSelectString(e.target
-                .value as AvailableTimeStrings)
+              } = convertDateSelectString(
+                e.target.value as AvailableTimeStrings
+              )
 
               resetSelectedTransactionKeyAction()
               setGraphHistoricalLengthAction({

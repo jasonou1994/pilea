@@ -50,7 +50,7 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     shown: [GRID_LAYOUT_BY_TIME],
 
     cellStyle: { display: 'flex', 'justify-content': 'flex-end' },
-    valueGetter: colData => {
+    cellRenderer: colData => {
       return numeral(colData.data.amount).format('$0,0.00')
     },
   },

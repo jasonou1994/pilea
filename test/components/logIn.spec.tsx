@@ -1,5 +1,6 @@
 import React from 'react'
-import App from '../../js/containers/App'
+import knex from 'knex'
+import App from '../../ui/js/containers/App'
 import {
   VALID_USER,
   VALID_PASS,
@@ -9,6 +10,7 @@ import {
   API_PORT,
   API_PROTOCOL,
   NEW_USER_UPDATED_PASSWORD,
+  connection,
 } from '../constants'
 import {
   render,
@@ -36,7 +38,7 @@ describe('Log in tests', () => {
 
   afterEach(cleanup)
 
-  afterAll(() => dbClient.destroy())
+  // afterAll(() => dbClient.destroy())
 
   test('Log in button is disabled without input', () => {
     const signInButton = getById('sign-in-button') as HTMLButtonElement
@@ -175,5 +177,5 @@ describe('Log in tests', () => {
       .del()
       .from('users')
       .where({ username: NEW_USER_EMAIL })
-  })
+  }, 10000)
 })

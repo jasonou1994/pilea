@@ -5,6 +5,7 @@ const config = (env: any): webpack.Configuration => {
   const API_PORT = env ? env.API_PORT : undefined
   const API_HOST = env ? env.API_HOST : undefined
   const API_PROTOCOL = env ? env.API_PROTOCOL : undefined
+  const NODE_ENV = env ? env.NODE_ENV : undefined
 
   return {
     mode: 'development',
@@ -50,7 +51,9 @@ const config = (env: any): webpack.Configuration => {
         'env.API_PROTOCOL': API_PROTOCOL
           ? JSON.stringify(API_PROTOCOL)
           : JSON.stringify('http'),
-        'env.NODE_ENV': JSON.stringify('development'),
+        'env.NODE_ENV': NODE_ENV
+          ? JSON.stringify(NODE_ENV)
+          : JSON.stringify('development'),
       }),
     ],
   }

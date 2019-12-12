@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import PlaidLink from 'react-plaid-link'
-import { PLAID_PUBLIC_KEY } from '../konstants'
+import { PLAID_PUBLIC_KEY, PLAID_ENV } from '../konstants'
 
 interface AddNewItemButtonProps {
   hidden: boolean
@@ -11,7 +11,7 @@ export const AddNewItemButton: FunctionComponent<AddNewItemButtonProps> = props 
   return !props.hidden ? (
     <PlaidLink
       clientName="Pilea"
-      env={'development'}
+      env={PLAID_ENV}
       product={['transactions']}
       publicKey={PLAID_PUBLIC_KEY}
       onSuccess={props.onSuccess}

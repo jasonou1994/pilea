@@ -43,8 +43,8 @@ export class IncomeSpendingChart extends Component<
   lineSeriesConverter: () => {
     incomeSeries: Array<{ x: number; y: number }>
     spendingSeries: Array<{ x: number; y: number }>
-  } = () =>
-    Object.entries(this.props.transactionsByDayCountCombined).reduce(
+  } = () => {
+    return Object.entries(this.props.transactionsByDayCountCombined).reduce(
       (result, [date, txs]) => {
         const unixMiliStamp = moment(date, 'YYYY-MM-DD', true).valueOf()
 
@@ -65,6 +65,7 @@ export class IncomeSpendingChart extends Component<
         spendingSeries: [],
       }
     )
+  }
 
   getCurrentYs: () => { incomeY: number; spendingY: number } = () => {
     const { transactionsByDayCountCombined: transactions } = this.props
@@ -90,10 +91,6 @@ export class IncomeSpendingChart extends Component<
 
     const { incomeSeries, spendingSeries } = this.lineSeriesConverter()
     const { incomeY, spendingY } = this.getCurrentYs()
-
-    if (this.state.ref.current) {
-      console.log(this.state.ref.current.offsetWidth)
-    }
 
     return (
       <div ref={this.state.ref}>

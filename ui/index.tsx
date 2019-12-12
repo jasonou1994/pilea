@@ -28,7 +28,7 @@ window.onresize = () => {
 // store.dispatch({
 //   type: 'FETCH_LOG_IN',
 //   payload: {
-//     user: 'jasonou122894@gmail.com',
+//     user: 'test@gmail.com',
 //     password: 'jasonou1',
 //   },
 // })

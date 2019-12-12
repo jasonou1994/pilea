@@ -66,8 +66,6 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
     setRowData(rows)
   }, [selectedTransactions])
 
-  console.log(allowedWidth)
-
   return (
     <div>
       <h2>Transactions</h2>

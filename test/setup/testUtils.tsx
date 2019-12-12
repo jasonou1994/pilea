@@ -10,8 +10,8 @@ import { Provider } from 'react-redux'
 import createSagaMiddleware from 'redux-saga'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
-import rootReducer from '../../js/reducers'
-import saga from '../../js/sagas/sagas'
+import rootReducer from '../../ui/js/reducers'
+import saga from '../../ui/js/sagas/sagas'
 import React from 'react'
 
 const generateReduxStore: () => Store = () => {

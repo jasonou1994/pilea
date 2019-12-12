@@ -2,7 +2,10 @@ import { Client, environments } from 'plaid'
 import { MODE } from './env'
 
 const PLAID_CLIENT_ID = '5c52345ce341ed0010a522f1'
-const PLAID_SECRET = '259a3db7aec2d3314a6e545d056a10'
+const PLAID_SECRET =
+  MODE === 'TEST'
+    ? '41ab53239da6e8befa565671fc4ce3'
+    : '259a3db7aec2d3314a6e545d056a10'
 const PLAID_PUBLIC_KEY = '134893e5d974bced3a52c91e8e6b5a'
 const PLAID_ENV = MODE === 'TEST' ? 'sandbox' : 'development'
 

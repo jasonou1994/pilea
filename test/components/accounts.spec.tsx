@@ -22,7 +22,7 @@ import {
   queryAllByAttribute,
   queryHelpers,
 } from '../setup/testUtils'
-import { dbClient } from '../../server/database'
+// import { dbClient } from '../../server/database'
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
@@ -32,6 +32,7 @@ let debug: (
     | DocumentFragment
     | Array<HTMLElement | DocumentFragment>
 ) => void
+export const dbClient = knex({ client: 'pg', connection })
 
 describe('Account tests', () => {
   beforeAll(async () => {

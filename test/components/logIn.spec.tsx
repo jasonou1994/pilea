@@ -20,7 +20,7 @@ import {
   fireEvent,
   wait,
 } from '../setup/testUtils'
-import { dbClient } from '../database'
+// import { dbClient } from '../database'
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
@@ -30,6 +30,7 @@ let debug: (
     | DocumentFragment
     | Array<HTMLElement | DocumentFragment>
 ) => void
+export const dbClient = knex({ client: 'pg', connection })
 
 describe('Log in tests', () => {
   beforeEach(() => {
@@ -38,7 +39,7 @@ describe('Log in tests', () => {
 
   afterEach(cleanup)
 
-  // afterAll(() => dbClient.destroy())
+  afterAll(() => dbClient.destroy())
 
   test('Log in button is disabled without input', () => {
     const signInButton = getById('sign-in-button') as HTMLButtonElement

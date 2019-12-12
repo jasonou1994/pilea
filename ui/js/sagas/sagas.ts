@@ -249,7 +249,6 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
 
 function* fetchLogOut() {
   try {
-    console.log('logout')
     yield call(services[API_USER_LOGOUT])
 
     yield put(setLoggedIn({ status: false }))
@@ -389,7 +388,6 @@ function* sendPasswordResetEmail({
   payload: { email },
 }: FetchSendPasswordResetEmailAction) {
   try {
-    console.log('here')
     const { status, success }: APIResponse = yield call(
       services[API_USER_SEND_PASSWORD_RESET_EMAIL],
       { body: JSON.stringify({ email }) }

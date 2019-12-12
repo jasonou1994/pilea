@@ -13,7 +13,7 @@
     "server-test": "MODE=TEST PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
     "server": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
     "test": "npm run jest",
-    "jest": "jest test/ --coverage"
+    "jest": "jest test/ --coverage --runInBand"
   },
   "keywords": [],
   "author": "",

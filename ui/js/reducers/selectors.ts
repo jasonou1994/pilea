@@ -161,7 +161,7 @@ export const categoryFilteredTransactionsSelector: (
   }
 )
 
-export const timeConsolidatedTransactionsSelector: (
+const timeConsolidatedTransactionsSelector: (
   state: RootState
 ) => TimeConsolidatedTransactionGroups = createSelector(
   categoryFilteredTransactionsSelector,

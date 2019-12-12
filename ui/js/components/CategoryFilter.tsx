@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
-import numeral from 'numeral'
 
 import { CategoriesWithTxData } from '../reducers'
 import { ToggleCategorySelectedActionCreator } from '../actions'
+import { CategoryFilterRow } from './CategoryFilterRow'
 
 interface CategoryFilterProps {
   categoryData: CategoriesWithTxData
@@ -41,22 +41,15 @@ export const CategoryFilter: FunctionComponent<CategoryFilterProps> = props => {
       <div className="category-table">
         {rowData.map(({ category, spending, txCount, selected }, i) => {
           return (
-            <div className="category-row" key={i}>
-              <input
-                style={{ backgroundColor: 'yellow' }}
-                type="checkbox"
-                checked={selected}
-                onChange={() => {
-                  props.toggleCategorySelectedAction({ category })
-                }}
-              />
-              <div className="category-row-items">
-                <div className="category-name category-item">{category}</div>
-                <div className="category-name category-item">
-                  {numeral(spending).format('$0,0')}
-                </div>
-              </div>
-            </div>
+            <CategoryFilterRow
+              {...{
+                selected,
+                category,
+                spending,
+                toggleSelected: (category: string) =>
+                  props.toggleCategorySelectedAction({ category }),
+              }}
+            />
           )
         })}
       </div>

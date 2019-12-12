@@ -1,15 +1,14 @@
 import React, { FunctionComponent, useState } from 'react'
-import { FetchAddItemActionCreator } from '../actions'
+import { FetchAddItemActionCreator, fetchAddItem } from '../actions'
 import { AddNewItemButton } from './AddNewItemButton'
 import { AddNewItemModal } from './AddNewItemModal'
 
 interface AddNewItemProps {
   hidden: boolean
-  onClick: FetchAddItemActionCreator
+  onConfirm: FetchAddItemActionCreator
 }
 
 export const AddNewItem: FunctionComponent<AddNewItemProps> = props => {
-  const [alias, setAlias] = useState('')
   const [token, setToken] = useState('')
   const [modalShown, setModalShown] = useState(false)
 
@@ -26,9 +25,9 @@ export const AddNewItem: FunctionComponent<AddNewItemProps> = props => {
       ) : (
         <AddNewItemModal
           {...{
-            setAlias,
             hideModal: () => setModalShown(false),
-            onClick: () => props.onClick({ accessToken: token, alias }),
+            onConfirm: (alias: string) =>
+              props.onConfirm({ alias, accessToken: token }),
           }}
         />
       )}

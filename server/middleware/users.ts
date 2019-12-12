@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
-//@ts-ignore
 import uuid from 'uuidv4'
 import {
   getUsers,

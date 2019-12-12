@@ -1,15 +1,16 @@
 #card-filter-contents {
   max-height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .category-table {
-  height: 360px;
-  overflow: scroll;
+  max-height: 360px;
+  overflow-y: scroll;
 }
 
 .category-row {
   display: flex;
+  margin-top: 2px;
 }
 
 .category-row-items {
@@ -24,7 +25,13 @@
 }
 .category-name {
   max-width: 160px;
-  overflow-x: scroll;
+  overflow-x: hidden;
   overflow-y: hidden;
   white-space: nowrap;
+}
+
+.category-row-show-only {
+  font-size: 10px;
+  cursor: pointer;
+  margin-top: -2px;
 }

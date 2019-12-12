@@ -11,10 +11,8 @@ import {
   ResetSelectedTransactionActionCreator,
 } from '../actions'
 import {
-  TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
   RootState,
-  timeConsolidatedTransactionsSelector,
   itemsWithCardsSelector,
   selectedTransactionsSelector,
   lineSeriesSelector,
@@ -42,7 +40,6 @@ import { IncomeSpendingDetailsGrid } from '../components/IncomeSpendingDetailsGr
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
-  transactionTimeGroups: TimeConsolidatedTransactionGroups
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -60,7 +57,7 @@ interface AnalysisContainerProps {
 
 const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
   graphFidelity,
-  transactionTimeGroups,
+
   cards,
   selectedTransactions,
   setGraphFidelityAction,
@@ -80,7 +77,7 @@ const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
           {...{
             lineSeries,
             windowWidth,
-            transactionTimeGroups,
+
             setSelectedTransactionKeyAction,
           }}
         />
@@ -108,7 +105,6 @@ const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
 export default connect(
   (state: RootState) => ({
     graphFidelity: graphFidelitySelector(state),
-    transactionTimeGroups: timeConsolidatedTransactionsSelector(state),
     cards: cardsSelector(state),
     cardsByItems: itemsWithCardsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),

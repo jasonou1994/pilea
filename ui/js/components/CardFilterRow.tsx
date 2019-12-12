@@ -7,7 +7,7 @@ interface Props {
   indentLevel: number
 }
 
-export const FilterRow: FunctionComponent<Props> = props => {
+export const CardFilterRow: FunctionComponent<Props> = props => {
   const { selected, displayName, onCheckboxClick, indentLevel } = props
 
   return (

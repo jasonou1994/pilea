@@ -42,3 +42,27 @@
   font-weight: 150;
   color: $faded-grey;
 }
+
+.new-item-modal-container {
+  position: absolute;
+  background-color: rgba(102, 102, 102, 0.582);
+  width: 200%;
+  height: 200%;
+  margin-top: -300px;
+  margin-left: -50%;
+  display: flex;
+  justify-content: center;
+}
+.new-item-modal {
+  padding: 10px;
+  background-color: white;
+  margin-top: 300px;
+  width: 300px;
+  height: 110px;
+  border: 1px solid black;
+  border-radius: 5px;
+
+  p {
+    margin: 5px 0;
+  }
+}

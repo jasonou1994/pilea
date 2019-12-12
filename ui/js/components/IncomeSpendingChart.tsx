@@ -1,8 +1,7 @@
 /// <reference path="../../../typings/react-vis.d.ts"/>
 
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import '../../../node_modules/react-vis/dist/style.css'
-import { isEmpty } from 'lodash'
 import moment from 'moment'
 import {
   XYPlot,
@@ -15,41 +14,37 @@ import {
 } from 'react-vis'
 
 import { SetSelectedTransactionActionCreator } from '../actions'
-import { INPUT, OUTPUT } from '../konstants'
 import { CrosshairDisplay } from './CrosshairDisplay'
-import { TimeConsolidatedTransactionGroups, GraphLineSeries } from '../reducers'
+import { GraphLineSeries } from '../reducers'
 
 interface IncomeSpendingChartProps {
-  transactionTimeGroups: TimeConsolidatedTransactionGroups
   lineSeries: GraphLineSeries
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
   windowWidth: number
 }
 
 export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = ({
-  transactionTimeGroups,
   setSelectedTransactionKeyAction,
   windowWidth,
   lineSeries: { incomeSeries, spendingSeries },
 }) => {
   const [currentX, setCurrentX] = useState(0)
+  const [currentYs, setCurrentYs] = useState({ incomeY: 0, spendingY: 0 })
 
-  const getCurrentYs: () => { incomeY: number; spendingY: number } = () => {
-    const key = moment(currentX).format('YYYY-MM-DD')
-    if (isEmpty(transactionTimeGroups) || !transactionTimeGroups[key]) {
-      return {
-        incomeY: 0,
-        spendingY: 0,
-      }
-    }
+  useEffect(() => {
+    const incomeY = incomeSeries.reduce(
+      (acc, cur) => (cur.x === currentX ? cur.y : acc),
+      0
+    )
+    const spendingY = spendingSeries.reduce(
+      (acc, cur) => (cur.x === currentX ? cur.y : acc),
+      0
+    )
 
-    return {
-      incomeY: transactionTimeGroups[key][INPUT],
-      spendingY: transactionTimeGroups[key][OUTPUT],
-    }
-  }
+    setCurrentYs({ incomeY, spendingY })
+  }, [currentX])
 
-  const { incomeY, spendingY } = getCurrentYs()
+  const { incomeY, spendingY } = currentYs
 
   return (
     <XYPlot

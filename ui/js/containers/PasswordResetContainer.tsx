@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { RootState } from '../reducers'
 import { SendReset } from '../components/SendReset'
@@ -23,14 +23,13 @@ class _PasswordResetContainer extends Component<Props> {
           <SendReset {...{ fetchSendPasswordResetEmailAction }} />
         </Route>
         <Route path="/password/reset/*">
-          <ResetPassword></ResetPassword>
+          <ResetPassword />
         </Route>
       </Switch>
     )
   }
 }
 
-export default connect(
-  (state: RootState) => ({}),
-  { fetchSendPasswordResetEmailAction: fetchSendPasswordResetEmail }
-)(_PasswordResetContainer)
+export default connect((state: RootState) => ({}), {
+  fetchSendPasswordResetEmailAction: fetchSendPasswordResetEmail,
+})(_PasswordResetContainer)

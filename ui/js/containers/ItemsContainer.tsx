@@ -38,7 +38,7 @@ class _ItemsContainer extends Component<
       <div id="item-panel">
         <h2>Your Accounts</h2>
         <AddNewItem
-          {...{ onClick: fetchAddItemAction, hidden: !user.confirmed }}
+          {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
         />
 
         <CurrentItems

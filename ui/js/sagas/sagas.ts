@@ -109,6 +109,8 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
       .format('YYYY-MM-DD')
     const end = moment().format('YYYY-MM-DD')
 
+    yield put(startLoading(TRANSACTIONS))
+
     const { cards, transactions, items }: AddItemResponse = yield call(
       services[API_ITEMS_ADD],
       {
@@ -124,6 +126,8 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+
+    yield put(stopLoading(TRANSACTIONS))
 
     yield put(
       addActiveNotification({
@@ -388,10 +392,9 @@ function* sendPasswordResetEmail({
   payload: { email },
 }: FetchSendPasswordResetEmailAction) {
   try {
-    const { status, success }: APIResponse = yield call(
-      services[API_USER_SEND_PASSWORD_RESET_EMAIL],
-      { body: JSON.stringify({ email }) }
-    )
+    yield call(services[API_USER_SEND_PASSWORD_RESET_EMAIL], {
+      body: JSON.stringify({ email }),
+    })
 
     yield put(
       addActiveNotification({

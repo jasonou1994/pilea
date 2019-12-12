@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import { ItemWithCards } from '../reducers'
-import { FilterRow } from './FilterRow'
+import { CardFilterRow } from './CardFilterRow'
 import {
   ToggleItemSelectedActionCreator,
   ToggleCardSelectedActionCreator,
@@ -24,7 +24,7 @@ export const CardFilter: FunctionComponent<CardFilterProps> = props => {
 
   const filterRows = cardsByItems.reduce((acc, item) => {
     acc.push(
-      <FilterRow
+      <CardFilterRow
         key={item.accessToken}
         selected={item.selected}
         indentLevel={0}
@@ -38,7 +38,7 @@ export const CardFilter: FunctionComponent<CardFilterProps> = props => {
 
     acc.push(
       item.cards.map((card, i) => (
-        <FilterRow
+        <CardFilterRow
           key={i}
           selected={card.selected}
           indentLevel={1}

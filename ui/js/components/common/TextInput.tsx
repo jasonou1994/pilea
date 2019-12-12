@@ -20,7 +20,7 @@ export const TextInput: FunctionComponent<TextInputProps> = ({
   onChange,
   placeholder,
 }) => (
-  <div className="input-group">
+  <div className="input-group" style={{ width: '100%' }}>
     {label && <span>{label}</span>}
     <input
       id={id}

@@ -39,8 +39,6 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
       ({ widthRatio, minWidth, width, ...col }) => {
         const calculatedWidth = (widthRatio / totalWidthRatio) * allowedWidth
 
-        // const minWidth = minWidth ? minWidth : 0
-
         return {
           ...col,
           width:

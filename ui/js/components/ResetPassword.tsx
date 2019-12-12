@@ -11,7 +11,7 @@ const API_PROTOCOL = env.API_PROTOCOL
 
 interface Props {}
 
-export const ResetPassword: SFC<Props> = props => {
+export const ResetPassword: SFC<Props> = () => {
   const [firstPassword, setFirstPassword] = useState('')
   const [secondPassword, setSecondPassword] = useState('')
   const [passwordMatch, setPasswordMatch] = useState(false)

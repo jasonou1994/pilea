@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
 import { Notification } from './common/Notification'
-import { useInterval } from '../utilities/utils'
+import { useInterval } from '../utilities/hooks'
 
 export const PERSISTENT = 'persistent'
 export const TEMPORARY = 'temporary'

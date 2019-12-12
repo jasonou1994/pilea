@@ -52,10 +52,7 @@ class _App extends Component<AppProps> {
             </>
           </Route>
           <Route path="/password">
-            <>
-              Reset Container
-              <PasswordResetContainer></PasswordResetContainer>
-            </>
+            <PasswordResetContainer />
           </Route>
           <Route exact path="(/|/view|/view/accounts|/view/transactions)">
             <HeaderContainer />

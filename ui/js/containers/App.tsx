@@ -35,8 +35,6 @@ class _App extends Component<AppProps> {
       expireNotificationsAction,
     } = this.props
 
-    // console.log(activeNotifications)
-
     return (
       <>
         <NotificationsContainer

@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
 import {
-  cardsByItemsSelector,
+  itemsWithCardsSelector,
   ItemWithCards,
   RootState,
   categoryDataSelector,
@@ -76,7 +76,7 @@ class _FiltersContainer extends Component<FiltersContainerProps> {
 
 export default connect(
   (state: RootState) => ({
-    cardsByItems: cardsByItemsSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
     categoryData: categoryDataSelector(state),
   }),
   {

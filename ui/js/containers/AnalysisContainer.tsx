@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, FunctionComponent } from 'react'
 import { connect } from 'react-redux'
-import { IncomeSpendingView } from '../components/IncomeSpendingView'
 import {
   setGraphFidelity,
   setSelectedTransactionKey,
@@ -15,9 +14,11 @@ import {
   TimeConsolidatedTransactionGroups,
   TimeConsolidatedTransactionGroup,
   RootState,
-  transactionsByDayCountCombinedSelector,
-  cardsByItemsSelector,
+  timeConsolidatedTransactionsSelector,
+  itemsWithCardsSelector,
   selectedTransactionsSelector,
+  lineSeriesSelector,
+  GraphLineSeries,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
 import {
@@ -35,10 +36,13 @@ import {
   windowWidthSelector,
   filterSidebarWidthSelector,
 } from '../reducers/sizing'
+import { IncomeSpendingChart } from '../components/IncomeSpendingChart'
+import { IncomeSpendingChartOptions } from '../components/IncomeSpendingChartOptions'
+import { IncomeSpendingDetailsGrid } from '../components/IncomeSpendingDetailsGrid'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
-  transactionsByDayCountCombined: TimeConsolidatedTransactionGroups
+  transactionTimeGroups: TimeConsolidatedTransactionGroups
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -51,63 +55,67 @@ interface AnalysisContainerProps {
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   windowWidth: number
   filterSidebarWidth: number
+  lineSeries: GraphLineSeries
 }
 
-interface AnalysisContainerState {}
-
-class _AnalysisContainer extends Component<
-  AnalysisContainerProps,
-  AnalysisContainerState
-> {
-  render() {
-    const {
-      graphFidelity,
-      transactionsByDayCountCombined,
-      cards,
-      selectedTransactions,
-      setGraphFidelityAction,
-      setSelectedTransactionKeyAction,
-      setGraphHistoricalLengthAction,
-      graphHistoricalLength,
-      resetSelectedTransactionKeyAction,
-      windowWidth,
-      filterSidebarWidth,
-    } = this.props
-
-    return (
-      <div id="analysis">
-        <IncomeSpendingView
+const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
+  graphFidelity,
+  transactionTimeGroups,
+  cards,
+  selectedTransactions,
+  setGraphFidelityAction,
+  setSelectedTransactionKeyAction,
+  setGraphHistoricalLengthAction,
+  graphHistoricalLength,
+  resetSelectedTransactionKeyAction,
+  windowWidth,
+  filterSidebarWidth,
+  lineSeries,
+}) => {
+  return (
+    <div id="analysis">
+      <div>
+        <h2>Income and Spending</h2>
+        <IncomeSpendingChart
           {...{
-            filterSidebarWidth,
-            graphFidelity,
-            transactionsByDayCountCombined,
-            cards,
-            selectedTransactions,
-            setGraphFidelityAction,
+            lineSeries,
+            windowWidth,
+            transactionTimeGroups,
             setSelectedTransactionKeyAction,
+          }}
+        />
+        <IncomeSpendingChartOptions
+          {...{
+            setGraphFidelityAction,
+            graphFidelity,
             setGraphHistoricalLengthAction,
             graphHistoricalLength,
             resetSelectedTransactionKeyAction,
-            windowWidth,
+          }}
+        />
+        <IncomeSpendingDetailsGrid
+          {...{
+            allowedWidth: windowWidth - filterSidebarWidth - 70,
+            cards,
+            selectedTransactions,
           }}
         />
       </div>
-    )
-  }
+    </div>
+  )
 }
 
 export default connect(
   (state: RootState) => ({
     graphFidelity: graphFidelitySelector(state),
-    transactionsByDayCountCombined: transactionsByDayCountCombinedSelector(
-      state
-    ),
+    transactionTimeGroups: timeConsolidatedTransactionsSelector(state),
     cards: cardsSelector(state),
-    cardsByItems: cardsByItemsSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),
     graphHistoricalLength: graphHistoricalLengthSelector(state),
     windowWidth: windowWidthSelector(state),
     filterSidebarWidth: filterSidebarWidthSelector(state),
+    lineSeries: lineSeriesSelector(state),
   }),
   {
     setGraphFidelityAction: setGraphFidelity,
@@ -115,4 +123,4 @@ export default connect(
     setGraphHistoricalLengthAction: setGraphHistoricalLength,
     resetSelectedTransactionKeyAction: resetSelectedTransactionKey,
   }
-)(_AnalysisContainer)
+)(AnalysisContainer)

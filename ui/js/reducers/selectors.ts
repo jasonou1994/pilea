@@ -19,6 +19,46 @@ import {
 } from './transactionsAccounts'
 import { graphHistoricalLengthSelector, graphFidelitySelector } from './graph'
 import { selectedTransactionKeySelector } from './grid'
+import { YEAR, MONTH, WEEK, INPUT, OUTPUT } from '../konstants'
+
+// Graph
+const orderedDatesSelector: (state: RootState) => string[] = createSelector(
+  graphFidelitySelector,
+  graphHistoricalLengthSelector,
+  (fidelity, { historicalTimeCount, historicalTimeUnit }) => {
+    const totalDaysInHistoricalLength =
+      historicalTimeCount *
+      (historicalTimeUnit === YEAR
+        ? 365
+        : historicalTimeUnit === MONTH
+        ? 31
+        : historicalTimeUnit === WEEK
+        ? 7
+        : 1)
+
+    const countDataPoints = Math.floor(
+      totalDaysInHistoricalLength /
+        (fidelity === YEAR
+          ? 365
+          : fidelity === MONTH
+          ? 30
+          : fidelity === WEEK
+          ? 7
+          : 1)
+    )
+
+    // ordered dates from current to past
+    const orderedDatesArray = Array(countDataPoints)
+      .fill(null)
+      .map((_, i) =>
+        moment()
+          .subtract(i + 1, fidelity)
+          .format('YYYY-MM-DD')
+      )
+
+    return orderedDatesArray
+  }
+)
 
 // Filtering
 export const allowedCardsSelector: (
@@ -121,100 +161,83 @@ export const categoryFilteredTransactionsSelector: (
   }
 )
 
-export const dailyTransactionsSelector: (
+export const timeConsolidatedTransactionsSelector: (
   state: RootState
-) => DailyTransactions = createSelector(
+) => TimeConsolidatedTransactionGroups = createSelector(
   categoryFilteredTransactionsSelector,
-  transactions => {
-    const uniqueDates = [...new Set(transactions.map(tx => tx.date))].reduce(
-      (acc, cur) => {
-        acc[cur] = []
-        return acc
-      },
-      {} as DailyTransactions
-    )
-    const txByDates = transactions.reduce((acc, cur) => {
-      const { date } = cur
-
-      acc[date].push(cur)
-      return acc
-    }, uniqueDates as DailyTransactions)
-
-    return txByDates
-  }
-)
-
-export const transactionsByDateInputOutputSelector: (
-  state: RootState
-) => TimeConsolidatedTransactionGroups = createSelector(
-  dailyTransactionsSelector,
-  transactions => {
-    return Object.keys(transactions).reduce((finalResult, date) => {
-      finalResult[date] = transactions[date].reduce(
-        (dailyInfo, tx) => {
-          const { cardType, amount } = tx
-
-          if (cardType === 'credit' && amount >= 0) {
-            dailyInfo.output += amount
-          }
-          if (cardType === 'credit' && amount <= 0) {
-            dailyInfo.input += -amount
-          }
-          if (cardType === 'depository' && amount >= 0) {
-            dailyInfo.output += amount
-          }
-          if (cardType === 'depository' && amount <= 0) {
-            dailyInfo.input += -amount
-          }
-
-          dailyInfo.transactions.push(tx)
-
-          return dailyInfo
-        },
-        {
-          input: 0,
-          output: 0,
-          transactions: [],
-        } as TimeConsolidatedTransactionGroup
+  orderedDatesSelector,
+  (transactions, orderedDates) => {
+    const txsGroupedByDate = transactions.reduce((acc, transaction) => {
+      const foundDate = orderedDates.find(
+        orderedDate =>
+          moment(orderedDate).valueOf() < moment(transaction.date).valueOf()
       )
-      return finalResult
-    }, {} as TimeConsolidatedTransactionGroups)
-  }
-)
 
-export const transactionsByDayCountCombinedSelector: (
-  state: RootState
-) => TimeConsolidatedTransactionGroups = createSelector(
-  transactionsByDateInputOutputSelector,
-  graphFidelitySelector,
-  graphHistoricalLengthSelector,
-  (transactions, fidelity, { historicalTimeCount, historicalTimeUnit }) => {
-    const { orderedDatesArray, orderedDatesMap } = getOrderedDates(
-      fidelity,
-      historicalTimeCount,
-      historicalTimeUnit
-    )
-
-    //sort transactions into ordered dates
-    return Object.entries(transactions).reduce(
-      (acc, [date, transactionGroup]) => {
-        // find the first date in orderedDates that comes before the transaction
-        const foundDate = orderedDatesArray.find(
-          orderedDate => moment(orderedDate).valueOf() < moment(date).valueOf()
-        )
-
-        if (foundDate) {
-          acc[foundDate].input += transactionGroup.input
-          acc[foundDate].output += transactionGroup.output
-          acc[foundDate].transactions = [
-            ...acc[foundDate].transactions,
-            ...transactionGroup.transactions,
-          ]
+      // find the first date in orderedDates that comes before the transaction
+      if (foundDate) {
+        if (!acc[foundDate]) {
+          acc[foundDate] = {
+            input: 0,
+            output: 0,
+            transactions: [],
+          }
         }
 
-        return acc
+        const { cardType, amount } = transaction
+
+        if (cardType === 'credit' && amount >= 0) {
+          acc[foundDate].output += amount
+        }
+        if (cardType === 'credit' && amount <= 0) {
+          acc[foundDate].input += -amount
+        }
+        if (cardType === 'depository' && amount >= 0) {
+          acc[foundDate].output += amount
+        }
+        if (cardType === 'depository' && amount <= 0) {
+          acc[foundDate].input += -amount
+        }
+
+        acc[foundDate].transactions.push(transaction)
+      }
+
+      return acc
+    }, {} as TimeConsolidatedTransactionGroups)
+
+    return txsGroupedByDate
+  }
+)
+
+export interface GraphLineSeries {
+  incomeSeries: Array<{ x: number; y: number }>
+  spendingSeries: Array<{ x: number; y: number }>
+}
+
+export const lineSeriesSelector: (
+  state: RootState
+) => GraphLineSeries = createSelector(
+  timeConsolidatedTransactionsSelector,
+  transactionGroups => {
+    return Object.entries(transactionGroups).reduce(
+      (result, [date, txs]) => {
+        const unixMiliStamp = moment(date, 'YYYY-MM-DD', true).valueOf()
+
+        result.incomeSeries.push({
+          x: unixMiliStamp,
+          y: txs[INPUT],
+        })
+
+        result.spendingSeries.push({
+          x: unixMiliStamp,
+          y: txs[OUTPUT],
+        })
+
+        return result
       },
-      orderedDatesMap as TimeConsolidatedTransactionGroups
+      {
+        incomeSeries: [],
+        spendingSeries: [],
+      }
     )
   }
 )
@@ -222,7 +245,7 @@ export const transactionsByDayCountCombinedSelector: (
 export const selectedTransactionsSelector: (
   state: RootState
 ) => TimeConsolidatedTransactionGroup = createSelector(
-  transactionsByDayCountCombinedSelector,
+  timeConsolidatedTransactionsSelector,
   selectedTransactionKeySelector,
   (transactions, selectedKey) => {
     return isEmpty(transactions) || selectedKey === ''
@@ -235,32 +258,9 @@ export const selectedTransactionsSelector: (
   }
 )
 
-export const transactionsBycardsSelector: (
-  state: RootState
-) => TxGroupedByDateAndCards = createSelector(
-  dailyTransactionsSelector,
-  transactions => {
-    return Object.keys(transactions).reduce((result, date) => {
-      result[date] = transactions[date].reduce(
-        (acc, cur) => {
-          acc[cur.account_id]
-            ? acc[cur.account_id].push(cur)
-            : (acc[cur.account_id] = [cur])
-          return acc
-        },
-        {} as {
-          [card: string]: TxWithCardType[]
-        }
-      )
-
-      return result
-    }, {} as TxGroupedByDateAndCards)
-  }
-)
-
 // Card combination
 
-export const cardsByItemsSelector: (
+export const itemsWithCardsSelector: (
   state: RootState
 ) => ItemWithCards[] = createSelector(
   cardsSelector,

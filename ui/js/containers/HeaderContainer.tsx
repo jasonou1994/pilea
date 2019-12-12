@@ -9,7 +9,7 @@ import {
 import { USER_ID, USER_NAME } from '../konstants'
 import { Button } from '../components/common/Button'
 import { RefreshData } from '../components/RefreshData'
-import { ItemWithCards, RootState, cardsByItemsSelector } from '../reducers'
+import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { loggedInSelector, userSelector } from '../reducers/login'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 
@@ -102,7 +102,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
 
 export default connect(
   (state: RootState) => ({
-    cardsByItems: cardsByItemsSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
 
     loggedIn: loggedInSelector(state),
     user: userSelector(state),

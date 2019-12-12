@@ -10,7 +10,7 @@ import {
   FetchRemoveItemActionCreator,
 } from '../actions'
 import { User, userSelector } from '../reducers/login'
-import { ItemWithCards, RootState, cardsByItemsSelector } from '../reducers'
+import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 
 interface ItemsContainerProps {
   cardsByItems: ItemWithCards[]
@@ -54,7 +54,7 @@ class _ItemsContainer extends Component<
 
 export default connect(
   (state: RootState) => ({
-    cardsByItems: cardsByItemsSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
     user: userSelector(state),
   }),
   {

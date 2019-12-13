@@ -4,11 +4,7 @@ import { isEmpty } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { RootState } from '.'
-import {
-  getTypeOfCard,
-  shouldKeepTransaction,
-  getOrderedDates,
-} from '../utilities/utils'
+import { getTypeOfCard, shouldKeepTransaction } from '../utilities/utils'
 import {
   cardsSelector,
   ItemWithFilter,
@@ -256,6 +252,35 @@ export const selectedTransactionsSelector: (
         }
       : transactions[selectedKey]
   }
+)
+
+export interface FlattenedTransaction extends PlaidTransaction {
+  card: string
+  item: string
+}
+
+export const consolidatedDataSelector: (
+  state: RootState
+) => FlattenedTransaction[] = createSelector(
+  transactionsSelector,
+  itemsSelector,
+  cardsSelector,
+  (transactions, items, cards) =>
+    transactions.map(tx => {
+      const matchedCard = cards.find(
+        card => tx.account_id === card.account_id
+      ) as CardWithFilter
+
+      const matchedItem = items.find(item => item.id === matchedCard.itemId)
+
+      return {
+        ...tx,
+        card: matchedCard.official_name
+          ? matchedCard.official_name
+          : matchedCard.name,
+        item: matchedItem.alias,
+      } as FlattenedTransaction
+    })
 )
 
 // Card combination

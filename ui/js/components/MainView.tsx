@@ -3,6 +3,7 @@ import { withRouter, RouteComponentProps, Route } from 'react-router-dom'
 import ItemsContainer from '../containers/ItemsContainer'
 import FiltersContainer from '../containers/FiltersContainer'
 import AnalysisContainer from '../containers/AnalysisContainer'
+import { PivotContainer } from '../containers/PivotContainer'
 
 interface MainViewProps extends RouteComponentProps {
   isTransactionsLoading: boolean
@@ -13,7 +14,7 @@ const _MainView: FunctionComponent<MainViewProps> = ({
   history,
 }) => {
   useEffect(() => {
-    history.push('/view/accounts')
+    history.push('/view/pivot')
     return () => {
       history.push('/')
     }
@@ -36,6 +37,9 @@ const _MainView: FunctionComponent<MainViewProps> = ({
               <FiltersContainer />
               <AnalysisContainer />
             </div>
+          </Route>
+          <Route exact path="/view/pivot">
+            <PivotContainer />
           </Route>
         </section>
       )}

@@ -91,6 +91,15 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
                 Transactions
               </span>
             </Link>
+            <Link to="/view/pivot">
+              <span
+                style={{
+                  fontWeight: pathname === '/view/pivot' ? 'bold' : 'normal',
+                }}
+              >
+                Pivots
+              </span>
+            </Link>
           </>
         )}
 

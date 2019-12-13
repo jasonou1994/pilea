@@ -54,7 +54,10 @@ class _App extends Component<AppProps> {
           <Route path="/password">
             <PasswordResetContainer />
           </Route>
-          <Route exact path="(/|/view|/view/accounts|/view/transactions)">
+          <Route
+            exact
+            path="(/|/view|/view/accounts|/view/transactions|/view/pivot)"
+          >
             <HeaderContainer />
 
             {!loggedIn ? (

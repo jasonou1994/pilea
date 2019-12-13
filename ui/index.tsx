@@ -25,13 +25,13 @@ window.onresize = () => {
   store.dispatch(setCurrentWindowWidth({ width: window.innerWidth }))
 }
 
-// store.dispatch({
-//   type: 'FETCH_LOG_IN',
-//   payload: {
-//     user: 'test@gmail.com',
-//     password: 'jasonou1',
-//   },
-// })
+store.dispatch({
+  type: 'FETCH_LOG_IN',
+  payload: {
+    user: 'jasonou122894@gmail.com',
+    password: 'jasonou1',
+  },
+})
 
 ReactDOM.render(
   <Provider store={store}>
@@ -39,3 +39,6 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root')
 )
+
+//@ts-ignore
+module.hot.accept()

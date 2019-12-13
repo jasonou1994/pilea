@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react'
 import numeral from 'numeral'
-import { useHover } from '../utilities/hooks'
 
 interface CategoryFilterRowProps {
   selected: boolean
   toggleSelected: (category: string) => void
+  selectSingleCategory: (category: string) => void
   category: string
   spending: number
 }
@@ -14,6 +14,7 @@ export const CategoryFilterRow: FunctionComponent<CategoryFilterRowProps> = ({
   toggleSelected,
   category,
   spending,
+  selectSingleCategory,
 }) => {
   return (
     <div>
@@ -33,7 +34,12 @@ export const CategoryFilterRow: FunctionComponent<CategoryFilterRowProps> = ({
           </div>
         </div>
       </div>
-      <div className="category-row-show-only">(Show only)</div>
+      <div
+        onClick={() => selectSingleCategory(category)}
+        className="category-row-show-only"
+      >
+        (Show only)
+      </div>
     </div>
   )
 }

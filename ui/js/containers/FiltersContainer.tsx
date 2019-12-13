@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
 import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
@@ -16,12 +16,14 @@ import {
   ToggleCardSelectedActionCreator,
   resetSelectedTransactionKey,
   ResetSelectedTransactionActionCreator,
-  resetCategoriesSelected,
-  ResetCategoriesSelectedActionCreator,
+  selectAllCategories,
+  SelectAllCategoriesActionCreator,
   setCategoriesSelected,
   SetCategoriesSelectedActionCreator,
   toggleCategorySelected,
   ToggleCategorySelectedActionCreator,
+  selectSingleCategory,
+  SelectSingleCategoryActionCreator,
 } from '../actions'
 import '../../scss/index.scss'
 
@@ -31,47 +33,46 @@ interface FiltersContainerProps {
   toggleItemSelectedAction: ToggleItemSelectedActionCreator
   toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
-  resetCategoriesSelectedAction: ResetCategoriesSelectedActionCreator
+  selectAllCategoriesAction: SelectAllCategoriesActionCreator
   setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
   toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
+  selectSingleCategoryAction: SelectSingleCategoryActionCreator
 }
 
-class _FiltersContainer extends Component<FiltersContainerProps> {
-  render() {
-    const {
-      cardsByItems,
-      categoryData,
-      toggleCardSelectedAction,
-      toggleItemSelectedAction,
-      resetSelectedTransactionKeyAction,
-      resetCategoriesSelectedAction,
-      setCategoriesSelectedAction,
-      toggleCategorySelectedAction,
-    } = this.props
-
-    return (
-      <div id="filters">
-        <h2>Filters</h2>
-        <CardFilter
-          {...{
-            cardsByItems,
-            toggleCardSelectedAction,
-            toggleItemSelectedAction,
-            resetSelectedTransactionKeyAction,
-            setCategoriesSelectedAction,
-          }}
-        />
-        <CategoryFilter
-          {...{
-            categoryData,
-            resetCategoriesSelectedAction,
-            setCategoriesSelectedAction,
-            toggleCategorySelectedAction,
-          }}
-        />
-      </div>
-    )
-  }
+const FiltersContainer: FunctionComponent<FiltersContainerProps> = ({
+  cardsByItems,
+  categoryData,
+  toggleCardSelectedAction,
+  toggleItemSelectedAction,
+  resetSelectedTransactionKeyAction,
+  selectAllCategoriesAction,
+  setCategoriesSelectedAction,
+  toggleCategorySelectedAction,
+  selectSingleCategoryAction,
+}) => {
+  return (
+    <div id="filters">
+      <h2>Filters</h2>
+      <CardFilter
+        {...{
+          cardsByItems,
+          toggleCardSelectedAction,
+          toggleItemSelectedAction,
+          resetSelectedTransactionKeyAction,
+          setCategoriesSelectedAction,
+        }}
+      />
+      <CategoryFilter
+        {...{
+          categoryData,
+          selectAllCategoriesAction,
+          setCategoriesSelectedAction,
+          toggleCategorySelectedAction,
+          selectSingleCategoryAction,
+        }}
+      />
+    </div>
+  )
 }
 
 export default connect(
@@ -83,8 +84,9 @@ export default connect(
     toggleCardSelectedAction: toggleCardSelected,
     toggleItemSelectedAction: toggleItemSelected,
     resetSelectedTransactionKeyAction: resetSelectedTransactionKey,
-    resetCategoriesSelectedAction: resetCategoriesSelected,
+    selectAllCategoriesAction: selectAllCategories,
     setCategoriesSelectedAction: setCategoriesSelected,
     toggleCategorySelectedAction: toggleCategorySelected,
+    selectSingleCategoryAction: selectSingleCategory,
   }
-)(_FiltersContainer)
+)(FiltersContainer)

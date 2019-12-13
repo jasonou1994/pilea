@@ -151,11 +151,11 @@ export const categoryFilteredTransactionsSelector: (
   (transactions, categories) => {
     return transactions.filter(tx => {
       const keepTx = tx.category.reduce((acc, cur) => {
-        if (!categories[cur]) {
-          acc = false
+        if (categories[cur]) {
+          acc = true
         }
         return acc
-      }, true as boolean)
+      }, false as boolean)
       return keepTx
     })
   }

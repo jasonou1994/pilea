@@ -5,9 +5,10 @@ import {
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
   TOGGLE_CATEGORY_SELECTED,
-  RESET_CATEGORIES_SELECTED,
+  SELECT_ALL_CATEGORIES,
   SET_CATEGORIES_SELECTED,
   SET_TRANSACTIONS,
+  SELECT_SINGLE_CATEGORY,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { RawTransaction } from '../sagas/sagas'
@@ -20,8 +21,9 @@ type TransactionsActionTypes =
   | typeof START_LOADING_TRANSACTIONS
   | typeof STOP_LOADING_TRANSACTIONS
   | typeof TOGGLE_CATEGORY_SELECTED
-  | typeof RESET_CATEGORIES_SELECTED
+  | typeof SELECT_ALL_CATEGORIES
   | typeof SET_CATEGORIES_SELECTED
+  | typeof SELECT_SINGLE_CATEGORY
 
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
@@ -29,8 +31,9 @@ export type TransactionsInterfaces =
   | SetTransactionsInterface
   | ReaddTransactionsInterface
   | ToggleCategorySelectedInterface
-  | ResetCategoriesSelectedInterface
+  | SelectAllCategoriesInterface
   | SetCategoriesSelectedInterface
+  | SelectSingleCategoryInterface
 
 // Generics
 export interface TransactionsAction<P, AT extends TransactionsActionTypes>
@@ -108,16 +111,16 @@ export const toggleCategorySelected: ToggleCategorySelectedActionCreator = categ
   payload: category,
 })
 
-export type ResetCategoriesSelectedActionCreator = TransactionsActionCreator<
+export type SelectAllCategoriesActionCreator = TransactionsActionCreator<
   {},
-  typeof RESET_CATEGORIES_SELECTED
+  typeof SELECT_ALL_CATEGORIES
 >
-export type ResetCategoriesSelectedInterface = TransactionsAction<
+export type SelectAllCategoriesInterface = TransactionsAction<
   {},
-  typeof RESET_CATEGORIES_SELECTED
+  typeof SELECT_ALL_CATEGORIES
 >
-export const resetCategoriesSelected: ResetCategoriesSelectedActionCreator = () => ({
-  type: RESET_CATEGORIES_SELECTED,
+export const selectAllCategories: SelectAllCategoriesActionCreator = () => ({
+  type: SELECT_ALL_CATEGORIES,
   payload: {},
 })
 
@@ -132,4 +135,19 @@ export type SetCategoriesSelectedInterface = TransactionsAction<
 export const setCategoriesSelected: SetCategoriesSelectedActionCreator = selectedCategories => ({
   type: SET_CATEGORIES_SELECTED,
   payload: selectedCategories,
+})
+
+export type SelectSingleCategoryActionCreator = TransactionsActionCreator<
+  { category: string },
+  typeof SELECT_SINGLE_CATEGORY
+>
+export type SelectSingleCategoryInterface = TransactionsAction<
+  { category: string },
+  typeof SELECT_SINGLE_CATEGORY
+>
+export const selectSingleCategory: SelectSingleCategoryActionCreator = ({
+  category,
+}) => ({
+  type: SELECT_SINGLE_CATEGORY,
+  payload: { category },
 })

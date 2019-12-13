@@ -10,10 +10,11 @@ import {
   TOGGLE_ITEM_SELECTED,
   CATEGORIES,
   TOGGLE_CATEGORY_SELECTED,
-  RESET_CATEGORIES_SELECTED,
+  SELECT_ALL_CATEGORIES,
   SET_CATEGORIES_SELECTED,
   SET_CARDS,
   SET_TRANSACTIONS,
+  SELECT_SINGLE_CATEGORY,
 } from '../konstants'
 import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
@@ -113,7 +114,7 @@ const transactions: (
       break
     }
 
-    case RESET_CATEGORIES_SELECTED: {
+    case SELECT_ALL_CATEGORIES: {
       newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) =>
         Object.keys(oldCategories).reduce((acc, cur) => {
           acc[cur] = true
@@ -142,6 +143,24 @@ const transactions: (
         )
 
         return updatedCategories
+      })
+      break
+    }
+
+    case SELECT_SINGLE_CATEGORY: {
+      newState = updateIn(state, [CATEGORIES], (oldCategories: Categories) => {
+        // Initially set all categories to false
+        const newCategories: Categories = Object.keys(oldCategories).reduce(
+          (acc, cur) => {
+            acc[cur] = false
+            return acc
+          },
+          {} as Categories
+        )
+
+        newCategories[action.payload.category] = true
+
+        return newCategories
       })
       break
     }

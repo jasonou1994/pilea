@@ -1,0 +1,13 @@
+.reactPivot {
+  margin-top: 0 !important;
+}
+
+.reactPivot-paginate {
+  margin-top: 0 !important;
+  overflow-x: scroll;
+  max-width: calc(100%);
+}
+
+.reactPivot-paginate::-webkit-scrollbar {
+  width: 0 !important;
+}

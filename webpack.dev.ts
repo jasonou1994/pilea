@@ -15,7 +15,7 @@ const config = (env: any): webpack.Configuration => {
       publicPath: '/',
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.json', '.scss', '.css'],
+      extensions: ['.ts', '.tsx', '.jsx', '.js', '.json', '.scss', '.css'],
     },
     devtool: 'source-map',
 
@@ -23,7 +23,15 @@ const config = (env: any): webpack.Configuration => {
       rules: [
         {
           test: /\.tsx?$/,
+          exclude: /node_modules/,
           loader: 'awesome-typescript-loader',
+        },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules\/(?!(react-pivot)\/).*/,
+          use: {
+            loader: 'babel-loader',
+          },
         },
         {
           test: /\.(sc|c)ss$/i,
@@ -36,6 +44,7 @@ const config = (env: any): webpack.Configuration => {
       port: 3000,
       historyApiFallback: true,
       open: false,
+      hot: true,
     },
     plugins: [
       new HtmlWebPackPlugin({
@@ -55,6 +64,7 @@ const config = (env: any): webpack.Configuration => {
           ? JSON.stringify(NODE_ENV)
           : JSON.stringify('development'),
       }),
+      new webpack.HotModuleReplacementPlugin(),
     ],
   }
 }

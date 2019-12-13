@@ -97,7 +97,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
                   fontWeight: pathname === '/view/pivot' ? 'bold' : 'normal',
                 }}
               >
-                Pivots
+                Pivot
               </span>
             </Link>
           </>

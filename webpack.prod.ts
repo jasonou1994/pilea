@@ -16,12 +16,19 @@ const config = (env: any): webpack.Configuration => {
       publicPath: '/',
     },
     resolve: {
-      extensions: ['.ts', '.tsx', '.js', '.json', '.scss', '.css'],
+      extensions: ['.ts', '.tsx', '.jsx', '.js', '.json', '.scss', '.css'],
     },
 
     module: {
       rules: [
         { test: /\.tsx?$/, loader: 'awesome-typescript-loader' },
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules\/(?!(react-pivot)\/).*/,
+          use: {
+            loader: 'babel-loader',
+          },
+        },
         {
           test: /\.(sc|c)ss$/i,
           use: ['style-loader', 'css-loader', 'sass-loader'],
@@ -42,7 +49,7 @@ const config = (env: any): webpack.Configuration => {
         'env.API_PROTOCOL': API_PROTOCOL
           ? JSON.stringify(API_PROTOCOL)
           : JSON.stringify('http'),
-        'env.NODE_ENV': JSON.stringify('development'),
+        'env.NODE_ENV': JSON.stringify('production'),
       }),
     ],
   }

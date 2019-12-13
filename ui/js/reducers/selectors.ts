@@ -214,7 +214,9 @@ export const lineSeriesSelector: (
 ) => GraphLineSeries = createSelector(
   timeConsolidatedTransactionsSelector,
   transactionGroups => {
-    return Object.entries(transactionGroups).reduce(
+    const lineSeries: GraphLineSeries = Object.entries(
+      transactionGroups
+    ).reduce(
       (result, [date, txs]) => {
         const unixMiliStamp = moment(date, 'YYYY-MM-DD', true).valueOf()
 
@@ -235,6 +237,12 @@ export const lineSeriesSelector: (
         spendingSeries: [],
       }
     )
+
+    console.log('calc')
+    lineSeries.incomeSeries.sort((a, b) => a.x - b.x)
+    lineSeries.spendingSeries.sort((a, b) => a.x - b.x)
+
+    return lineSeries
   }
 )
 

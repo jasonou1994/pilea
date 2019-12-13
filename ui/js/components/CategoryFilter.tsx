@@ -60,6 +60,7 @@ export const CategoryFilter: FunctionComponent<CategoryFilterProps> = props => {
           return (
             <CategoryFilterRow
               {...{
+                key: i,
                 selected,
                 category,
                 spending,

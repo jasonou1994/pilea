@@ -4,6 +4,7 @@ import {
   checkUpdateAuthToken,
   getUserId,
   retrieveTransactions,
+  getHistoricalBalanceByCard,
 } from '../middleware'
 
 export const transactions = Router()
@@ -21,4 +22,11 @@ transactions.post(
   checkUpdateAuthToken,
   getUserId,
   retrieveTransactions
+)
+
+transactions.post(
+  '/historical',
+  checkUpdateAuthToken,
+  getUserId,
+  getHistoricalBalanceByCard
 )

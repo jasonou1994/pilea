@@ -1,5 +1,5 @@
 import { dbClient } from '../database'
-import { CARDS } from '../constants'
+import { CARDS, USERS, TRANSACTIONS } from '../constants'
 import { Account as PlaidCard } from 'plaid'
 
 export interface DBCard {
@@ -75,3 +75,23 @@ export const deleteCards: ({
 
 export const insertCards: (cards: DBCard[]) => Promise<void> = async cards =>
   await dbClient(CARDS).insert(cards)
+
+export const dbDailySumByCard: (
+  userId: number
+) => Promise<
+  Array<{
+    name: string
+    official_name: string
+    type: string
+    sum: number
+    date: string
+  }>
+> = async userId =>
+  await dbClient
+    .select('cards.name', 'official_name', 'type', 'date')
+    .sum('amount')
+    .from(TRANSACTIONS)
+    .innerJoin(CARDS, 'transactions.account_id', 'cards.account_id')
+    .where({ 'transactions.userId': userId })
+    .groupBy('cards.name', 'official_name', 'type', 'date')
+    .orderBy('date', 'desc')

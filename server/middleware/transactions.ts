@@ -11,7 +11,12 @@ import {
 } from '../database/transactions'
 import { DBItem, getItems, updateItemById } from '../database/items'
 import { plaidGetTransactions } from '../plaidAPI'
-import { deleteCards, insertCards, getCards, DBCard } from '../database/cards'
+import {
+  deleteCards,
+  insertCards,
+  getCards,
+  dbDailySumByCard,
+} from '../database/cards'
 import { ContractResponse, generateGenericErrorResponse } from '.'
 import { convertPlaidCardsToDBCards } from '../utils'
 import { logger } from '../logger'
@@ -20,6 +25,18 @@ export interface ContractRetrieveTransactions extends ContractResponse {
   cards: PlaidCard[]
   transactions: PlaidTransaction[]
   items: DBItem[]
+}
+
+export interface ContractRetrieveHistoricalBalance extends ContractResponse {
+  historicalBalances: {
+    [date: string]: {
+      card: {
+        name: string
+        amount: number
+        type: 'deposit' | 'credit'
+      }
+    }
+  }
 }
 
 export const refreshTransactions = async (
@@ -174,5 +191,42 @@ export const retrieveTransactions = async (_: Request, res: Response) => {
   } catch (error) {
     logger.error(error)
     res.status(500).json(generateGenericErrorResponse(error))
+  }
+}
+
+export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
+  const { userId } = res.locals
+
+  logger.debug('In getDailySumByCard middleware.')
+
+  try {
+    // Get current balances.
+
+    // Get historical daily sums.
+    const sortedDailySums = await dbDailySumByCard(userId)
+    if (sortedDailySums.length <= 0) {
+      throw new Error('No transactions found to compute historical balances.')
+    }
+
+    // Calculate historical balances.
+
+    const resBody: ContractRetrieveHistoricalBalance = {
+      status: 'Successfully retrieved transactions',
+      success: true,
+      error: null,
+      historicalBalances: {},
+    }
+
+    res.json(resBody)
+  } catch (error) {
+    logger.error(error)
+    res
+      .status(500)
+      .json(
+        generateGenericErrorResponse(
+          error,
+          'Error retrieving historical balances.'
+        )
+      )
   }
 }

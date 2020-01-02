@@ -38,7 +38,7 @@ export const getCards: ({
       ...(itemId ? { itemId } : {}),
     })
 
-  return dbCards.map(dbCard => {
+  const pileaCards: PileaCard[] = dbCards.map(dbCard => {
     const {
       available,
       current,
@@ -50,15 +50,20 @@ export const getCards: ({
 
     return {
       ...sharedFields,
+      verification_status: null,
+
       balances: {
         available,
         current,
         limit: credit_limit,
         iso_currency_code,
         official_currency_code,
+        unofficial_currency_code: null,
       },
     }
   })
+
+  return pileaCards
 }
 
 export const deleteCards: ({
@@ -81,17 +86,24 @@ export const dbDailySumByCard: (
 ) => Promise<
   Array<{
     name: string
-    official_name: string
     type: string
     sum: number
     date: string
   }>
 > = async userId =>
-  await dbClient
-    .select('cards.name', 'official_name', 'type', 'date')
-    .sum('amount')
-    .from(TRANSACTIONS)
-    .innerJoin(CARDS, 'transactions.account_id', 'cards.account_id')
-    .where({ 'transactions.userId': userId })
-    .groupBy('cards.name', 'official_name', 'type', 'date')
-    .orderBy('date', 'desc')
+  (
+    await dbClient
+      .select('cards.name', 'official_name', 'type', 'date')
+      .sum('amount')
+      .from(TRANSACTIONS)
+      .innerJoin(CARDS, 'transactions.account_id', 'cards.account_id')
+      .where({ 'transactions.userId': userId })
+      .groupBy('cards.name', 'official_name', 'type', 'date')
+      .orderBy('date', 'asc')
+      .debug(true)
+  ).map(({ name, official_name, type, date, sum }) => ({
+    name: official_name ? official_name : name,
+    sum,
+    type,
+    date,
+  }))

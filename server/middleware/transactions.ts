@@ -28,13 +28,14 @@ export interface ContractRetrieveTransactions extends ContractResponse {
 }
 
 export interface ContractRetrieveHistoricalBalance extends ContractResponse {
-  historicalBalances: {
-    [date: string]: {
-      card: {
-        name: string
-        amount: number
-        type: 'deposit' | 'credit'
-      }
+  historicalBalances: HistoricalBalances
+}
+
+interface HistoricalBalances {
+  [date: string]: {
+    [cardName: string]: {
+      amount: number
+      type: 'deposit' | 'credit'
     }
   }
 }
@@ -201,20 +202,102 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
 
   try {
     // Get current balances.
+    const cards: Array<{
+      name: string
+      type: string
+      amount: number
+    }> = (await getCards({ userId })).map(card => ({
+      name: card.official_name ? card.official_name : card.name,
+      type: card.type,
+      amount: card.balances.current,
+    }))
 
-    // Get historical daily sums.
+    // Get historical daily sums, sorted from earliest date to most recent
     const sortedDailySums = await dbDailySumByCard(userId)
     if (sortedDailySums.length <= 0) {
       throw new Error('No transactions found to compute historical balances.')
     }
 
-    // Calculate historical balances.
+    // Set up an object that keeps track of cards' last state. Needed since not all cards have transactions on all days. In days without transactions, we pull the value of a given card on that date from the previous date. Initially set so balances are 0 for all cards, but this will be offset in next step.
+    const previousDateData: {
+      [cardName: string]: {
+        amount: number
+        type: string
+      }
+    } = cards.reduce(
+      (acc, { name, type }) => ({
+        ...acc,
+        [name]: { amount: 0, type },
+      }),
+      {}
+    )
+
+    const unadjustedHistoricalBalances: HistoricalBalances = sortedDailySums.reduce(
+      (acc, { name, sum, date }) => {
+        // If the date does not yet exist, populate with cards where the amount comes from the previous date, or 0 if not found.
+        if (!acc[date]) {
+          acc[date] = cards.reduce(
+            (acc, { name, type }) => ({
+              ...acc,
+              [name]: {
+                type,
+                amount: previousDateData[name].amount || 0,
+              },
+            }),
+            {}
+          )
+        }
+
+        const newAmount = acc[date][name].amount + sum
+
+        acc[date][name].amount = newAmount
+        previousDateData[name].amount = newAmount
+
+        return acc
+      },
+      {} as HistoricalBalances
+    )
+
+    // Get the offset
+    const mostRecentDate = sortedDailySums[sortedDailySums.length - 1].date
+    const unadjustedMostRecentDateData =
+      unadjustedHistoricalBalances[mostRecentDate]
+    const offset: {
+      [name: string]: number
+    } = cards.reduce(
+      (acc, { name, amount }) => ({
+        ...acc,
+        [name]: amount - unadjustedMostRecentDateData[name].amount,
+      }),
+      {}
+    )
+
+    // Update all data with new offset
+    const adjustedHistoricalBalances = Object.entries(
+      unadjustedHistoricalBalances
+    ).reduce((acc, [date, cards]) => {
+      acc[date] = Object.entries(cards).reduce(
+        (innerAcc, [cardName, { amount, type }]) => {
+          innerAcc[cardName] = {
+            type,
+            amount: offset[cardName] + amount,
+          }
+
+          return innerAcc
+        },
+        {}
+      )
+
+      return acc
+    }, {} as HistoricalBalances)
+
+    // Ensure there are no gaps caused by days without transactions
 
     const resBody: ContractRetrieveHistoricalBalance = {
       status: 'Successfully retrieved transactions',
       success: true,
       error: null,
-      historicalBalances: {},
+      historicalBalances: adjustedHistoricalBalances,
     }
 
     res.json(resBody)

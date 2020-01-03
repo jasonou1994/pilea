@@ -20,6 +20,7 @@ import {
 import { ContractResponse, generateGenericErrorResponse } from '.'
 import { convertPlaidCardsToDBCards } from '../utils'
 import { logger } from '../logger'
+import moment from 'moment'
 
 export interface ContractRetrieveTransactions extends ContractResponse {
   cards: PlaidCard[]
@@ -31,13 +32,15 @@ export interface ContractRetrieveHistoricalBalance extends ContractResponse {
   historicalBalances: HistoricalBalances
 }
 
+interface DailyBalances {
+  [name: string]: number
+}
+interface DailyBalancesWithDate {
+  date: string
+  balances: DailyBalances
+}
 interface HistoricalBalances {
-  [date: string]: {
-    [cardName: string]: {
-      amount: number
-      type: 'deposit' | 'credit'
-    }
-  }
+  [date: string]: DailyBalances
 }
 
 export const refreshTransactions = async (
@@ -204,94 +207,104 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
     // Get current balances.
     const cards: Array<{
       name: string
-      type: string
+      type: 'depository' | 'credit'
       amount: number
     }> = (await getCards({ userId })).map(card => ({
       name: card.official_name ? card.official_name : card.name,
-      type: card.type,
+      type: card.type as 'depository' | 'credit',
       amount: card.balances.current,
     }))
 
-    // Get historical daily sums, sorted from earliest date to most recent
-    const sortedDailySums = await dbDailySumByCard(userId)
-    if (sortedDailySums.length <= 0) {
+    // Get historical daily sums
+    const sortedDailyCardSums = await dbDailySumByCard(userId)
+    if (sortedDailyCardSums.length <= 0) {
       throw new Error('No transactions found to compute historical balances.')
     }
 
-    // Set up an object that keeps track of cards' last state. Needed since not all cards have transactions on all days. In days without transactions, we pull the value of a given card on that date from the previous date. Initially set so balances are 0 for all cards, but this will be offset in next step.
-    const previousDateData: {
-      [cardName: string]: {
-        amount: number
-        type: string
+    const dailySums = sortedDailyCardSums.reduce((acc, { name, sum, date }) => {
+      if (!acc[date]) {
+        acc[date] = {}
       }
-    } = cards.reduce(
-      (acc, { name, type }) => ({
-        ...acc,
-        [name]: { amount: 0, type },
-      }),
-      {}
+
+      acc[date][name] = sum
+      return acc
+    }, {} as HistoricalBalances)
+
+    // Create template with dates
+    const earliestDateMilli = moment(
+      sortedDailyCardSums[0].date,
+      'YYYY-MM-DD',
+      true
+    ).valueOf()
+    const dateCount = Math.ceil(
+      (moment().valueOf() - earliestDateMilli) / 86400000
     )
 
-    const unadjustedHistoricalBalances: HistoricalBalances = sortedDailySums.reduce(
-      (acc, { name, sum, date }) => {
-        // If the date does not yet exist, populate with cards where the amount comes from the previous date, or 0 if not found.
-        if (!acc[date]) {
-          acc[date] = cards.reduce(
-            (acc, { name, type }) => ({
+    const dateTemplate = Array(dateCount)
+      .fill(null)
+      .map((_, i) => i * 86400000 + earliestDateMilli)
+      .map(date => moment(date).format('YYYY-MM-DD'))
+
+    // Map through dateTemplate, looking for matching dates from dailySums. Pull previous date if no matching date is found.
+    const unadjustedHistoricalBalances: DailyBalancesWithDate[] = []
+    for (const [i, date] of dateTemplate.entries()) {
+      const startingBalances = unadjustedHistoricalBalances[i - 1]
+        ? unadjustedHistoricalBalances[i - 1].balances
+        : cards.reduce(
+            (acc, { name }) => ({
               ...acc,
-              [name]: {
-                type,
-                amount: previousDateData[name].amount || 0,
-              },
+              [name]: 0,
             }),
-            {}
+            {} as DailyBalances
           )
-        }
 
-        const newAmount = acc[date][name].amount + sum
-
-        acc[date][name].amount = newAmount
-        previousDateData[name].amount = newAmount
-
-        return acc
-      },
-      {} as HistoricalBalances
-    )
+      unadjustedHistoricalBalances[i] = {
+        date,
+        balances: dailySums[date]
+          ? cards.reduce(
+              (acc, { name }) => ({
+                ...acc,
+                [name]: startingBalances[name] + (dailySums[date][name] || 0),
+              }),
+              {} as DailyBalances
+            )
+          : startingBalances,
+      }
+    }
 
     // Get the offset
-    const mostRecentDate = sortedDailySums[sortedDailySums.length - 1].date
     const unadjustedMostRecentDateData =
-      unadjustedHistoricalBalances[mostRecentDate]
+      unadjustedHistoricalBalances[unadjustedHistoricalBalances.length - 1]
     const offset: {
       [name: string]: number
     } = cards.reduce(
       (acc, { name, amount }) => ({
         ...acc,
-        [name]: amount - unadjustedMostRecentDateData[name].amount,
+        [name]: amount - unadjustedMostRecentDateData.balances[name],
       }),
       {}
     )
 
-    // Update all data with new offset
-    const adjustedHistoricalBalances = Object.entries(
-      unadjustedHistoricalBalances
-    ).reduce((acc, [date, cards]) => {
-      acc[date] = Object.entries(cards).reduce(
-        (innerAcc, [cardName, { amount, type }]) => {
-          innerAcc[cardName] = {
-            type,
-            amount: offset[cardName] + amount,
-          }
+    // Update all data with new offset, and format
+    const adjustedHistoricalBalances: HistoricalBalances = unadjustedHistoricalBalances
+      .map(
+        ({ date, balances }) =>
+          ({
+            date,
+            balances: Object.entries(balances).reduce(
+              (acc, [cardName, amount]) => {
+                acc[cardName] = (offset[cardName] + amount).toFixed(2)
 
-          return innerAcc
-        },
-        {}
+                return acc
+              },
+              {}
+            ),
+          } as DailyBalancesWithDate)
       )
-
-      return acc
-    }, {} as HistoricalBalances)
-
-    // Ensure there are no gaps caused by days without transactions
+      .reduce(
+        (acc, { date, balances }) => ({ ...acc, [date]: balances }),
+        {} as HistoricalBalances
+      )
 
     const resBody: ContractRetrieveHistoricalBalance = {
       status: 'Successfully retrieved transactions',

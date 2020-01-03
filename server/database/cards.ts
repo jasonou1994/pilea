@@ -86,7 +86,7 @@ export const dbDailySumByCard: (
 ) => Promise<
   Array<{
     name: string
-    type: string
+    type: 'depository' | 'credit'
     sum: number
     date: string
   }>

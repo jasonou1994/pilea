@@ -13,6 +13,7 @@ import {
   setTransactions,
   FetchSendPasswordResetEmailAction,
   addActiveNotification,
+  setHistoricalBalances,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -44,6 +45,7 @@ import {
 } from 'plaid'
 import { startLoading, stopLoading } from '../actions/loading'
 import { createNotification } from '../utilities/utils'
+import { HistoricalBalances } from '../reducers/transactionsAccounts'
 
 export interface DBItem {
   id: number
@@ -80,6 +82,10 @@ export interface TransactionsRetrieveResponse extends APIResponse {
   cards: PileaCard[]
   transactions: RawTransaction[]
   items: DBItem[]
+}
+
+export interface HistoricalBalancesResponse extends APIResponse {
+  historicalBalances: HistoricalBalances
 }
 
 export interface AddItemResponse extends TransactionsRetrieveResponse {}
@@ -423,9 +429,11 @@ function* sendPasswordResetEmail({
 
 function* getHistoricalBalances() {
   try {
-    const balances = yield call(services[API_ACCOUNTS_GET_DAILY_BALANCES])
+    const { historicalBalances }: HistoricalBalancesResponse = yield call(
+      services[API_ACCOUNTS_GET_DAILY_BALANCES]
+    )
 
-    console.log('balances', balances)
+    yield put(setHistoricalBalances(historicalBalances))
 
     yield put(
       addActiveNotification({

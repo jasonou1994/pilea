@@ -9,8 +9,10 @@ export const SET_CARDS = 'SET_CARDS'
 export const SET_LAST_UPDATED = 'SET_LAST_UPDATED'
 export const TOGGLE_ITEM_SELECTED = 'TOGGLE_ITEM_SELECTED'
 export const TOGGLE_CARD_SELECTED = 'TOGGLE_CARD_SELECTED'
+export const SET_HISTORICAL_BALANCES = 'SET_HISTORICAL_BALANCES'
 
 //STORE
 export const ITEMS = 'items'
 export const CARDS = 'cards'
 export const LAST_UPDATED = 'lastUpdated'
+export const HISTORICAL_BALANCES = 'historicalBalances'

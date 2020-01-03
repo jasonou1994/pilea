@@ -15,6 +15,8 @@ import {
   SET_CARDS,
   SET_TRANSACTIONS,
   SELECT_SINGLE_CATEGORY,
+  HISTORICAL_BALANCES,
+  SET_HISTORICAL_BALANCES,
 } from '../konstants'
 import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
@@ -34,11 +36,20 @@ export interface Categories {
   [key: string]: boolean
 }
 
+export interface DailyBalances {
+  [name: string]: number
+}
+
+export interface HistoricalBalances {
+  [date: string]: DailyBalances
+}
+
 export interface TransactionsAccountsState {
   [TRANSACTIONS]: PlaidTransaction[]
   [CARDS]: CardWithFilter[]
   [ITEMS]: ItemWithFilter[]
   [CATEGORIES]: Categories
+  [HISTORICAL_BALANCES]: HistoricalBalances
 }
 
 const initialState: TransactionsAccountsState = {
@@ -46,6 +57,7 @@ const initialState: TransactionsAccountsState = {
   [CARDS]: [],
   [ITEMS]: [],
   [CATEGORIES]: {},
+  [HISTORICAL_BALANCES]: {},
 }
 
 const transactions: (
@@ -232,6 +244,11 @@ const transactions: (
       break
     }
 
+    case SET_HISTORICAL_BALANCES: {
+      newState = set(state, HISTORICAL_BALANCES, action.payload)
+      break
+    }
+
     case TOGGLE_ITEM_SELECTED: {
       const foundItemIndex = state[ITEMS].findIndex(
         item => item.id === action.payload
@@ -282,3 +299,7 @@ export const itemsSelector: (state: RootState) => ItemWithFilter[] = state =>
 
 export const categoriesSelector: (state: RootState) => Categories = state =>
   state[TRANSACTIONS][CATEGORIES]
+
+export const historicalBalancesSelector: (
+  state: RootState
+) => HistoricalBalances = state => state[TRANSACTIONS][HISTORICAL_BALANCES]

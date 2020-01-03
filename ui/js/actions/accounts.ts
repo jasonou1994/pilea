@@ -7,9 +7,11 @@ import {
   FETCH_REMOVE_ITEM,
   SET_CARDS,
   FETCH_GET_HISTORICAL_BALANCES,
+  SET_HISTORICAL_BALANCES,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
+import { HistoricalBalances } from '../reducers/transactionsAccounts'
 
 export type AccountsActionTypes =
   | typeof SET_ITEMS
@@ -20,6 +22,7 @@ export type AccountsActionTypes =
   | typeof TOGGLE_ITEM_SELECTED
   | typeof FETCH_REMOVE_ITEM
   | typeof FETCH_GET_HISTORICAL_BALANCES
+  | typeof SET_HISTORICAL_BALANCES
 
 export type AccountsInterfaces =
   | FetchAddItemInterface
@@ -28,7 +31,7 @@ export type AccountsInterfaces =
   | SetItemsInterface
   | ToggleItemSelectedInterface
   | ToggleCardSelectedInterface
-
+  | SetHistoricalBalancesInterface
 // Generics
 export interface AccountsAction<P, AT extends AccountsActionTypes>
   extends Action<AT> {
@@ -139,4 +142,17 @@ export type FetchGetHistoricalBalancesInterface = AccountsAction<
 export const fetchGetHistoricalBalances: FetchGetHistoricalBalancesActionCreator = () => ({
   payload: undefined,
   type: FETCH_GET_HISTORICAL_BALANCES,
+})
+
+export type SetHistoricalBalancesActionCreator = AccountsActionCreator<
+  HistoricalBalances,
+  typeof SET_HISTORICAL_BALANCES
+>
+export type SetHistoricalBalancesInterface = AccountsAction<
+  HistoricalBalances,
+  typeof SET_HISTORICAL_BALANCES
+>
+export const setHistoricalBalances: SetHistoricalBalancesActionCreator = balances => ({
+  payload: balances,
+  type: SET_HISTORICAL_BALANCES,
 })

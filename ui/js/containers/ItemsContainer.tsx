@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
 import { CurrentItems } from '../components/ItemCollection'
 import { AddNewItem } from '../components/AddNewItem'
@@ -20,36 +20,27 @@ interface ItemsContainerProps {
   fetchRemoveItemAction: FetchRemoveItemActionCreator
 }
 
-interface ItemsContainerState {}
+const ItemsContainer: FunctionComponent<ItemsContainerProps> = ({
+  cardsByItems,
+  fetchAddItemAction,
+  fetchRemoveItemAction,
+  user,
+}) => {
+  return (
+    <div id="item-panel">
+      <h2>Your Accounts</h2>
+      <AddNewItem
+        {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
+      />
 
-class _ItemsContainer extends Component<
-  ItemsContainerProps,
-  ItemsContainerState
-> {
-  render() {
-    const {
-      cardsByItems,
-      fetchAddItemAction,
-      fetchRemoveItemAction,
-      user,
-    } = this.props
-
-    return (
-      <div id="item-panel">
-        <h2>Your Accounts</h2>
-        <AddNewItem
-          {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
-        />
-
-        <CurrentItems
-          {...{
-            cardsByItems,
-            fetchRemoveItemAction,
-          }}
-        />
-      </div>
-    )
-  }
+      <CurrentItems
+        {...{
+          cardsByItems,
+          fetchRemoveItemAction,
+        }}
+      />
+    </div>
+  )
 }
 
 export default connect(
@@ -61,4 +52,4 @@ export default connect(
     fetchAddItemAction: fetchAddItem,
     fetchRemoveItemAction: fetchRemoveItem,
   }
-)(_ItemsContainer)
+)(ItemsContainer)

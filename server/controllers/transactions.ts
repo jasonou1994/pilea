@@ -24,7 +24,7 @@ transactions.post(
   retrieveTransactions
 )
 
-transactions.post(
+transactions.get(
   '/historical',
   checkUpdateAuthToken,
   getUserId,

@@ -10,6 +10,8 @@ import '../../scss/index.scss'
 import {
   expireNotifications,
   ExpireNotificationsActionCreator,
+  FetchGetHistoricalBalancesActionCreator,
+  fetchGetHistoricalBalances,
 } from '../actions'
 import {
   NotificationsContainer,
@@ -24,6 +26,7 @@ interface AppProps {
   isTransactionsLoading: boolean
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
+  fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
 }
 
 class _App extends Component<AppProps> {
@@ -33,6 +36,7 @@ class _App extends Component<AppProps> {
       isTransactionsLoading,
       activeNotifications,
       expireNotificationsAction,
+      fetchGetHistoricalBalancesAction,
     } = this.props
 
     return (
@@ -63,7 +67,9 @@ class _App extends Component<AppProps> {
             {!loggedIn ? (
               <LogInContainer />
             ) : (
-              <MainView {...{ isTransactionsLoading }} />
+              <MainView
+                {...{ isTransactionsLoading, fetchGetHistoricalBalancesAction }}
+              />
             )}
           </Route>
         </Router>
@@ -80,5 +86,6 @@ export default connect(
   }),
   {
     expireNotificationsAction: expireNotifications,
+    fetchGetHistoricalBalancesAction: fetchGetHistoricalBalances,
   }
 )(_App)

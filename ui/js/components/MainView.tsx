@@ -4,16 +4,20 @@ import ItemsContainer from '../containers/ItemsContainer'
 import FiltersContainer from '../containers/FiltersContainer'
 import AnalysisContainer from '../containers/AnalysisContainer'
 import { PivotContainer } from '../containers/PivotContainer'
+import { FetchGetHistoricalBalancesActionCreator } from '../actions'
 
 interface MainViewProps extends RouteComponentProps {
   isTransactionsLoading: boolean
+  fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
 }
 
 const _MainView: FunctionComponent<MainViewProps> = ({
   isTransactionsLoading,
   history,
+  fetchGetHistoricalBalancesAction,
 }) => {
   useEffect(() => {
+    fetchGetHistoricalBalancesAction()
     history.push('/view/accounts')
     return () => {
       history.push('/')

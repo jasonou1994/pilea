@@ -32,6 +32,8 @@ import {
   LOGIN,
   API_USER_SEND_PASSWORD_RESET_EMAIL,
   FETCH_SEND_PASSWORD_RESET_EMAIL,
+  FETCH_GET_HISTORICAL_BALANCES,
+  API_ACCOUNTS_GET_DAILY_BALANCES,
 } from '../konstants'
 import { services } from '../utilities/services'
 import {
@@ -419,21 +421,44 @@ function* sendPasswordResetEmail({
   }
 }
 
+function* getHistoricalBalances() {
+  try {
+    const balances = yield call(services[API_ACCOUNTS_GET_DAILY_BALANCES])
+
+    console.log('balances', balances)
+
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Historical Balances',
+          `Successfully retrieved historical balances.`,
+          true
+        ),
+      })
+    )
+  } catch ({ error, status }) {
+    console.error('Error in getHistoricalBalances:', error, status)
+    yield put(
+      addActiveNotification({
+        notification: createNotification(
+          'Historical Balances',
+          `Failed to retrieve historical balances: ${error}`,
+          false
+        ),
+      })
+    )
+  }
+}
+
 function* saga() {
-  //@ts-ignore
   yield takeLatest(FETCH_CREATE_USER, fetchCreateUser)
-  //@ts-ignore
   yield takeLatest(FETCH_REFRESH_TRANSACTIONS, refreshTransactions)
-  //@ts-ignore
   yield takeLatest(FETCH_ADD_ITEM, addItem)
-  //@ts-ignore
   yield takeLatest(FETCH_LOG_IN, fetchLogIn)
-  //@ts-ignore
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
-  //@ts-ignore
   yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
-  //@ts-ignore
   yield takeLatest(FETCH_SEND_PASSWORD_RESET_EMAIL, sendPasswordResetEmail)
+  yield takeLatest(FETCH_GET_HISTORICAL_BALANCES, getHistoricalBalances)
 }
 
 export default saga

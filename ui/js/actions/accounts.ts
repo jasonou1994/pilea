@@ -6,6 +6,7 @@ import {
   TOGGLE_ITEM_SELECTED,
   FETCH_REMOVE_ITEM,
   SET_CARDS,
+  FETCH_GET_HISTORICAL_BALANCES,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { DBItem, PileaCard } from '../sagas/sagas'
@@ -18,6 +19,7 @@ export type AccountsActionTypes =
   | typeof TOGGLE_CARD_SELECTED
   | typeof TOGGLE_ITEM_SELECTED
   | typeof FETCH_REMOVE_ITEM
+  | typeof FETCH_GET_HISTORICAL_BALANCES
 
 export type AccountsInterfaces =
   | FetchAddItemInterface
@@ -124,4 +126,17 @@ export type FetchRemoveItemInterface = AccountsAction<
 export const fetchRemoveItem: FetchRemoveItemActionCreator = itemId => ({
   payload: itemId,
   type: FETCH_REMOVE_ITEM,
+})
+
+export type FetchGetHistoricalBalancesActionCreator = AccountsActionCreator<
+  void,
+  typeof FETCH_GET_HISTORICAL_BALANCES
+>
+export type FetchGetHistoricalBalancesInterface = AccountsAction<
+  void,
+  typeof FETCH_GET_HISTORICAL_BALANCES
+>
+export const fetchGetHistoricalBalances: FetchGetHistoricalBalancesActionCreator = () => ({
+  payload: undefined,
+  type: FETCH_GET_HISTORICAL_BALANCES,
 })

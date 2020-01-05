@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest, all } from 'redux-saga/effects'
 import moment from 'moment'
 import {
   readdTransactions,
@@ -221,19 +221,21 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
     )
     yield put(stopLoading(LOGIN))
 
-    // 2. Immediately request accounts + tx stored in DB
+    // 2. Immediately request accounts + tx stored in DB and historical balances
     yield put(startLoading(TRANSACTIONS))
-    const {
-      cards,
-      transactions,
-      items,
-    }: TransactionsRetrieveResponse = yield call(
-      services[API_TRANSACTIONS_RETRIEVE]
-    )
+
+    const [{ cards, transactions, items }, { historicalBalances }]: [
+      TransactionsRetrieveResponse,
+      HistoricalBalancesResponse
+    ] = yield all([
+      call(services[API_TRANSACTIONS_RETRIEVE]),
+      call(services[API_ACCOUNTS_GET_DAILY_BALANCES]),
+    ])
 
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+    yield put(setHistoricalBalances(historicalBalances))
 
     yield put(stopLoading(TRANSACTIONS))
 
@@ -253,7 +255,11 @@ function* fetchLogIn({ payload: { user, password } }: FetchLogInAction) {
 
     yield put(
       addActiveNotification({
-        notification: createNotification('Login Error', error, false),
+        notification: createNotification(
+          'An error occurred during log in. Some data may be missing. Please refresh to try again.',
+          error,
+          false
+        ),
       })
     )
   }
@@ -466,7 +472,6 @@ function* saga() {
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
   yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
   yield takeLatest(FETCH_SEND_PASSWORD_RESET_EMAIL, sendPasswordResetEmail)
-  yield takeLatest(FETCH_GET_HISTORICAL_BALANCES, getHistoricalBalances)
 }
 
 export default saga

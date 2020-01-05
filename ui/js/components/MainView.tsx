@@ -17,7 +17,7 @@ const _MainView: FunctionComponent<MainViewProps> = ({
   fetchGetHistoricalBalancesAction,
 }) => {
   useEffect(() => {
-    fetchGetHistoricalBalancesAction()
+    // fetchGetHistoricalBalancesAction()
     history.push('/view/accounts')
     return () => {
       history.push('/')

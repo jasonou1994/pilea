@@ -1,16 +1,16 @@
 import {
   SET_GRAPH_FIDELITY,
   SET_GRAPH_HISTORICAL_LENGTH,
-  DAY,
-  WEEK,
-  MONTH,
   AvailableTimeUnits,
+  AvailableGraphs,
+  SET_HISTORICAL_TYPE,
 } from '../konstants/index'
 import { Action } from 'redux'
 
 type GraphActionTypes =
   | typeof SET_GRAPH_FIDELITY
   | typeof SET_GRAPH_HISTORICAL_LENGTH
+  | typeof SET_HISTORICAL_TYPE
 
 export type GraphInterfaces =
   | SetGraphFidelityInterface
@@ -28,27 +28,55 @@ export type GraphActionCreator<P, AT extends GraphActionTypes> = (
 
 // Action Creators
 export type SetGraphFidelityActionCreator = GraphActionCreator<
-  AvailableTimeUnits,
+  { fidelity: AvailableTimeUnits; graph: AvailableGraphs },
   typeof SET_GRAPH_FIDELITY
 >
 export type SetGraphFidelityInterface = GraphAction<
-  AvailableTimeUnits,
+  { fidelity: AvailableTimeUnits; graph: AvailableGraphs },
   typeof SET_GRAPH_FIDELITY
 >
-export const setGraphFidelity: SetGraphFidelityActionCreator = fidelity => ({
+export const setGraphFidelity: SetGraphFidelityActionCreator = ({
+  fidelity,
+  graph,
+}) => ({
   type: SET_GRAPH_FIDELITY,
-  payload: fidelity,
+  payload: { fidelity, graph },
 })
 
 export type SetGraphHistoricalLengthActionCreator = GraphActionCreator<
-  { count: number; unit: string },
+  {
+    length: { count: number; unit: string }
+    graph: AvailableGraphs
+  },
   typeof SET_GRAPH_HISTORICAL_LENGTH
 >
 export type SetGraphHistoricalLengthInterface = GraphAction<
-  { count: number; unit: string },
+  {
+    length: { count: number; unit: string }
+    graph: AvailableGraphs
+  },
   typeof SET_GRAPH_HISTORICAL_LENGTH
 >
 export const setGraphHistoricalLength: SetGraphHistoricalLengthActionCreator = ({
-  count,
-  unit,
-}) => ({ type: SET_GRAPH_HISTORICAL_LENGTH, payload: { count, unit } })
+  length: { count, unit },
+  graph,
+}) => ({
+  type: SET_GRAPH_HISTORICAL_LENGTH,
+  payload: {
+    length: { count, unit },
+    graph,
+  },
+})
+
+export type SetHistoricalTypeActionCreator = GraphActionCreator<
+  'combined' | 'individual',
+  typeof SET_GRAPH_HISTORICAL_LENGTH
+>
+export type SetHistoricalTypeInterface = GraphAction<
+  'combined' | 'individual',
+  typeof SET_GRAPH_HISTORICAL_LENGTH
+>
+export const setHistoricalType: SetHistoricalTypeActionCreator = type => ({
+  type: SET_GRAPH_HISTORICAL_LENGTH,
+  payload: type,
+})

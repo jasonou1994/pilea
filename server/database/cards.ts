@@ -85,7 +85,7 @@ export const dbDailySumByCard: (
   userId: number
 ) => Promise<
   Array<{
-    name: string
+    id: string
     type: 'depository' | 'credit'
     sum: number
     date: string
@@ -93,16 +93,16 @@ export const dbDailySumByCard: (
 > = async userId =>
   (
     await dbClient
-      .select('cards.name', 'official_name', 'type', 'date')
+      .select('cards.account_id', 'type', 'date')
       .sum('amount')
       .from(TRANSACTIONS)
       .innerJoin(CARDS, 'transactions.account_id', 'cards.account_id')
       .where({ 'transactions.userId': userId })
-      .groupBy('cards.name', 'official_name', 'type', 'date')
+      .groupBy('cards.account_id', 'type', 'date')
       .orderBy('date', 'asc')
       .debug(true)
-  ).map(({ name, official_name, type, date, sum }) => ({
-    name: official_name ? official_name : name,
+  ).map(({ account_id, type, date, sum }) => ({
+    id: account_id,
     sum,
     type,
     date,

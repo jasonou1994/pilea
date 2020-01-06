@@ -9,11 +9,14 @@ import {
   SET_GRAPH_HISTORICAL_LENGTH,
   MONTH,
   GRAPH,
+  INCOME_SPENDING,
+  HISTORICAL_BALANCES,
+  TYPE,
 } from '../konstants/index'
 import { GraphInterfaces } from '../actions'
 import { RootState } from '.'
 
-export interface GraphState {
+interface GraphOptions {
   [GRAPH_FIDELITY]: AvailableTimeUnits
   [HISTORICAL_LENGTH]: {
     [HISTORICAL_TIME_COUNT]: number
@@ -21,11 +24,30 @@ export interface GraphState {
   }
 }
 
+interface HistoricalGraphOptions extends GraphOptions {
+  [TYPE]: 'combined' | 'individual'
+}
+
+export interface GraphState {
+  [INCOME_SPENDING]: GraphOptions
+  [HISTORICAL_BALANCES]: HistoricalGraphOptions
+}
+
 const initialState: GraphState = {
-  [GRAPH_FIDELITY]: MONTH,
-  [HISTORICAL_LENGTH]: {
-    [HISTORICAL_TIME_COUNT]: 1,
-    [HISTORICAL_TIME_UNIT]: 'year',
+  [INCOME_SPENDING]: {
+    [GRAPH_FIDELITY]: MONTH,
+    [HISTORICAL_LENGTH]: {
+      [HISTORICAL_TIME_COUNT]: 1,
+      [HISTORICAL_TIME_UNIT]: 'year',
+    },
+  },
+  [HISTORICAL_BALANCES]: {
+    [GRAPH_FIDELITY]: MONTH,
+    [HISTORICAL_LENGTH]: {
+      [HISTORICAL_TIME_COUNT]: 1,
+      [HISTORICAL_TIME_UNIT]: 'year',
+    },
+    [TYPE]: 'combined',
   },
 }
 
@@ -37,15 +59,22 @@ const graph: (state: GraphState, action: GraphInterfaces) => GraphState = (
 
   switch (action.type) {
     case SET_GRAPH_FIDELITY: {
-      newState = setIn(state, [GRAPH_FIDELITY], action.payload)
+      newState = setIn(
+        state,
+        [action.payload.graph, GRAPH_FIDELITY],
+        action.payload.fidelity
+      )
 
       break
     }
 
     case SET_GRAPH_HISTORICAL_LENGTH: {
-      const { count, unit } = action.payload
+      const {
+        length: { count, unit },
+        graph,
+      } = action.payload
 
-      newState = setIn(state, [HISTORICAL_LENGTH], {
+      newState = setIn(state, [graph, HISTORICAL_LENGTH], {
         [HISTORICAL_TIME_COUNT]: count,
         [HISTORICAL_TIME_UNIT]: unit,
       })
@@ -61,8 +90,17 @@ const graph: (state: GraphState, action: GraphInterfaces) => GraphState = (
 }
 export default graph
 
-export const graphFidelitySelector = (state: RootState) =>
-  state[GRAPH][GRAPH_FIDELITY]
+export const incomeSpendingGraphFidelitySelector = (state: RootState) =>
+  state[GRAPH][INCOME_SPENDING][GRAPH_FIDELITY]
 
-export const graphHistoricalLengthSelector = (state: RootState) =>
-  state[GRAPH][HISTORICAL_LENGTH]
+export const incomeSpendingGraphHistoricalLengthSelector = (state: RootState) =>
+  state[GRAPH][INCOME_SPENDING][HISTORICAL_LENGTH]
+
+export const historicalGraphFidelitySelector = (state: RootState) =>
+  state[GRAPH][HISTORICAL_BALANCES][GRAPH_FIDELITY]
+
+export const historicalGraphHistoricalLengthSelector = (state: RootState) =>
+  state[GRAPH][HISTORICAL_BALANCES][HISTORICAL_LENGTH]
+
+export const historicalGraphTypeSelector = (state: RootState) =>
+  state[GRAPH][HISTORICAL_BALANCES][TYPE]

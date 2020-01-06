@@ -12,7 +12,6 @@ import {
   ONE_YEAR,
   SIX_MONTHS,
   THREE_MONTHS,
-  CUSTOM,
   AvailableTimeStrings,
   DAY,
   WEEK,
@@ -54,7 +53,10 @@ export class IncomeSpendingChartOptions extends Component<
             value={graphFidelity}
             onChange={e => {
               resetSelectedTransactionKeyAction()
-              setGraphFidelityAction(e.target.value as AvailableTimeUnits)
+              setGraphFidelityAction({
+                fidelity: e.target.value as AvailableTimeUnits,
+                graph: 'incomeSpending',
+              })
             }}
           >
             <option value={DAY}>Daily</option>
@@ -78,9 +80,13 @@ export class IncomeSpendingChartOptions extends Component<
               )
 
               resetSelectedTransactionKeyAction()
+
               setGraphHistoricalLengthAction({
-                count: historicalTimeCount,
-                unit: historicalTimeUnit,
+                graph: 'incomeSpending',
+                length: {
+                  count: historicalTimeCount,
+                  unit: historicalTimeUnit,
+                },
               })
             }}
           >

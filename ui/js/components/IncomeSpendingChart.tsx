@@ -14,7 +14,7 @@ import {
 } from 'react-vis'
 
 import { SetSelectedTransactionActionCreator } from '../actions'
-import { CrosshairDisplay } from './CrosshairDisplay'
+import { IncomeSpendingCrosshairDisplay } from './IncomeSpendingCrosshairDisplay'
 import { GraphLineSeries } from '../reducers'
 
 interface IncomeSpendingChartProps {
@@ -46,6 +46,8 @@ export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = 
 
   const { incomeY, spendingY } = currentYs
 
+  console.log(incomeSeries)
+
   return (
     <XYPlot
       height={300}
@@ -75,7 +77,7 @@ export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = 
       />
       <LineMarkSeries color="#bb0120" data={spendingSeries} />
       <Crosshair values={[{ x: currentX }]}>
-        <CrosshairDisplay
+        <IncomeSpendingCrosshairDisplay
           time={currentX}
           income={incomeY}
           spending={spendingY}

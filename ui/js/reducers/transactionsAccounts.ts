@@ -37,7 +37,7 @@ export interface Categories {
 }
 
 export interface DailyBalances {
-  [name: string]: number
+  [id: string]: number
 }
 
 export interface HistoricalBalances {

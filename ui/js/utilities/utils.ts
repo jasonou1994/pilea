@@ -1,4 +1,4 @@
-import moment from 'moment'
+import moment, { Moment } from 'moment'
 import {
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
@@ -259,4 +259,30 @@ export const createNotification: (
     title,
     message,
   }
+}
+
+export const getSelectedHistoricalDates: (
+  historicalTimeCount: number,
+  historicalTimeUnit: AvailableTimeUnits,
+  fidelity: AvailableTimeUnits
+) => Moment[] = (historicalTimeCount, historicalTimeUnit, fidelity) => {
+  const firstDate = moment().subtract(historicalTimeCount, historicalTimeUnit)
+
+  let inBounds = true
+  let selectedDates = [firstDate]
+  let counter = 1
+  const now = moment()
+  while (inBounds) {
+    const newDate = moment()
+      .subtract(historicalTimeCount, historicalTimeUnit)
+      .add(counter, fidelity)
+    if (newDate.valueOf() <= now.valueOf()) {
+      selectedDates.push(newDate)
+      counter++
+    } else {
+      inBounds = false
+    }
+  }
+
+  return selectedDates
 }

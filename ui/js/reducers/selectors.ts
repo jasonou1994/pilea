@@ -4,7 +4,11 @@ import { isEmpty } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { RootState } from '.'
-import { getTypeOfCard, shouldKeepTransaction } from '../utilities/utils'
+import {
+  getTypeOfCard,
+  shouldKeepTransaction,
+  getSelectedHistoricalDates,
+} from '../utilities/utils'
 import {
   cardsSelector,
   ItemWithFilter,
@@ -12,15 +16,30 @@ import {
   transactionsSelector,
   categoriesSelector,
   itemsSelector,
+  historicalBalancesSelector,
+  DailyBalances,
 } from './transactionsAccounts'
-import { graphHistoricalLengthSelector, graphFidelitySelector } from './graph'
+import {
+  incomeSpendingGraphHistoricalLengthSelector,
+  incomeSpendingGraphFidelitySelector,
+  historicalGraphFidelitySelector,
+  historicalGraphHistoricalLengthSelector,
+} from './graph'
 import { selectedTransactionKeySelector } from './grid'
-import { YEAR, MONTH, WEEK, INPUT, OUTPUT } from '../konstants'
+import {
+  YEAR,
+  MONTH,
+  WEEK,
+  INPUT,
+  OUTPUT,
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+} from '../konstants'
 
 // Graph
 const orderedDatesSelector: (state: RootState) => string[] = createSelector(
-  graphFidelitySelector,
-  graphHistoricalLengthSelector,
+  incomeSpendingGraphFidelitySelector,
+  incomeSpendingGraphHistoricalLengthSelector,
   (fidelity, { historicalTimeCount, historicalTimeUnit }) => {
     const totalDaysInHistoricalLength =
       historicalTimeCount *
@@ -124,7 +143,7 @@ export const cardAndTimeFilteredTransactionsSelector: (
   state: RootState
 ) => TxWithCardType[] = createSelector(
   transactionsNoIntraAccountSelector,
-  graphHistoricalLengthSelector,
+  incomeSpendingGraphHistoricalLengthSelector,
   allowedCardsSelector,
   (transactions, { historicalTimeCount, historicalTimeUnit }, allowedCards) => {
     const cutOffDate = moment()
@@ -205,11 +224,19 @@ const timeConsolidatedTransactionsSelector: (
 )
 
 export interface GraphLineSeries {
+  [series: string]: Array<{ x: number; y: number }>
+}
+
+export interface IncomeSpendingLineSeries extends GraphLineSeries {
   incomeSeries: Array<{ x: number; y: number }>
   spendingSeries: Array<{ x: number; y: number }>
 }
 
-export const lineSeriesSelector: (
+export interface HistoricalBalanceLineSeries extends GraphLineSeries {
+  combined: Array<{ x: number; y: number }>
+}
+
+export const incomeSpendingLineSeriesSelector: (
   state: RootState
 ) => GraphLineSeries = createSelector(
   timeConsolidatedTransactionsSelector,
@@ -238,11 +265,81 @@ export const lineSeriesSelector: (
       }
     )
 
-    console.log('calc')
     lineSeries.incomeSeries.sort((a, b) => a.x - b.x)
     lineSeries.spendingSeries.sort((a, b) => a.x - b.x)
 
     return lineSeries
+  }
+)
+
+export const historicalBalancesLineSeriesSelector: (
+  state: RootState
+) => HistoricalBalanceLineSeries = createSelector(
+  historicalBalancesSelector,
+  cardsSelector,
+  historicalGraphFidelitySelector,
+  historicalGraphHistoricalLengthSelector,
+  (
+    historicalBalances,
+    cards,
+    fidelity,
+    { historicalTimeUnit, historicalTimeCount }
+  ) => {
+    const selectedDates = getSelectedHistoricalDates(
+      historicalTimeCount,
+      historicalTimeUnit,
+      fidelity
+    )
+
+    const balanceArr = selectedDates
+      .map(date => date.format('YYYY-MM-DD'))
+      .map(date => ({
+        date,
+        balances: historicalBalances[date]
+          ? // Flip DailyBalances to negative if credit card
+            Object.entries(historicalBalances[date]).reduce(
+              (acc, [id, amount]) => {
+                const cardType = cards.find(card => card.account_id === id).type
+
+                acc[id] =
+                  cardType === 'credit' ? Number(amount) * -1 : Number(amount)
+                return acc
+              },
+              {} as DailyBalances
+            )
+          : {},
+      }))
+
+    const combined: Array<{ x: number; y: number }> = balanceArr.map(
+      ({ date, balances }) => ({
+        x: moment(date).valueOf(),
+        y: Object.values(balances).reduce(
+          (combined, amount) => Number(combined) + Number(amount),
+          0
+        ),
+      })
+    )
+
+    const individuals: Array<{
+      cardName: string
+      lineSeries: Array<{
+        x: number
+        y: number
+      }>
+    }> = cards.map(({ official_name, name, account_id }) => ({
+      cardName: official_name ? official_name : name,
+      lineSeries: balanceArr.map(({ date, balances }) => ({
+        x: moment(date).valueOf(),
+        y: balances[account_id],
+      })),
+    }))
+
+    return individuals.reduce(
+      (acc, { cardName, lineSeries }) => ({ ...acc, [cardName]: lineSeries }),
+      {
+        combined,
+      }
+    )
   }
 )
 

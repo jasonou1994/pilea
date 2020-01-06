@@ -206,11 +206,11 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
   try {
     // Get current balances.
     const cards: Array<{
-      name: string
+      id: string
       type: 'depository' | 'credit'
       amount: number
     }> = (await getCards({ userId })).map(card => ({
-      name: card.official_name ? card.official_name : card.name,
+      id: card.account_id,
       type: card.type as 'depository' | 'credit',
       amount: card.balances.current,
     }))
@@ -221,12 +221,12 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
       throw new Error('No transactions found to compute historical balances.')
     }
 
-    const dailySums = sortedDailyCardSums.reduce((acc, { name, sum, date }) => {
+    const dailySums = sortedDailyCardSums.reduce((acc, { id, sum, date }) => {
       if (!acc[date]) {
         acc[date] = {}
       }
 
-      acc[date][name] = sum
+      acc[date][id] = sum
       return acc
     }, {} as HistoricalBalances)
 
@@ -251,9 +251,9 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
       const startingBalances = unadjustedHistoricalBalances[i - 1]
         ? unadjustedHistoricalBalances[i - 1].balances
         : cards.reduce(
-            (acc, { name }) => ({
+            (acc, { id }) => ({
               ...acc,
-              [name]: 0,
+              [id]: 0,
             }),
             {} as DailyBalances
           )
@@ -262,9 +262,9 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
         date,
         balances: dailySums[date]
           ? cards.reduce(
-              (acc, { name }) => ({
+              (acc, { id }) => ({
                 ...acc,
-                [name]: startingBalances[name] + (dailySums[date][name] || 0),
+                [id]: startingBalances[id] + (dailySums[date][id] || 0),
               }),
               {} as DailyBalances
             )
@@ -276,11 +276,11 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
     const unadjustedMostRecentDateData =
       unadjustedHistoricalBalances[unadjustedHistoricalBalances.length - 1]
     const offset: {
-      [name: string]: number
+      [id: string]: number
     } = cards.reduce(
-      (acc, { name, amount }) => ({
+      (acc, { id, amount }) => ({
         ...acc,
-        [name]: amount - unadjustedMostRecentDateData.balances[name],
+        [id]: amount - unadjustedMostRecentDateData.balances[id],
       }),
       {}
     )
@@ -291,14 +291,11 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
         ({ date, balances }) =>
           ({
             date,
-            balances: Object.entries(balances).reduce(
-              (acc, [cardName, amount]) => {
-                acc[cardName] = (offset[cardName] + amount).toFixed(2)
+            balances: Object.entries(balances).reduce((acc, [id, amount]) => {
+              acc[id] = (offset[id] + amount).toFixed(2)
 
-                return acc
-              },
-              {}
-            ),
+              return acc
+            }, {}),
           } as DailyBalancesWithDate)
       )
       .reduce(

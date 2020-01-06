@@ -7,7 +7,7 @@ interface CrosshairDisplayProps {
   spending: number
 }
 
-export const CrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {
+export const IncomeSpendingCrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {
   const { time, income, spending } = props
   return (
     <div

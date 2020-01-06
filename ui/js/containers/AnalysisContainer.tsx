@@ -15,7 +15,7 @@ import {
   RootState,
   itemsWithCardsSelector,
   selectedTransactionsSelector,
-  lineSeriesSelector,
+  incomeSpendingLineSeriesSelector,
   GraphLineSeries,
 } from '../reducers'
 import { PileaCard } from '../sagas/sagas'
@@ -26,8 +26,8 @@ import {
 } from '../konstants'
 import '../../scss/index.scss'
 import {
-  graphFidelitySelector,
-  graphHistoricalLengthSelector,
+  incomeSpendingGraphFidelitySelector,
+  incomeSpendingGraphHistoricalLengthSelector,
 } from '../reducers/graph'
 import { cardsSelector } from '../reducers/transactionsAccounts'
 import {
@@ -104,14 +104,14 @@ const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
 
 export default connect(
   (state: RootState) => ({
-    graphFidelity: graphFidelitySelector(state),
+    graphFidelity: incomeSpendingGraphFidelitySelector(state),
     cards: cardsSelector(state),
     cardsByItems: itemsWithCardsSelector(state),
     selectedTransactions: selectedTransactionsSelector(state),
-    graphHistoricalLength: graphHistoricalLengthSelector(state),
+    graphHistoricalLength: incomeSpendingGraphHistoricalLengthSelector(state),
     windowWidth: windowWidthSelector(state),
     filterSidebarWidth: filterSidebarWidthSelector(state),
-    lineSeries: lineSeriesSelector(state),
+    lineSeries: incomeSpendingLineSeriesSelector(state),
   }),
   {
     setGraphFidelityAction: setGraphFidelity,

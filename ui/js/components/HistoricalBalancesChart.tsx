@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useState, useEffect } from 'react'
-import { DailyBalances } from '../reducers/transactionsAccounts'
 import {
   XYPlot,
   VerticalGridLines,
@@ -12,10 +11,11 @@ import {
 import moment from 'moment'
 import { HistoricalBalanceLineSeries } from '../reducers'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
+import { AvailableHistoricalGraphTypes } from '../reducers/graph'
 
 interface Props {
   historicalBalancesLineSeries: HistoricalBalanceLineSeries
-  type: 'combined' | 'individual'
+  type: AvailableHistoricalGraphTypes
   windowWidth: number
 }
 
@@ -64,9 +64,7 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
       }, {} as { [cardName: string]: number })
     )
   }, [currentX])
-  console.log(historicalBalancesLineSeries)
-  console.log(currentYs)
-  console.log(currentX)
+
   return (
     <XYPlot
       height={330}
@@ -83,25 +81,44 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
       />
       <YAxis tickFormat={amount => `$${amount}`} />
 
-      <LineMarkSeries
-        color="#bb0120"
-        data={historicalBalancesLineSeries.combined}
-        onNearestX={value => {
-          if (currentX !== value.x) {
-            setCurrentX(value.x as number)
-          }
-        }}
-      />
-      {Object.entries(historicalBalancesLineSeries).reduce(
-        (acc, [cardName, seriesValues], i) => {
-          if (cardName !== 'combined') {
-            acc.push(<LineMarkSeries data={seriesValues} key={i} />)
-          }
+      {type === 'combined' ? (
+        <LineMarkSeries
+          color="#bb0120"
+          data={historicalBalancesLineSeries.combined}
+          onNearestX={value => {
+            if (currentX !== value.x) {
+              setCurrentX(value.x as number)
+            }
+          }}
+        />
+      ) : type === 'individual' ? (
+        Object.entries(historicalBalancesLineSeries).reduce(
+          (acc, [cardName, seriesValues], i) => {
+            if (cardName !== 'combined') {
+              acc.push(
+                <LineMarkSeries
+                  {...{
+                    data: seriesValues,
+                    key: i,
+                    onNearestX:
+                      i === 1
+                        ? value => {
+                            if (currentX !== value.x) {
+                              setCurrentX(value.x as number)
+                            }
+                          }
+                        : undefined,
+                  }}
+                />
+              )
+            }
 
-          return acc
-        },
-        []
-      )}
+            return acc
+          },
+          []
+        )
+      ) : null}
+
       <Crosshair values={[{ x: currentX }]}>
         <HistoricalBalancesCrosshairDisplay
           time={currentX}

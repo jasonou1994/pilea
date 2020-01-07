@@ -276,7 +276,7 @@ export const getSelectedHistoricalDates: (
     const newDate = moment()
       .subtract(historicalTimeCount, historicalTimeUnit)
       .add(counter, fidelity)
-    if (newDate.valueOf() <= now.valueOf()) {
+    if (newDate.valueOf() <= now.valueOf() + 1000) {
       selectedDates.push(newDate)
       counter++
     } else {

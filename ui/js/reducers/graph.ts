@@ -12,9 +12,15 @@ import {
   INCOME_SPENDING,
   HISTORICAL_BALANCES,
   TYPE,
+  SET_HISTORICAL_TYPE,
 } from '../konstants/index'
 import { GraphInterfaces } from '../actions'
 import { RootState } from '.'
+
+export type AvailableHistoricalGraphTypes =
+  | 'combined'
+  | 'individual'
+  | 'grouped'
 
 interface GraphOptions {
   [GRAPH_FIDELITY]: AvailableTimeUnits
@@ -25,7 +31,7 @@ interface GraphOptions {
 }
 
 interface HistoricalGraphOptions extends GraphOptions {
-  [TYPE]: 'combined' | 'individual'
+  [TYPE]: AvailableHistoricalGraphTypes
 }
 
 export interface GraphState {
@@ -78,6 +84,11 @@ const graph: (state: GraphState, action: GraphInterfaces) => GraphState = (
         [HISTORICAL_TIME_COUNT]: count,
         [HISTORICAL_TIME_UNIT]: unit,
       })
+
+      break
+    }
+    case SET_HISTORICAL_TYPE: {
+      newState = setIn(state, [HISTORICAL_BALANCES, TYPE], action.payload)
 
       break
     }

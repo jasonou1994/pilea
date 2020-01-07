@@ -62,6 +62,7 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
       />
       <HistoricalBalancesChartOptions
         {...{
+          type,
           setGraphFidelityAction,
           graphFidelity,
           setGraphHistoricalLengthAction,

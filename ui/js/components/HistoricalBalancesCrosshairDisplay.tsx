@@ -14,7 +14,7 @@ export const HistoricalBalancesCrosshairDisplay: FunctionComponent<CrosshairDisp
         borderRadius: '3px',
         backgroundColor: 'black',
         padding: '3px',
-        width: '300px',
+        width: '200px',
       }}
     >
       <h4>{formatMilliseconds(time)}</h4>

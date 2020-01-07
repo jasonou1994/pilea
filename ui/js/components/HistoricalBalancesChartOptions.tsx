@@ -21,6 +21,7 @@ import {
   convertDateSelectObject,
   convertDateSelectString,
 } from '../utilities/utils'
+import { AvailableHistoricalGraphTypes } from '../reducers/graph'
 
 interface HistoricalBalancesChartOptionsProps {
   setGraphFidelityAction: SetGraphFidelityActionCreator
@@ -30,6 +31,7 @@ interface HistoricalBalancesChartOptionsProps {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
+  type: AvailableHistoricalGraphTypes
   setHistoricalTypeAction: SetHistoricalTypeActionCreator
 }
 
@@ -39,8 +41,24 @@ export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalance
   setGraphFidelityAction,
   graphHistoricalLength: { historicalTimeCount, historicalTimeUnit },
   setHistoricalTypeAction,
+  type,
 }) => (
   <div style={{ display: 'flex' }}>
+    <>
+      <div>Show:</div>
+      <select
+        value={type}
+        onChange={e => {
+          setHistoricalTypeAction(
+            e.target.value as AvailableHistoricalGraphTypes
+          )
+        }}
+      >
+        <option value={'combined'}>Combined</option>
+        <option value={'individual'}>Individual</option>
+        <option value={'grouped'}>Asset vs. Liability</option>
+      </select>
+    </>
     <>
       <div>Group by:</div>
       <select

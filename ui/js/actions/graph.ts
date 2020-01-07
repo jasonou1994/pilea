@@ -6,6 +6,7 @@ import {
   SET_HISTORICAL_TYPE,
 } from '../konstants/index'
 import { Action } from 'redux'
+import { AvailableHistoricalGraphTypes } from '../reducers/graph'
 
 type GraphActionTypes =
   | typeof SET_GRAPH_FIDELITY
@@ -15,6 +16,7 @@ type GraphActionTypes =
 export type GraphInterfaces =
   | SetGraphFidelityInterface
   | SetGraphHistoricalLengthInterface
+  | SetHistoricalTypeInterface
 
 // Generics
 export interface GraphAction<P, AT extends GraphActionTypes>
@@ -69,14 +71,14 @@ export const setGraphHistoricalLength: SetGraphHistoricalLengthActionCreator = (
 })
 
 export type SetHistoricalTypeActionCreator = GraphActionCreator<
-  'combined' | 'individual',
-  typeof SET_GRAPH_HISTORICAL_LENGTH
+  AvailableHistoricalGraphTypes,
+  typeof SET_HISTORICAL_TYPE
 >
 export type SetHistoricalTypeInterface = GraphAction<
-  'combined' | 'individual',
-  typeof SET_GRAPH_HISTORICAL_LENGTH
+  AvailableHistoricalGraphTypes,
+  typeof SET_HISTORICAL_TYPE
 >
 export const setHistoricalType: SetHistoricalTypeActionCreator = type => ({
-  type: SET_GRAPH_HISTORICAL_LENGTH,
+  type: SET_HISTORICAL_TYPE,
   payload: type,
 })

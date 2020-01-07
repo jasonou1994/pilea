@@ -31,16 +31,18 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
     const cardNames = Object.keys(historicalBalancesLineSeries)
 
     setCurrentYs(
-      cardNames.reduce((acc, cardName) => {
-        const foundMarker = historicalBalancesLineSeries[cardName].find(
-          ({ x }) => x === currentX
-        )
+      Object.entries(historicalBalancesLineSeries).reduce(
+        (acc, [cardName, valuesArr]) => {
+          const foundMarker = valuesArr.find(({ x }) => x === currentX)
 
-        return {
-          ...acc,
-          [cardName]: foundMarker ? foundMarker.y : 0,
-        }
-      }, {})
+          if (foundMarker) {
+            acc[cardName] = foundMarker.y
+          }
+
+          return acc
+        },
+        {} as { [cardName: string]: number }
+      )
     )
   }, [currentX])
 
@@ -70,9 +72,9 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
         }}
       />
       {Object.entries(historicalBalancesLineSeries).reduce(
-        (acc, [cardName, seriesValues]) => {
+        (acc, [cardName, seriesValues], i) => {
           if (cardName !== 'combined') {
-            acc.push(<LineMarkSeries color="#bb0120" data={seriesValues} />)
+            acc.push(<LineMarkSeries data={seriesValues} key={i} />)
           }
 
           return acc

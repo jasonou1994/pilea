@@ -27,7 +27,6 @@ import {
   setHistoricalType,
   SetHistoricalTypeActionCreator,
 } from '../actions'
-import { getSelectedHistoricalDates } from '../utilities/utils'
 import { windowWidthSelector } from '../reducers/sizing'
 import { HistoricalBalancesChartOptions } from '../components/HistoricalBalancesChartOptions'
 
@@ -56,6 +55,7 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
   windowWidth,
   setHistoricalTypeAction,
 }) => {
+  console.log(historicalBalancesLineSeries)
   return (
     <>
       <HistoricalBalancesChart

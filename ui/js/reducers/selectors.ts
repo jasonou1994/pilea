@@ -307,7 +307,8 @@ export const historicalBalancesLineSeriesSelector: (
               },
               {} as DailyBalances
             )
-          : {},
+          : // For when historical balances has not been fetched yet
+            {},
       }))
 
     const combined: Array<{ x: number; y: number }> = balanceArr.map(
@@ -328,10 +329,12 @@ export const historicalBalancesLineSeriesSelector: (
       }>
     }> = cards.map(({ official_name, name, account_id }) => ({
       cardName: official_name ? official_name : name,
-      lineSeries: balanceArr.map(({ date, balances }) => ({
-        x: moment(date).valueOf(),
-        y: balances[account_id],
-      })),
+      lineSeries: balanceArr
+        .map(({ date, balances }) => ({
+          x: moment(date).valueOf(),
+          y: balances[account_id],
+        }))
+        .filter(({ y }) => y !== undefined),
     }))
 
     return individuals.reduce(

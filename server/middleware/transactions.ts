@@ -18,7 +18,7 @@ import {
   dbDailySumByCard,
 } from '../database/cards'
 import { ContractResponse, generateGenericErrorResponse } from '.'
-import { convertPlaidCardsToDBCards } from '../utils'
+import { convertPlaidCardsToDBCards, add, subtract } from '../utils'
 import { logger } from '../logger'
 import moment from 'moment'
 
@@ -204,17 +204,6 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
   logger.debug('In getDailySumByCard middleware.')
 
   try {
-    // Get current balances.
-    const cards: Array<{
-      id: string
-      type: 'depository' | 'credit'
-      amount: number
-    }> = (await getCards({ userId })).map(card => ({
-      id: card.account_id,
-      type: card.type as 'depository' | 'credit',
-      amount: card.balances.current,
-    }))
-
     // Get historical daily sums
     const sortedDailyCardSums = await dbDailySumByCard(userId)
     if (sortedDailyCardSums.length <= 0) {
@@ -229,6 +218,39 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
       acc[date][id] = sum
       return acc
     }, {} as HistoricalBalances)
+
+    // Get current balances.
+    const cards: Array<{
+      id: string
+      type: string
+      amount: number
+    }> = (await getCards({ userId })).map(card => ({
+      id: card.account_id,
+      type: card.type,
+      amount: card.balances.current,
+    }))
+
+    const cardTypeMap = cards.reduce(
+      (acc, { type, id }) => ({ ...acc, [id]: type }),
+      {} as { [id: string]: string }
+    )
+
+    const cardFirstDateMap: { [id: string]: string } = cards.reduce(
+      (acc, card) => {
+        const firstDate = sortedDailyCardSums.find(
+          dailyCardSum => dailyCardSum.id === card.id
+        )
+
+        return {
+          ...acc,
+          [card.id]: firstDate
+            ? firstDate.date
+            : // If no txs can be found, default to first date
+              sortedDailyCardSums[0].date,
+        }
+      },
+      {}
+    )
 
     // Create template with dates
     const earliestDateMilli = moment(
@@ -246,28 +268,29 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
       .map(date => moment(date).format('YYYY-MM-DD'))
 
     // Map through dateTemplate, looking for matching dates from dailySums. Pull previous date if no matching date is found.
+
     const unadjustedHistoricalBalances: DailyBalancesWithDate[] = []
     for (const [i, date] of dateTemplate.entries()) {
       const startingBalances = unadjustedHistoricalBalances[i - 1]
         ? unadjustedHistoricalBalances[i - 1].balances
-        : cards.reduce(
-            (acc, { id }) => ({
-              ...acc,
-              [id]: 0,
-            }),
-            {} as DailyBalances
-          )
+        : {}
 
       unadjustedHistoricalBalances[i] = {
         date,
         balances: dailySums[date]
-          ? cards.reduce(
-              (acc, { id }) => ({
-                ...acc,
-                [id]: startingBalances[id] + (dailySums[date][id] || 0),
-              }),
-              {} as DailyBalances
-            )
+          ? cards.reduce((acc, { id }) => {
+              if (moment(cardFirstDateMap[id]) <= moment(date)) {
+                acc[id] =
+                  cardTypeMap[id] === 'depository'
+                    ? subtract(
+                        startingBalances[id] || 0,
+                        dailySums[date][id] || 0
+                      )
+                    : add(startingBalances[id] || 0, dailySums[date][id] || 0)
+              }
+
+              return acc
+            }, {} as DailyBalances)
           : startingBalances,
       }
     }

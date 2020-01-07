@@ -24,6 +24,7 @@ import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 import { parseRawTransaction } from '../utilities/translation'
 import { RootState } from '.'
+import { createSelector } from 'reselect'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean
@@ -293,6 +294,17 @@ export const transactionsSelector: (
 
 export const cardsSelector: (state: RootState) => CardWithFilter[] = state =>
   state[TRANSACTIONS][CARDS]
+
+export const cardTypeMapSelector: (
+  state: RootState
+) => { [cardId: string]: string } = state =>
+  state[TRANSACTIONS][CARDS].reduce(
+    (acc, { account_id, type }) => ({
+      ...acc,
+      [account_id]: type,
+    }),
+    {}
+  )
 
 export const itemsSelector: (state: RootState) => ItemWithFilter[] = state =>
   state[TRANSACTIONS][ITEMS]

@@ -27,25 +27,46 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
   const [currentX, setCurrentX] = useState(0)
   const [currentYs, setCurrentYs] = useState<{ [cardName: string]: number }>({})
 
+  const [balancesMap, setBalancesMap] = useState<{
+    [series: string]: { [x: number]: number }
+  }>({})
   useEffect(() => {
-    const cardNames = Object.keys(historicalBalancesLineSeries)
-
-    setCurrentYs(
+    setBalancesMap(
       Object.entries(historicalBalancesLineSeries).reduce(
         (acc, [cardName, valuesArr]) => {
-          const foundMarker = valuesArr.find(({ x }) => x === currentX)
-
-          if (foundMarker) {
-            acc[cardName] = foundMarker.y
-          }
+          acc[cardName] = valuesArr.reduce(
+            (innerAcc, { x, y }) => ({
+              ...innerAcc,
+              [x]: y,
+            }),
+            {}
+          )
 
           return acc
         },
-        {} as { [cardName: string]: number }
+        {} as {
+          [series: string]: { [x: number]: number }
+        }
       )
     )
-  }, [currentX])
+  }, [historicalBalancesLineSeries])
 
+  useEffect(() => {
+    setCurrentYs(
+      Object.entries(balancesMap).reduce((acc, [cardName, valuesMap]) => {
+        const foundMarker = valuesMap[currentX]
+
+        if (foundMarker) {
+          acc[cardName] = foundMarker
+        }
+
+        return acc
+      }, {} as { [cardName: string]: number })
+    )
+  }, [currentX])
+  console.log(historicalBalancesLineSeries)
+  console.log(currentYs)
+  console.log(currentX)
   return (
     <XYPlot
       height={330}

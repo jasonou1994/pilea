@@ -18,6 +18,7 @@ import {
   itemsSelector,
   historicalBalancesSelector,
   DailyBalances,
+  cardTypeMapSelector,
 } from './transactionsAccounts'
 import {
   incomeSpendingGraphHistoricalLengthSelector,
@@ -277,11 +278,13 @@ export const historicalBalancesLineSeriesSelector: (
 ) => HistoricalBalanceLineSeries = createSelector(
   historicalBalancesSelector,
   cardsSelector,
+  cardTypeMapSelector,
   historicalGraphFidelitySelector,
   historicalGraphHistoricalLengthSelector,
   (
     historicalBalances,
     cards,
+    cardTypeMap,
     fidelity,
     { historicalTimeUnit, historicalTimeCount }
   ) => {
@@ -299,7 +302,7 @@ export const historicalBalancesLineSeriesSelector: (
           ? // Flip DailyBalances to negative if credit card
             Object.entries(historicalBalances[date]).reduce(
               (acc, [id, amount]) => {
-                const cardType = cards.find(card => card.account_id === id).type
+                const cardType = cardTypeMap[id]
 
                 acc[id] =
                   cardType === 'credit' ? Number(amount) * -1 : Number(amount)

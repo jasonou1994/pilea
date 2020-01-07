@@ -46,8 +46,6 @@ export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = 
 
   const { incomeY, spendingY } = currentYs
 
-  console.log(incomeSeries)
-
   return (
     <XYPlot
       height={300}

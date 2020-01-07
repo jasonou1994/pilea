@@ -55,7 +55,6 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
   windowWidth,
   setHistoricalTypeAction,
 }) => {
-  console.log(historicalBalancesLineSeries)
   return (
     <>
       <HistoricalBalancesChart

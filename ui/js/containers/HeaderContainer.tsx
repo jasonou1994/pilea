@@ -5,24 +5,25 @@ import {
   FetchLogOutActionCreator,
   fetchRefreshTransactions,
   FetchRefreshTransactionsActionCreator,
+  FetchAddItemActionCreator,
+  fetchAddItem,
 } from '../actions'
 import { USER_ID, USER_NAME } from '../konstants'
 import { Button } from '../components/common/Button'
 import { RefreshData } from '../components/RefreshData'
 import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
-import { loggedInSelector, userSelector } from '../reducers/login'
+import { loggedInSelector, userSelector, User } from '../reducers/login'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
+import { AddNewItem } from '../components/AddNewItem'
 
 interface HeaderContainerProps extends RouteComponentProps {
   fetchLogOutAction: FetchLogOutActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
+  fetchAddItemAction: FetchAddItemActionCreator
 
   cardsByItems: ItemWithCards[]
   loggedIn: boolean
-  user: {
-    [USER_ID]: string
-    [USER_NAME]: string
-  }
+  user: User
 }
 
 class _HeaderContainer extends Component<HeaderContainerProps> {
@@ -34,6 +35,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       fetchRefreshTransactionsAction,
       cardsByItems,
       location: { pathname },
+      fetchAddItemAction,
     } = this.props
 
     return (
@@ -67,6 +69,12 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
               cardsByItems,
               fetchRefreshTransactionsAction,
             }}
+          />
+        )}
+
+        {loggedIn && (
+          <AddNewItem
+            {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
           />
         )}
 
@@ -117,6 +125,7 @@ export default connect(
     user: userSelector(state),
   }),
   {
+    fetchAddItemAction: fetchAddItem,
     fetchLogOutAction: fetchLogOut,
     fetchRefreshTransactionsAction: fetchRefreshTransactions,
   }

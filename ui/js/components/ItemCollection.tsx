@@ -12,7 +12,8 @@ export const CurrentItems: FunctionComponent<CurrentItemsProps> = ({
   cardsByItems,
   fetchRemoveItemAction,
 }) => (
-  <>
+  <div>
+    <h2>Institutions</h2>
     {cardsByItems.length >= 0 ? (
       <div className="items-collection">
         {cardsByItems.map((item, i) => (
@@ -26,5 +27,5 @@ export const CurrentItems: FunctionComponent<CurrentItemsProps> = ({
     ) : (
       <div>Please add an institution to continue.</div>
     )}
-  </>
+  </div>
 )

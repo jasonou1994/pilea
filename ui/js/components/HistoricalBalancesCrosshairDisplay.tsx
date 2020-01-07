@@ -18,11 +18,13 @@ export const HistoricalBalancesCrosshairDisplay: FunctionComponent<CrosshairDisp
       }}
     >
       <h4>{formatMilliseconds(time)}</h4>
-      {Object.entries(currentYs).map(([cardname, amount], i) => (
-        <div key={i}>
-          {cardname}: {formatNumberAsDollars(Number(amount))}
-        </div>
-      ))}
+      {Object.entries(currentYs)
+        .sort(([_, amountA], [__, amountB]) => amountB - amountA)
+        .map(([cardname, amount], i) => (
+          <div key={i}>
+            {cardname}: {formatNumberAsDollars(Number(amount))}
+          </div>
+        ))}
     </div>
   )
 }

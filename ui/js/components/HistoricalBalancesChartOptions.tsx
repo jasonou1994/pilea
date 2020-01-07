@@ -54,9 +54,9 @@ export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalance
           )
         }}
       >
+        <option value={'grouped'}>Asset vs. Liability</option>
         <option value={'combined'}>Combined</option>
         <option value={'individual'}>Individual</option>
-        <option value={'grouped'}>Asset vs. Liability</option>
       </select>
     </>
     <>

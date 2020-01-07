@@ -11,6 +11,7 @@ import {
   YAxis,
   LineMarkSeries,
   Crosshair,
+  DiscreteColorLegend,
 } from 'react-vis'
 
 import { SetSelectedTransactionActionCreator } from '../actions'
@@ -72,8 +73,13 @@ export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = 
             setCurrentX(value.x as number)
           }
         }}
+        curve={'curveMonotoneX'}
       />
-      <LineMarkSeries color="#bb0120" data={spendingSeries} />
+      <LineMarkSeries
+        color="#bb0120"
+        data={spendingSeries}
+        curve={'curveMonotoneX'}
+      />
       <Crosshair values={[{ x: currentX }]}>
         <IncomeSpendingCrosshairDisplay
           time={currentX}

@@ -7,7 +7,7 @@ import rootReducer from './js/reducers/index'
 import saga from './js/sagas/sagas'
 import createSagaMiddleware from 'redux-saga'
 import App from './js/containers/App'
-import { setCurrentWindowWidth } from './js/actions'
+import { setCurrentWindowWidth, setCurrentWindowHeight } from './js/actions'
 // import { accounts } from "./mockData/setAccounts";
 // import { transactions } from "./mockData/addTransactions";
 
@@ -21,8 +21,10 @@ const store = createStore(
 sagaMiddleware.run(saga)
 
 store.dispatch(setCurrentWindowWidth({ width: window.innerWidth }))
+store.dispatch(setCurrentWindowHeight({ height: window.innerHeight }))
 window.onresize = () => {
   store.dispatch(setCurrentWindowWidth({ width: window.innerWidth }))
+  store.dispatch(setCurrentWindowHeight({ height: window.innerHeight }))
 }
 
 store.dispatch({

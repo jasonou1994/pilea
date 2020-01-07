@@ -234,7 +234,9 @@ export interface IncomeSpendingLineSeries extends GraphLineSeries {
 }
 
 export interface HistoricalBalanceLineSeries extends GraphLineSeries {
-  combined: Array<{ x: number; y: number }>
+  Combined: Array<{ x: number; y: number }>
+  Assets: Array<{ x: number; y: number }>
+  Liabilities: Array<{ x: number; y: number }>
 }
 
 export const incomeSpendingLineSeriesSelector: (
@@ -323,6 +325,28 @@ export const historicalBalancesLineSeriesSelector: (
         ),
       })
     )
+    const assets: Array<{ x: number; y: number }> = balanceArr.map(
+      ({ date, balances }) => ({
+        x: moment(date).valueOf(),
+        y: Object.entries(balances).reduce(
+          (combined, [cardId, amount]) =>
+            Number(combined) +
+            (cardTypeMap[cardId] === 'depository' ? Number(amount) : 0),
+          0
+        ),
+      })
+    )
+    const liabilities: Array<{ x: number; y: number }> = balanceArr.map(
+      ({ date, balances }) => ({
+        x: moment(date).valueOf(),
+        y: Object.entries(balances).reduce(
+          (combined, [cardId, amount]) =>
+            Number(combined) +
+            (cardTypeMap[cardId] === 'credit' ? Number(amount) : 0),
+          0
+        ),
+      })
+    )
 
     const individuals: Array<{
       cardName: string
@@ -337,13 +361,15 @@ export const historicalBalancesLineSeriesSelector: (
           x: moment(date).valueOf(),
           y: balances[account_id],
         }))
-        .filter(({ y }) => y !== undefined),
+        .filter(({ y }) => y !== undefined && y !== 0),
     }))
 
     return individuals.reduce(
       (acc, { cardName, lineSeries }) => ({ ...acc, [cardName]: lineSeries }),
       {
-        combined,
+        Combined: combined,
+        Assets: assets,
+        Liabilities: liabilities,
       }
     )
   }

@@ -28,19 +28,18 @@ const ItemsContainer: FunctionComponent<ItemsContainerProps> = ({
 }) => {
   return (
     <div id="item-panel">
-      <h2>Your Accounts</h2>
-      <AddNewItem
+      {/* <AddNewItem
         {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
-      />
-
-      <HistoricalBalancesContainer />
-
-      <CurrentItems
-        {...{
-          cardsByItems,
-          fetchRemoveItemAction,
-        }}
-      />
+      /> */}
+      <div className="items-content">
+        <CurrentItems
+          {...{
+            cardsByItems,
+            fetchRemoveItemAction,
+          }}
+        />
+        <HistoricalBalancesContainer />
+      </div>
     </div>
   )
 }

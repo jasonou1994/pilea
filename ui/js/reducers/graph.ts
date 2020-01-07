@@ -53,7 +53,7 @@ const initialState: GraphState = {
       [HISTORICAL_TIME_COUNT]: 1,
       [HISTORICAL_TIME_UNIT]: 'year',
     },
-    [TYPE]: 'combined',
+    [TYPE]: 'grouped',
   },
 }
 

@@ -1,18 +1,24 @@
 @import 'colors';
+.items-content {
+  display: flex;
+}
 
 .item-display {
+  flex-shrink: 0;
   border: 1px solid black;
   border-radius: 5px;
-  // height: 200px;
-  width: 250px;
+  width: 200px;
   padding: 0px 10px;
-  overflow-y: scroll;
-  overflow-x: hidden;
-  margin-right: 5px;
+
+  margin-bottom: 5px;
 }
 
 .items-collection {
+  widows: auto;
   display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 220px);
+  overflow-y: scroll;
 }
 
 .item-header {
@@ -65,4 +71,10 @@
   p {
     margin: 5px 0;
   }
+}
+
+.item-historical-balances {
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 0 5px;
 }

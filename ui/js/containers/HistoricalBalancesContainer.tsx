@@ -27,7 +27,7 @@ import {
   setHistoricalType,
   SetHistoricalTypeActionCreator,
 } from '../actions'
-import { windowWidthSelector } from '../reducers/sizing'
+import { windowWidthSelector, windowHeightSelector } from '../reducers/sizing'
 import { HistoricalBalancesChartOptions } from '../components/HistoricalBalancesChartOptions'
 
 interface Props {
@@ -42,6 +42,7 @@ interface Props {
   setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   windowWidth: number
+  windowHeight: number
   setHistoricalTypeAction: SetHistoricalTypeActionCreator
 }
 
@@ -53,13 +54,12 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
   setGraphFidelityAction,
   setGraphHistoricalLengthAction,
   windowWidth,
+  windowHeight,
   setHistoricalTypeAction,
 }) => {
   return (
-    <>
-      <HistoricalBalancesChart
-        {...{ type, historicalBalancesLineSeries, windowWidth }}
-      />
+    <div className="item-historical-balances">
+      <h2>Balances</h2>
       <HistoricalBalancesChartOptions
         {...{
           type,
@@ -70,7 +70,10 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
           setHistoricalTypeAction,
         }}
       />
-    </>
+      <HistoricalBalancesChart
+        {...{ type, historicalBalancesLineSeries, windowWidth, windowHeight }}
+      />
+    </div>
   )
 }
 
@@ -81,6 +84,7 @@ export const HistoricalBalancesContainer = connect(
     graphFidelity: historicalGraphFidelitySelector(state),
     type: historicalGraphTypeSelector(state),
     windowWidth: windowWidthSelector(state),
+    windowHeight: windowHeightSelector(state),
     cards: cardsSelector(state),
   }),
   {

@@ -224,19 +224,26 @@ const timeConsolidatedTransactionsSelector: (
   }
 )
 
+export interface LineMarker {
+  x: number
+  y: number
+}
+
+export type LineSeries = LineMarker[]
+
 export interface GraphLineSeries {
-  [series: string]: Array<{ x: number; y: number }>
+  [series: string]: LineSeries
 }
 
 export interface IncomeSpendingLineSeries extends GraphLineSeries {
-  incomeSeries: Array<{ x: number; y: number }>
-  spendingSeries: Array<{ x: number; y: number }>
+  incomeSeries: LineSeries
+  spendingSeries: LineSeries
 }
 
 export interface HistoricalBalanceLineSeries extends GraphLineSeries {
-  Combined: Array<{ x: number; y: number }>
-  Assets: Array<{ x: number; y: number }>
-  Liabilities: Array<{ x: number; y: number }>
+  Combined: LineSeries
+  Assets: LineSeries
+  Liabilities: LineSeries
 }
 
 export const incomeSpendingLineSeriesSelector: (

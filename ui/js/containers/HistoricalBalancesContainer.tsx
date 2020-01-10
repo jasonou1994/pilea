@@ -6,7 +6,7 @@ import {
   historicalBalancesLineSeriesSelector,
   HistoricalBalanceLineSeries,
 } from '../reducers'
-import { HistoricalBalancesChart } from '../components/HistoricalBalancesChart'
+import { HistoricalBalancesChart } from '../components/historicalBalances/HistoricalBalancesChart'
 import {
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
@@ -28,7 +28,7 @@ import {
   SetHistoricalTypeActionCreator,
 } from '../actions'
 import { windowWidthSelector, windowHeightSelector } from '../reducers/sizing'
-import { HistoricalBalancesChartOptions } from '../components/HistoricalBalancesChartOptions'
+import { HistoricalBalancesChartOptions } from '../components/historicalBalances/HistoricalBalancesChartOptions'
 
 interface Props {
   historicalBalancesLineSeries: HistoricalBalanceLineSeries

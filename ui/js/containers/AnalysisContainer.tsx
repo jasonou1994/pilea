@@ -34,9 +34,9 @@ import {
   windowWidthSelector,
   filterSidebarWidthSelector,
 } from '../reducers/sizing'
-import { IncomeSpendingChart } from '../components/IncomeSpendingChart'
-import { IncomeSpendingChartOptions } from '../components/IncomeSpendingChartOptions'
-import { IncomeSpendingDetailsGrid } from '../components/IncomeSpendingDetailsGrid'
+import { IncomeSpendingChart } from '../components/incomeSpending/IncomeSpendingChart'
+import { IncomeSpendingChartOptions } from '../components/incomeSpending/IncomeSpendingChartOptions'
+import { IncomeSpendingDetailsGrid } from '../components/incomeSpending/IncomeSpendingDetailsGrid'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits

@@ -4,11 +4,11 @@ import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import { AgGridReact } from 'ag-grid-react'
 import numeral from 'numeral'
 
-import { PileaCard } from '../sagas/sagas'
-import { TimeConsolidatedTransactionGroup } from '../reducers'
-import { GridColumnDef, getDataGridColumnDefs } from '../utilities/layout'
-import { GRID_LAYOUT_BY_TIME } from '../konstants'
-import { getCardName } from '../utilities/utils'
+import { PileaCard } from '../../sagas/sagas'
+import { TimeConsolidatedTransactionGroup } from '../../reducers'
+import { GridColumnDef, getDataGridColumnDefs } from '../../utilities/layout'
+import { GRID_LAYOUT_BY_TIME } from '../../konstants'
+import { getCardName } from '../../utilities/utils'
 
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]

@@ -3,7 +3,7 @@ import {
   SetHistoricalTypeActionCreator,
   SetGraphFidelityActionCreator,
   SetGraphHistoricalLengthActionCreator,
-} from '../actions'
+} from '../../actions'
 import {
   AvailableTimeUnits,
   HISTORICAL_TIME_COUNT,
@@ -16,12 +16,12 @@ import {
   ONE_YEAR,
   SIX_MONTHS,
   THREE_MONTHS,
-} from '../konstants'
+} from '../../konstants'
 import {
   convertDateSelectObject,
   convertDateSelectString,
-} from '../utilities/utils'
-import { AvailableHistoricalGraphTypes } from '../reducers/graph'
+} from '../../utilities/utils'
+import { AvailableHistoricalGraphTypes } from '../../reducers/graph'
 
 interface HistoricalBalancesChartOptionsProps {
   setGraphFidelityAction: SetGraphFidelityActionCreator

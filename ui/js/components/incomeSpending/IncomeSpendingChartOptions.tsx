@@ -3,7 +3,7 @@ import {
   SetGraphFidelityActionCreator,
   SetGraphHistoricalLengthActionCreator,
   ResetSelectedTransactionActionCreator,
-} from '../actions'
+} from '../../actions'
 import {
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
@@ -16,11 +16,11 @@ import {
   DAY,
   WEEK,
   MONTH,
-} from '../konstants'
+} from '../../konstants'
 import {
   convertDateSelectString,
   convertDateSelectObject,
-} from '../utilities/utils'
+} from '../../utilities/utils'
 
 interface IncomeSpendingChartOptionsProps {
   setGraphFidelityAction: SetGraphFidelityActionCreator

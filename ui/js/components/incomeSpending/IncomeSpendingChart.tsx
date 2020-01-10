@@ -1,7 +1,7 @@
-/// <reference path="../../../typings/react-vis.d.ts"/>
+/// <reference path="../../../../typings/react-vis.d.ts"/>
 
 import React, { FunctionComponent, useState, useEffect } from 'react'
-import '../../../node_modules/react-vis/dist/style.css'
+import '../../../../node_modules/react-vis/dist/style.css'
 import moment from 'moment'
 import {
   XYPlot,
@@ -11,12 +11,11 @@ import {
   YAxis,
   LineMarkSeries,
   Crosshair,
-  DiscreteColorLegend,
 } from 'react-vis'
 
-import { SetSelectedTransactionActionCreator } from '../actions'
+import { SetSelectedTransactionActionCreator } from '../../actions'
 import { IncomeSpendingCrosshairDisplay } from './IncomeSpendingCrosshairDisplay'
-import { GraphLineSeries } from '../reducers'
+import { GraphLineSeries } from '../../reducers'
 
 interface IncomeSpendingChartProps {
   lineSeries: GraphLineSeries

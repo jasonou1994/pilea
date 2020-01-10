@@ -1,9 +1,13 @@
 import React, { FunctionComponent } from 'react'
-import { formatMilliseconds, formatNumberAsDollars } from '../utilities/utils'
+import {
+  formatMilliseconds,
+  formatNumberAsDollars,
+} from '../../utilities/utils'
+import { CurrentYs } from './utilities'
 
 interface CrosshairDisplayProps {
   time: number
-  currentYs: { [cardName: string]: number }
+  currentYs: CurrentYs
 }
 
 export const HistoricalBalancesCrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {

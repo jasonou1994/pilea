@@ -1,5 +1,8 @@
 import React, { Component, FunctionComponent } from 'react'
-import { formatMilliseconds, formatNumberAsDollars } from '../utilities/utils'
+import {
+  formatMilliseconds,
+  formatNumberAsDollars,
+} from '../../utilities/utils'
 
 interface CrosshairDisplayProps {
   time: number

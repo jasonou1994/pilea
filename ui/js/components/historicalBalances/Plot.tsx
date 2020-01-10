@@ -20,6 +20,16 @@ export const Plot: FunctionComponent<PlotProps> = ({
 }) => {
   const [hoverRef, isHovered] = useHover()
 
+  const flattenedChildren = (children as any[]).reduce((acc, cur) => {
+    if (Array.isArray(cur)) {
+      acc = [...acc, ...cur]
+    } else {
+      acc.push(cur)
+    }
+
+    return acc
+  }, [])
+
   return (
     <div ref={hoverRef as React.MutableRefObject<any>}>
       <XYPlot
@@ -37,7 +47,7 @@ export const Plot: FunctionComponent<PlotProps> = ({
         />
         <YAxis tickFormat={amount => `$${amount}`} />
 
-        {(children as any[]).reduce((acc, cur) => {
+        {(flattenedChildren as any[]).reduce((acc, cur) => {
           switch (cur.type.name) {
             case 'Crosshair': {
               if (isHovered) {

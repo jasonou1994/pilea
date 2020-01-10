@@ -22,24 +22,26 @@ interface ItemsContainerProps {
 
 const ItemsContainer: FunctionComponent<ItemsContainerProps> = ({
   cardsByItems,
-  fetchAddItemAction,
   fetchRemoveItemAction,
-  user,
 }) => {
   return (
     <div id="item-panel">
-      {/* <AddNewItem
-        {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
-      /> */}
-      <div className="items-content">
-        <CurrentItems
-          {...{
-            cardsByItems,
-            fetchRemoveItemAction,
-          }}
-        />
-        <HistoricalBalancesContainer />
-      </div>
+      {cardsByItems.length === 0 ? (
+        <p>
+          Uh oh, you haven't added any active institutions. Please add an
+          institution with an active financial product to view data.
+        </p>
+      ) : (
+        <div className="items-content">
+          <CurrentItems
+            {...{
+              cardsByItems,
+              fetchRemoveItemAction,
+            }}
+          />
+          <HistoricalBalancesContainer />
+        </div>
+      )}
     </div>
   )
 }

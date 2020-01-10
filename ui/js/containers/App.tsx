@@ -5,7 +5,7 @@ import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
 import PasswordResetContainer from './PasswordResetContainer'
 import { MainView } from '../components/MainView'
-import { RootState } from '../reducers'
+import { RootState, ItemWithCards, itemsWithCardsSelector } from '../reducers'
 import '../../scss/index.scss'
 import {
   expireNotifications,
@@ -27,6 +27,7 @@ interface AppProps {
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
   fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
+  cardsByItems: ItemWithCards[]
 }
 
 class _App extends Component<AppProps> {
@@ -37,6 +38,7 @@ class _App extends Component<AppProps> {
       activeNotifications,
       expireNotificationsAction,
       fetchGetHistoricalBalancesAction,
+      cardsByItems,
     } = this.props
 
     return (
@@ -68,7 +70,11 @@ class _App extends Component<AppProps> {
               <LogInContainer />
             ) : (
               <MainView
-                {...{ isTransactionsLoading, fetchGetHistoricalBalancesAction }}
+                {...{
+                  isTransactionsLoading,
+                  fetchGetHistoricalBalancesAction,
+                  cardsByItems,
+                }}
               />
             )}
           </Route>
@@ -83,6 +89,7 @@ export default connect(
     loggedIn: loggedInSelector(state),
     isTransactionsLoading: isTransactionsLoadingSelector(state),
     activeNotifications: activeNotificationsSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
   }),
   {
     expireNotificationsAction: expireNotifications,

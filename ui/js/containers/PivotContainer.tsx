@@ -4,11 +4,14 @@ import {
   RootState,
   consolidatedDataSelector,
   FlattenedTransaction,
+  itemsWithCardsSelector,
+  ItemWithCards,
 } from '../reducers'
 import { Pivot } from '../components/Pivot'
 
 interface PivotContainerProps {
   consolidatedData: FlattenedTransaction[]
+  cardsByItems: ItemWithCards[]
 }
 
 interface Memo {
@@ -28,6 +31,7 @@ interface Memo {
 
 const _PivotContainer: FunctionComponent<PivotContainerProps> = ({
   consolidatedData,
+  cardsByItems,
 }) => {
   const dimensions = [
     { value: 'item', title: 'Account' },
@@ -89,7 +93,12 @@ const _PivotContainer: FunctionComponent<PivotContainerProps> = ({
     },
   ]
 
-  return (
+  return cardsByItems.length === 0 ? (
+    <p>
+      Uh oh, you haven't added any active institutions. Please add an
+      institution with an active financial product to view data.
+    </p>
+  ) : (
     <>
       <h2>Pivot</h2>
       <Pivot
@@ -110,6 +119,7 @@ const _PivotContainer: FunctionComponent<PivotContainerProps> = ({
 export const PivotContainer = connect(
   (state: RootState) => ({
     consolidatedData: consolidatedDataSelector(state),
+    cardsByItems: itemsWithCardsSelector(state),
   }),
   {}
 )(_PivotContainer)

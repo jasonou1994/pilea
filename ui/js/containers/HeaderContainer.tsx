@@ -15,11 +15,13 @@ import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { loggedInSelector, userSelector, User } from '../reducers/login'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { AddNewItem } from '../components/AddNewItem'
+import { isTransactionsLoadingSelector } from '../reducers/loading'
 
 interface HeaderContainerProps extends RouteComponentProps {
   fetchLogOutAction: FetchLogOutActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
   fetchAddItemAction: FetchAddItemActionCreator
+  isTransactionsLoading: boolean
 
   cardsByItems: ItemWithCards[]
   loggedIn: boolean
@@ -36,6 +38,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       cardsByItems,
       location: { pathname },
       fetchAddItemAction,
+      isTransactionsLoading,
     } = this.props
 
     return (
@@ -63,7 +66,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             </span>
           </div>
         )}
-        {cardsByItems.length > 0 && (
+        {cardsByItems.length > 0 && !isTransactionsLoading && (
           <RefreshData
             {...{
               cardsByItems,
@@ -123,6 +126,7 @@ export default connect(
 
     loggedIn: loggedInSelector(state),
     user: userSelector(state),
+    isTransactionsLoading: isTransactionsLoadingSelector(state),
   }),
   {
     fetchAddItemAction: fetchAddItem,

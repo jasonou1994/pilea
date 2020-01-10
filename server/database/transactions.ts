@@ -11,7 +11,6 @@ export interface DBTransaction {
   account_owner: string | null
   amount: number | null
   iso_currency_code: string | null
-  official_currency_code: string | null
   category: Array<string> | null
   category_id: string | null
   date: Iso8601DateString
@@ -127,6 +126,11 @@ export const insertTransactions: ({
         reason,
         reference_number,
       },
+      // Plaid API is not accurate...these are extra fields.
+      // @ts-ignore
+      authorized_date,
+      // @ts-ignore
+      payment_channel,
       ...sharedFields
     } = plaidTx
 

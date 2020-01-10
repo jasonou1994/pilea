@@ -114,6 +114,7 @@ export const refreshTransactions = async (
 
             txOffset += txCount
           } catch (err) {
+            console.log(err)
             logger.error(
               `Error ${errorCount} in processing transactions for item ${
                 item.alias ? item.alias : item.accessToken
@@ -227,7 +228,10 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
     }> = (await getCards({ userId })).map(card => ({
       id: card.account_id,
       type: card.type,
-      amount: card.balances.current,
+      amount:
+        card.type === 'depository'
+          ? card.balances.available
+          : card.balances.current,
     }))
 
     const cardTypeMap = cards.reduce(

@@ -3,13 +3,16 @@
   display: flex;
 }
 
-.item-display {
-  flex-shrink: 0;
+.items-current-items {
   border: 1px solid black;
   border-radius: 5px;
-  width: 200px;
   padding: 0px 10px;
+  margin-right: 5px;
+}
 
+.item-display {
+  flex-shrink: 0;
+  width: 200px;
   margin-bottom: 5px;
 }
 

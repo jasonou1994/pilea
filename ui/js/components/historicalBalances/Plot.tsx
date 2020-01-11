@@ -33,10 +33,10 @@ export const Plot: FunctionComponent<PlotProps> = ({
   return (
     <div ref={hoverRef as React.MutableRefObject<any>}>
       <XYPlot
-        height={height - 250}
-        width={width - 300}
+        height={height - 230}
+        width={width - 255}
         xType="time"
-        margin={{ left: 70, right: 10, top: 10, bottom: 70 }}
+        margin={{ left: 70, right: 30, top: 20, bottom: 80 }}
         style={{ cursor: 'pointer' }}
       >
         <VerticalGridLines />

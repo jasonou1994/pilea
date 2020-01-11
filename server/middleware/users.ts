@@ -5,7 +5,6 @@ import {
   getUsers,
   insertUser,
   DBUser,
-  getUserByToken,
   confirmUserDB,
   dbCheckIfUserVerified,
   addPasswordResetTokenToUser,
@@ -13,6 +12,7 @@ import {
   updatePassword,
   deleteUserByUsername,
   confirmUserBypassDB,
+  getUserFromUserAccessToken,
 } from '../database/users'
 import { encryptPassword } from '../utils'
 import { ContractResponse, generateGenericErrorResponse } from '.'
@@ -192,7 +192,7 @@ export const getUserId = async (
 
   const { updatedToken } = res.locals
   try {
-    const { id: userId }: DBUser = await getUserByToken({
+    const { id: userId }: DBUser = await getUserFromUserAccessToken({
       token: updatedToken,
     })
 

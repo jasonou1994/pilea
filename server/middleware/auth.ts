@@ -7,13 +7,14 @@ import {
   EXPIRED_TOKEN_ERROR,
 } from '../constants'
 import jwt from 'jsonwebtoken'
-import uuidv4 from 'uuidv4'
-import {
-  updateUser,
-  checkUserToken,
-  updateUserWithToken,
-} from '../database/users'
 import { generateGenericErrorResponse } from '.'
+import {
+  addUserAccessToken,
+  doesUserAccessTokenExist,
+  getUserFromUserAccessToken,
+  deleteUserAccessToken,
+  deleteAllUserAccessTokensByUsername,
+} from '../database/users'
 
 export const auth = Router()
 
@@ -33,7 +34,8 @@ export const addAuthToken = async (
       },
       key
     )
-    await updateUser({ username, token })
+    await deleteAllUserAccessTokensByUsername({ username })
+    await addUserAccessToken({ username, token })
 
     res.cookie('Authorization', token)
     res.locals.updatedToken = token
@@ -60,8 +62,10 @@ export const checkUpdateAuthToken = async (
     }
 
     // 2. Check token exists in DB.
-    const acceptToken: boolean = await checkUserToken({ token: authorization })
-    if (!acceptToken) {
+    const existingToken: boolean = await doesUserAccessTokenExist({
+      token: authorization,
+    })
+    if (!existingToken) {
       throw new Error(INVALID_TOKEN_AUTH_ERROR)
     }
 
@@ -69,7 +73,7 @@ export const checkUpdateAuthToken = async (
     await jwt.verify(authorization, key)
     logger.debug('Authentication token is valid.')
 
-    // 4. Accepted token - refresh in DB and client.
+    // 4. Create new token
     const token = await jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) + 60 * 60,
@@ -78,8 +82,16 @@ export const checkUpdateAuthToken = async (
       key
     )
 
-    await updateUserWithToken({ oldToken: authorization, newToken: token })
+    // 5. Add token to DB, but don't remove the old token for 3 seconds. That way, simultaneous requests will still pass through
+    const { username } = await getUserFromUserAccessToken({
+      token: authorization,
+    })
 
+    await addUserAccessToken({ username, token })
+
+    setTimeout(() => deleteUserAccessToken({ token: authorization }), 3000)
+
+    // 6. Attach new cookie to res
     res.cookie('Authorization', token)
     res.locals.updatedToken = token
 
@@ -105,7 +117,7 @@ export const checkDeleteAuthToken: (
   next: NextFunction
 ) => void = async (req, res, next) => {
   try {
-    const authorization = req.cookies.Authorization
+    const authorization: string = req.cookies.Authorization
 
     // 1. Check token exists.
     if (!authorization) {
@@ -113,16 +125,20 @@ export const checkDeleteAuthToken: (
     }
 
     // 2. Check token exists in DB.
-    const acceptToken = await checkUserToken({ token: authorization })
-    if (!acceptToken) {
+    const existingToken: boolean = await doesUserAccessTokenExist({
+      token: authorization,
+    })
+    if (!existingToken) {
       throw new Error(INVALID_TOKEN_AUTH_ERROR)
     }
 
     // 3. Check JWT properly signed.
     jwt.verify(authorization, key)
 
-    // 4. Replace in DB with random string
-    await updateUserWithToken({ oldToken: authorization, newToken: uuidv4() })
+    // 4. Remove old token from token array
+    await deleteUserAccessToken({
+      token: authorization,
+    })
 
     next()
   } catch (error) {

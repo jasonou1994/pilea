@@ -45,6 +45,7 @@ export const USERS = 'users'
 export const ITEMS = 'items'
 export const TRANSACTIONS = 'transactions'
 export const CARDS = 'cards'
+export const ACCESS_TOKENS = 'access_tokens'
 
 //jwt
 export const key = 'jasonou1'

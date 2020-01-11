@@ -1,12 +1,11 @@
 import { dbClient } from '../database'
-import { USERS } from '../constants'
+import { USERS, ACCESS_TOKENS } from '../constants'
 
 export interface DBUser {
   id?: number
   username: string
   passwordHash?: string
   confirmed?: boolean
-  token: string
   confirmationString?: string
   passwordResetToken?: string
 }
@@ -67,47 +66,71 @@ export const getUsers: ({ username }) => Promise<DBUser[]> = async ({
     .where({ username })
 }
 
-export const getUserByToken: ({ token }) => Promise<DBUser> = async ({
-  token,
-}) => {
-  const dbUser: DBUser = await new Promise((resolve, reject) => {
-    dbClient
-      .select('*')
-      .from(USERS)
-      .where({ token })
-      .limit(1)
-      .then(rows => resolve(rows[0]))
-      .catch(err => reject(err))
-  })
-  return dbUser
-}
-
-export const updateUser: ({
+export const addUserAccessToken: ({
   username,
   token,
-}: DBUser) => Promise<void> = async ({ username, token }) => {
-  await dbClient(USERS)
-    .update({ token })
+}: {
+  username: string
+  token: string
+}) => Promise<void> = async ({ username, token }) =>
+  await dbClient(ACCESS_TOKENS).insert({ token, username })
+
+export const deleteUserAccessToken: ({
+  token,
+}: {
+  token: string
+}) => Promise<number> = async ({ token }) =>
+  await dbClient(ACCESS_TOKENS)
+    .delete()
+    .where({ token })
+
+export const deleteAllUserAccessTokensByUsername: ({
+  username,
+}: {
+  username: string
+}) => Promise<void> = async ({ username }) => {
+  await dbClient(ACCESS_TOKENS)
+    .delete()
     .where({ username })
 }
 
-export const updateUserWithToken: ({
-  oldToken,
-  newToken,
-}) => Promise<void> = async ({ oldToken, newToken }) => {
-  await dbClient(USERS)
-    .update({ token: newToken })
-    .where({ token: oldToken })
+export const doesUserAccessTokenExist: ({
+  token,
+}: {
+  token: string
+}) => Promise<boolean> = async ({ token }) => {
+  const results = await dbClient(ACCESS_TOKENS)
+    .select('*')
+    .where({ token })
+
+  return results.length > 0
 }
 
-export const checkUserToken: ({ token }) => Promise<boolean> = async ({
+export const getUserFromUserAccessToken: ({
   token,
-}) => {
-  const result = await dbClient(USERS)
+}: {
+  token: string
+}) => Promise<{
+  id: number
+  username: string
+  confirmed: boolean
+  confirmationString: string
+  passwordResetToken: string
+}> = async ({ token }) => {
+  const results = await dbClient
+    .select(
+      'users.id',
+      'users.username',
+      'confirmed',
+      'confirmationString',
+      'passwordResetToken'
+    )
+    .from(USERS)
+    .innerJoin(ACCESS_TOKENS, 'users.username', 'access_tokens.username')
     .where({ token })
-    .count('*')
+    .debug(true)
 
-  return result[0].count > 0
+  return results[0]
 }
 
 export const dbCheckIfUserVerified: ({ id }) => Promise<boolean> = async ({

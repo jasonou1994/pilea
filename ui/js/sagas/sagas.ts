@@ -119,21 +119,25 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
 
     yield put(startLoading(TRANSACTIONS))
 
-    const { cards, transactions, items }: AddItemResponse = yield call(
-      services[API_ITEMS_ADD],
-      {
+    const [{ cards, transactions, items }, { historicalBalances }]: [
+      TransactionsRetrieveResponse,
+      HistoricalBalancesResponse
+    ] = yield all([
+      call(services[API_ITEMS_ADD], {
         body: JSON.stringify({
           publicToken: accessToken,
           alias,
           start,
           end,
         }),
-      }
-    )
+      }),
+      call(services[API_ACCOUNTS_GET_DAILY_BALANCES]),
+    ])
 
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+    yield put(setHistoricalBalances(historicalBalances))
 
     yield put(stopLoading(TRANSACTIONS))
 
@@ -162,16 +166,20 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
 
 function* removeItem({ payload: itemId }: FetchRemoveItemInterface) {
   try {
-    const { cards, transactions, items }: RemoveItemsResponse = yield call(
-      services[API_ITEMS_REMOVE],
-      {
+    const [{ cards, transactions, items }, { historicalBalances }]: [
+      TransactionsRetrieveResponse,
+      HistoricalBalancesResponse
+    ] = yield all([
+      call(services[API_ITEMS_REMOVE], {
         body: JSON.stringify({ itemId }),
-      }
-    )
+      }),
+      call(services[API_ACCOUNTS_GET_DAILY_BALANCES]),
+    ])
 
     yield put(setCards(cards))
     yield put(setTransactions(transactions))
     yield put(setItems(items))
+    yield put(setHistoricalBalances(historicalBalances))
 
     yield put(
       addActiveNotification({

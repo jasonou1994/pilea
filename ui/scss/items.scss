@@ -4,16 +4,17 @@
 }
 
 .items-current-items {
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 0px 10px;
+  // border: 1px solid black;
+  border-right: 1px solid rgb(66, 66, 66);
+  // border-radius: 5px;
+  padding: 0 10px 0 5px;
   margin-right: 5px;
 }
 
 .item-display {
   flex-shrink: 0;
   width: 200px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 .items-collection {
@@ -28,6 +29,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: -6px;
 }
 .card-group {
   margin: 8px 0px;
@@ -77,7 +79,7 @@
 }
 
 .item-historical-balances {
-  border: 1px solid black;
+  // border: 1px solid black;
   border-radius: 5px;
   padding: 0 5px;
 }

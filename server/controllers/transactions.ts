@@ -5,6 +5,7 @@ import {
   getUserId,
   retrieveTransactions,
   getHistoricalBalanceByCard,
+  getTransactionCount,
 } from '../middleware'
 
 export const transactions = Router()
@@ -30,3 +31,5 @@ transactions.get(
   getUserId,
   getHistoricalBalanceByCard
 )
+
+transactions.get('/count', checkUpdateAuthToken, getUserId, getTransactionCount)

@@ -10,6 +10,7 @@ import {
   API_TRANSACTIONS_REFRESH,
   API_USER_SEND_PASSWORD_RESET_EMAIL,
   API_ACCOUNTS_GET_DAILY_BALANCES,
+  API_TRANSACTIONS_COUNT,
 } from '../konstants'
 
 interface ServiceDefinition {
@@ -69,6 +70,11 @@ export const serviceDefs: ServiceDefinition[] = [
   {
     name: API_ACCOUNTS_GET_DAILY_BALANCES,
     path: '/transactions/historical',
+    method: 'GET',
+  },
+  {
+    name: API_TRANSACTIONS_COUNT,
+    path: '/transactions/COUNT',
     method: 'GET',
   },
 ].map(def => ({ ...defaultOptions, ...def } as ServiceDefinition))

@@ -8,6 +8,7 @@ import {
   deleteTransactions,
   insertTransactions,
   getTransactions,
+  dbGetTransactionCount,
 } from '../database/transactions'
 import { DBItem, getItems, updateItemById } from '../database/items'
 import { plaidGetTransactions } from '../plaidAPI'
@@ -28,6 +29,10 @@ export interface ContractRetrieveTransactions extends ContractResponse {
   items: DBItem[]
 }
 
+export interface ContractTransactionsCount extends ContractResponse {
+  count: number
+}
+
 export interface ContractRetrieveHistoricalBalance extends ContractResponse {
   historicalBalances: HistoricalBalances
 }
@@ -41,6 +46,31 @@ interface DailyBalancesWithDate {
 }
 interface HistoricalBalances {
   [date: string]: DailyBalances
+}
+
+export const getTransactionCount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    logger.debug('In getTransactionCount middlware.')
+    const { userId } = res.locals
+
+    const count = await dbGetTransactionCount({ userId })
+
+    const resBody: ContractTransactionsCount = {
+      status: 'Successfully retrieved transactions',
+      success: true,
+      error: null,
+      count,
+    }
+
+    res.json(resBody)
+  } catch (error) {
+    logger.error(error)
+    res.status(500).json(generateGenericErrorResponse(error))
+  }
 }
 
 export const refreshTransactions = async (
@@ -114,7 +144,6 @@ export const refreshTransactions = async (
 
             txOffset += txCount
           } catch (err) {
-            console.log(err)
             logger.error(
               `Error ${errorCount} in processing transactions for item ${
                 item.alias ? item.alias : item.accessToken

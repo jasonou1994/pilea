@@ -9,6 +9,7 @@ import {
   SET_CATEGORIES_SELECTED,
   SET_TRANSACTIONS,
   SELECT_SINGLE_CATEGORY,
+  FETCH_TRANSACTIONS_COUNT,
 } from '../konstants/index'
 import { Action } from 'redux'
 import { RawTransaction } from '../sagas/sagas'
@@ -24,6 +25,7 @@ type TransactionsActionTypes =
   | typeof SELECT_ALL_CATEGORIES
   | typeof SET_CATEGORIES_SELECTED
   | typeof SELECT_SINGLE_CATEGORY
+  | typeof FETCH_TRANSACTIONS_COUNT
 
 export type TransactionsInterfaces =
   | FetchRefreshTransactionsInterface
@@ -150,4 +152,17 @@ export const selectSingleCategory: SelectSingleCategoryActionCreator = ({
 }) => ({
   type: SELECT_SINGLE_CATEGORY,
   payload: { category },
+})
+
+export type FetchTransactionsCountActionCreator = TransactionsActionCreator<
+  void,
+  typeof FETCH_TRANSACTIONS_COUNT
+>
+export type FetchTransactionsCountInterface = TransactionsAction<
+  void,
+  typeof FETCH_TRANSACTIONS_COUNT
+>
+export const fetchTransactionsCount: FetchTransactionsCountActionCreator = () => ({
+  type: FETCH_TRANSACTIONS_COUNT,
+  payload: undefined,
 })

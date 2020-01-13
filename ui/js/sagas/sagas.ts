@@ -14,6 +14,7 @@ import {
   FetchSendPasswordResetEmailAction,
   addActiveNotification,
   setHistoricalBalances,
+  fetchTransactionsCount,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -35,6 +36,8 @@ import {
   FETCH_SEND_PASSWORD_RESET_EMAIL,
   FETCH_GET_HISTORICAL_BALANCES,
   API_ACCOUNTS_GET_DAILY_BALANCES,
+  FETCH_TRANSACTIONS_COUNT,
+  API_TRANSACTIONS_COUNT,
 } from '../konstants'
 import { services } from '../utilities/services'
 import {
@@ -86,6 +89,9 @@ export interface TransactionsRetrieveResponse extends APIResponse {
 
 export interface HistoricalBalancesResponse extends APIResponse {
   historicalBalances: HistoricalBalances
+}
+export interface TransactionsCountResponse extends APIResponse {
+  count: number
 }
 
 export interface AddItemResponse extends TransactionsRetrieveResponse {}
@@ -362,12 +368,12 @@ function* fetchCreateUser({
 function* refreshTransactions() {
   yield put(startLoading(TRANSACTIONS))
   yield put(readdTransactions({}))
+
   try {
     const start = moment()
       .subtract(2, 'year')
       .format('YYYY-MM-DD')
     const end = moment().format('YYYY-MM-DD')
-
     const {
       cards,
       transactions,
@@ -441,34 +447,15 @@ function* sendPasswordResetEmail({
   }
 }
 
-function* getHistoricalBalances() {
+function* getTransactionsCount() {
   try {
-    const { historicalBalances }: HistoricalBalancesResponse = yield call(
-      services[API_ACCOUNTS_GET_DAILY_BALANCES]
+    const { count }: TransactionsCountResponse = yield call(
+      services[API_TRANSACTIONS_COUNT]
     )
 
-    yield put(setHistoricalBalances(historicalBalances))
-
-    yield put(
-      addActiveNotification({
-        notification: createNotification(
-          'Historical Balances',
-          `Successfully retrieved historical balances.`,
-          true
-        ),
-      })
-    )
+    console.log(count)
   } catch ({ error, status }) {
-    console.error('Error in getHistoricalBalances:', error, status)
-    yield put(
-      addActiveNotification({
-        notification: createNotification(
-          'Historical Balances',
-          `Failed to retrieve historical balances: ${error}`,
-          false
-        ),
-      })
-    )
+    console.error('Error in retrieving transaction count:', error, status)
   }
 }
 
@@ -480,6 +467,7 @@ function* saga() {
   yield takeLatest(FETCH_LOG_OUT, fetchLogOut)
   yield takeLatest(FETCH_REMOVE_ITEM, removeItem)
   yield takeLatest(FETCH_SEND_PASSWORD_RESET_EMAIL, sendPasswordResetEmail)
+  yield takeLatest(FETCH_TRANSACTIONS_COUNT, getTransactionsCount)
 }
 
 export default saga

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
@@ -12,6 +12,8 @@ import {
   ExpireNotificationsActionCreator,
   FetchGetHistoricalBalancesActionCreator,
   fetchGetHistoricalBalances,
+  fetchTransactionsCount,
+  FetchTransactionsCountActionCreator,
 } from '../actions'
 import {
   NotificationsContainer,
@@ -27,61 +29,60 @@ interface AppProps {
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
   fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
+  fetchTransactionsCountAction: FetchTransactionsCountActionCreator
   cardsByItems: ItemWithCards[]
 }
 
-class _App extends Component<AppProps> {
-  render() {
-    const {
-      loggedIn,
-      isTransactionsLoading,
-      activeNotifications,
-      expireNotificationsAction,
-      fetchGetHistoricalBalancesAction,
-      cardsByItems,
-    } = this.props
+const _App: FunctionComponent<AppProps> = ({
+  loggedIn,
+  isTransactionsLoading,
+  activeNotifications,
+  expireNotificationsAction,
+  fetchGetHistoricalBalancesAction,
+  cardsByItems,
+  fetchTransactionsCountAction,
+}) => {
+  return (
+    <>
+      <NotificationsContainer
+        {...{
+          notifications: activeNotifications,
+          onExpireHandler: (notifications: NotificationWithDuration[]) =>
+            expireNotificationsAction({ notifications }),
+        }}
+      />
+      <Router>
+        <Route path="/confirmed">
+          <>
+            <div>Thanks for confirming your email!</div>
+            <Link to="/">Please sign in.</Link>
+          </>
+        </Route>
+        <Route path="/password">
+          <PasswordResetContainer />
+        </Route>
+        <Route
+          exact
+          path="(/|/view|/view/accounts|/view/transactions|/view/pivot)"
+        >
+          <HeaderContainer />
 
-    return (
-      <>
-        <NotificationsContainer
-          {...{
-            notifications: activeNotifications,
-            onExpireHandler: (notifications: NotificationWithDuration[]) =>
-              expireNotificationsAction({ notifications }),
-          }}
-        />
-        <Router>
-          <Route path="/confirmed">
-            <>
-              <div>Thanks for confirming your email!</div>
-              <Link to="/">Please sign in.</Link>
-            </>
-          </Route>
-          <Route path="/password">
-            <PasswordResetContainer />
-          </Route>
-          <Route
-            exact
-            path="(/|/view|/view/accounts|/view/transactions|/view/pivot)"
-          >
-            <HeaderContainer />
-
-            {!loggedIn ? (
-              <LogInContainer />
-            ) : (
-              <MainView
-                {...{
-                  isTransactionsLoading,
-                  fetchGetHistoricalBalancesAction,
-                  cardsByItems,
-                }}
-              />
-            )}
-          </Route>
-        </Router>
-      </>
-    )
-  }
+          {!loggedIn ? (
+            <LogInContainer />
+          ) : (
+            <MainView
+              {...{
+                isTransactionsLoading,
+                fetchGetHistoricalBalancesAction,
+                fetchTransactionsCountAction,
+                cardsByItems,
+              }}
+            />
+          )}
+        </Route>
+      </Router>
+    </>
+  )
 }
 
 export default connect(
@@ -94,5 +95,6 @@ export default connect(
   {
     expireNotificationsAction: expireNotifications,
     fetchGetHistoricalBalancesAction: fetchGetHistoricalBalances,
+    fetchTransactionsCountAction: fetchTransactionsCount,
   }
 )(_App)

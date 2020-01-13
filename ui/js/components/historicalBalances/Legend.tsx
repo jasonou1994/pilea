@@ -10,8 +10,8 @@ interface LegendProps {
 export const Legend: FunctionComponent<LegendProps> = ({ items }) => {
   return (
     <div className="legend">
-      {items.map(item => (
-        <div className="legend-row">
+      {items.map((item, i) => (
+        <div className="legend-row" key={i}>
           <div
             className="legend-color"
             style={{ backgroundColor: item.color }}

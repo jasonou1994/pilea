@@ -4,19 +4,24 @@ import ItemsContainer from '../containers/ItemsContainer'
 import FiltersContainer from '../containers/FiltersContainer'
 import AnalysisContainer from '../containers/AnalysisContainer'
 import { PivotContainer } from '../containers/PivotContainer'
-import { FetchGetHistoricalBalancesActionCreator } from '../actions'
+import {
+  FetchGetHistoricalBalancesActionCreator,
+  FetchTransactionsCountActionCreator,
+} from '../actions'
 import { ItemWithCards } from '../reducers'
 
 interface MainViewProps extends RouteComponentProps {
   isTransactionsLoading: boolean
   fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
   cardsByItems: ItemWithCards[]
+  fetchTransactionsCountAction: FetchTransactionsCountActionCreator
 }
 
 const _MainView: FunctionComponent<MainViewProps> = ({
   isTransactionsLoading,
   history,
   cardsByItems,
+  fetchTransactionsCountAction,
 }) => {
   useEffect(() => {
     history.push('/view/accounts')
@@ -24,6 +29,23 @@ const _MainView: FunctionComponent<MainViewProps> = ({
       history.push('/')
     }
   }, [])
+
+  useEffect(() => {
+    // @ts-ignore
+    let interval
+
+    if (isTransactionsLoading) {
+      interval = setInterval(() => {
+        fetchTransactionsCountAction()
+      }, 1500)
+    }
+
+    return () => {
+      console.log('clearing interval')
+      // @ts-ignore
+      clearInterval(interval)
+    }
+  }, [isTransactionsLoading])
 
   return isTransactionsLoading ? (
     <div style={{ color: 'blue', border: '1px solid blue' }}>

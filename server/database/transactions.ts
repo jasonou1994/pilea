@@ -95,6 +95,17 @@ export const deleteTransactions: ({ userId }) => Promise<void> = async ({
     .where({ userId })
     .del()
 }
+
+export const dbGetTransactionCount: ({ userId }) => Promise<number> = async ({
+  userId,
+}) => {
+  const result = await dbClient(TRANSACTIONS)
+    .count('*')
+    .where({ userId })
+
+  return Number(Object.values(result[0])[0])
+}
+
 export const deleteTransactionsForGivenCardAndUser: ({
   userId,
   cardId,

@@ -4,6 +4,7 @@ import {
   formatNumberAsDollars,
 } from '../../utilities/utils'
 import { CurrentYs } from './utilities'
+import classNames from 'classnames'
 
 interface CrosshairDisplayProps {
   time: number
@@ -13,20 +14,22 @@ interface CrosshairDisplayProps {
 export const HistoricalBalancesCrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {
   const { time, currentYs } = props
   return (
-    <div
-      style={{
-        borderRadius: '3px',
-        backgroundColor: 'black',
-        padding: '3px',
-        width: '200px',
-      }}
-    >
-      <h4>{formatMilliseconds(time)}</h4>
+    <div className="historical-balances-crosshair">
+      <h4 style={{ marginTop: '0px' }}>{formatMilliseconds(time)}</h4>
       {Object.entries(currentYs)
         .sort(([_, amountA], [__, amountB]) => amountB - amountA)
         .map(([cardname, amount], i) => (
-          <div key={i}>
-            {cardname}: {formatNumberAsDollars(Number(amount))}
+          <div key={i} className="row">
+            <span>{cardname}:</span>
+            <span
+              className={classNames({
+                positive: Number(amount) >= 0,
+                negative: Number(amount) < 0,
+                amount: true,
+              })}
+            >
+              {formatNumberAsDollars(Number(amount))}
+            </span>
           </div>
         ))}
     </div>

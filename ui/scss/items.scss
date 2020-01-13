@@ -136,3 +136,33 @@
     font-size: 14px;
   }
 }
+
+.historical-balances-crosshair {
+  border-radius: 3px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  padding: 7px;
+  width: 250px;
+  opacity: 0.8;
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .positive {
+    color: #00b44b;
+  }
+
+  .negative {
+    color: #bb0120;
+  }
+
+  .amount {
+    font-weight: bold;
+  }
+  span {
+    font-size: 14px;
+  }
+}

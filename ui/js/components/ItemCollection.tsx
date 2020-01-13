@@ -13,7 +13,7 @@ export const CurrentItems: FunctionComponent<CurrentItemsProps> = ({
   fetchRemoveItemAction,
 }) => (
   <div className="items-current-items">
-    <h2>Institutions</h2>
+    {/* <h2>Institutions</h2> */}
     {cardsByItems.length >= 0 ? (
       <div className="items-collection">
         {cardsByItems.map((item, i) => (

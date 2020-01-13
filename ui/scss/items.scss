@@ -49,8 +49,6 @@
   color: $green;
 }
 .currency-type {
-  font-style: italic;
-  font-weight: 150;
   color: $faded-grey;
 }
 
@@ -82,4 +80,59 @@
   // border: 1px solid black;
   border-radius: 5px;
   padding: 0 5px;
+}
+
+.chart-option-header {
+  font-size: 14px;
+  margin-right: 3px;
+}
+.chart-option-select {
+  font-size: 12px;
+  margin-right: 10px;
+}
+
+.show-legend {
+  font-size: 14px;
+  margin-top: 10px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.legend-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: $faded-grey;
+
+  .legend-title-container {
+    display: flex;
+    margin: 0 0px;
+    width: 100%;
+    padding-bottom: 10px;
+    align-items: flex-end;
+  }
+
+  .hide-legend {
+    font-size: 13px;
+    padding-left: 8px;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+
+.legend-row {
+  display: flex;
+  margin-bottom: 5px;
+  color: $faded-grey;
+
+  .legend-color {
+    margin-top: 1px;
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+  }
+
+  .legend-title {
+    margin-left: 5px;
+    font-size: 14px;
+  }
 }

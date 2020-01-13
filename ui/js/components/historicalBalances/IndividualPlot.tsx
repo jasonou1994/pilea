@@ -4,6 +4,7 @@ import { LineMarkSeries, Crosshair, DiscreteColorLegend } from 'react-vis'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
 import { useLineSeriesMap, useCurrentYs, LineSeriesMap } from './utilities'
 import { Plot } from './Plot'
+import { Legend } from './Legend'
 
 interface IndividualPlotProps {
   combinedLineSeries: LineSeries
@@ -60,41 +61,67 @@ export const IndividualPlot: FunctionComponent<IndividualPlotProps> = ({
     [individualLineSeries]
   )
 
+  const [showLegend, setShowLegend] = useState<boolean>(true)
+  const legendWidth = 150
+
   return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <Plot {...{ width: width - 150, height }}>
-        <LineMarkSeries
-          data={combinedLineSeries}
-          onNearestX={value => {
-            console.log('hi')
-            if (currentX !== value.x) {
-              setCurrentX(value.x as number)
-            }
+    <>
+      {!showLegend && (
+        <div className="show-legend" onClick={() => setShowLegend(true)}>
+          Show legend?
+        </div>
+      )}
+      <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Plot
+          {...{
+            width: showLegend ? width - legendWidth : width,
+            height: height - 35,
           }}
-          style={{ opacity: 0 }}
-        />
-
-        {Object.values(individualLineSeries).map((lineSeries, i) => (
+        >
           <LineMarkSeries
-            data={lineSeries}
-            key={i}
-            curve="curveMonotoneX"
-            color={colors[i]}
+            data={combinedLineSeries}
+            onNearestX={value => {
+              if (currentX !== value.x) {
+                setCurrentX(value.x as number)
+              }
+            }}
+            style={{ opacity: 0 }}
           />
-        ))}
 
-        <Crosshair values={[{ x: currentX }]}>
-          <HistoricalBalancesCrosshairDisplay
-            time={currentX}
-            currentYs={currentYs}
-          />
-        </Crosshair>
-      </Plot>
-      <div style={{ width: '150px' }}>
-        <DiscreteColorLegend
-          {...{ orientation: 'vertical', items: legendItems }}
-        />
+          {Object.values(individualLineSeries).map((lineSeries, i) => (
+            <LineMarkSeries
+              data={lineSeries}
+              key={i}
+              curve="curveMonotoneX"
+              color={colors[i]}
+            />
+          ))}
+
+          <Crosshair values={[{ x: currentX }]}>
+            <HistoricalBalancesCrosshairDisplay
+              time={currentX}
+              currentYs={currentYs}
+            />
+          </Crosshair>
+        </Plot>
+        {showLegend && (
+          <div
+            style={{ width: `${legendWidth}px` }}
+            className="legend-container"
+          >
+            <div className="legend-title-container">
+              <span>Legend</span>
+              <span
+                onClick={() => setShowLegend(false)}
+                className="hide-legend"
+              >
+                Hide?
+              </span>
+            </div>
+            <Legend items={legendItems} />
+          </div>
+        )}
       </div>
-    </div>
+    </>
   )
 }

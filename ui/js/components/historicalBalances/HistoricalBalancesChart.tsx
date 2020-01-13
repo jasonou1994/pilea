@@ -8,15 +8,15 @@ import { IndividualPlot } from './IndividualPlot'
 interface Props {
   historicalBalancesLineSeries: HistoricalBalanceLineSeries
   type: AvailableHistoricalGraphTypes
-  windowWidth: number
-  windowHeight: number
+  width: number
+  height: number
 }
 
 export const HistoricalBalancesChart: FunctionComponent<Props> = ({
   historicalBalancesLineSeries,
   type,
-  windowWidth,
-  windowHeight,
+  width,
+  height,
 }) => {
   const {
     Combined,
@@ -28,8 +28,8 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
   return type === 'grouped' ? (
     <GroupedPlot
       {...{
-        width: windowWidth,
-        height: windowHeight,
+        width: width,
+        height: height,
         assetLineSeries: Assets,
         liabilityLineSeries: Liabilities,
       }}
@@ -37,19 +37,19 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
   ) : type === 'combined' ? (
     <CombinedPlot
       {...{
-        width: windowWidth,
-        height: windowHeight,
+        width: width,
+        height: height,
         combinedLineSeries: Combined,
       }}
     />
   ) : (
     <IndividualPlot
       {...{
-        width: windowWidth,
-        height: windowHeight,
+        width: width,
+        height: height,
         combinedLineSeries: Combined,
         individualLineSeries: individual,
       }}
-    ></IndividualPlot>
+    />
   )
 }

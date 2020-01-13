@@ -12,10 +12,11 @@ import {
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
 } from '../konstants'
-import {
+import graph, {
   historicalGraphHistoricalLengthSelector,
   historicalGraphFidelitySelector,
   historicalGraphTypeSelector,
+  AvailableHistoricalGraphTypes,
 } from '../reducers/graph'
 import {
   setGraphFidelity,
@@ -32,7 +33,7 @@ import { HistoricalBalancesChartOptions } from '../components/historicalBalances
 
 interface Props {
   historicalBalancesLineSeries: HistoricalBalanceLineSeries
-  type: 'combined' | 'individual'
+  type: AvailableHistoricalGraphTypes
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
@@ -57,9 +58,35 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
   windowHeight,
   setHistoricalTypeAction,
 }) => {
+  const titleType =
+    type === 'individual'
+      ? 'Individual Account Balances'
+      : type === 'grouped'
+      ? 'Account Balances Grouped by Assets vs. Liabilities'
+      : 'Combined Account Balances'
+
+  const titleTimeFidelity =
+    graphFidelity === 'year'
+      ? 'Yearly'
+      : graphFidelity === 'month'
+      ? 'Monthly'
+      : graphFidelity === 'week'
+      ? 'Weekly'
+      : 'Daily'
+
+  const titleTimeDuration = graphHistoricalLength[HISTORICAL_TIME_COUNT]
+  const titleTimeUnit =
+    graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'year'
+      ? 'Year(s)'
+      : graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'month'
+      ? 'Month(s)'
+      : graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'week'
+      ? 'Week(s)'
+      : 'Day(s)'
+
   return (
     <div className="item-historical-balances">
-      <h2>Balances</h2>
+      <h4>{`${titleType} Displayed ${titleTimeFidelity} for the Past ${titleTimeDuration} ${titleTimeUnit}`}</h4>
       <HistoricalBalancesChartOptions
         {...{
           type,
@@ -71,7 +98,12 @@ const _HistoricalBalancesContainer: FunctionComponent<Props> = ({
         }}
       />
       <HistoricalBalancesChart
-        {...{ type, historicalBalancesLineSeries, windowWidth, windowHeight }}
+        {...{
+          type,
+          historicalBalancesLineSeries,
+          height: windowHeight - 230,
+          width: windowWidth - 265,
+        }}
       />
     </div>
   )

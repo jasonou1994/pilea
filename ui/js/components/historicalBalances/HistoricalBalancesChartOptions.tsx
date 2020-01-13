@@ -45,8 +45,9 @@ export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalance
 }) => (
   <div style={{ display: 'flex' }}>
     <>
-      <div>Show:</div>
+      <div className="chart-option-header">Type:</div>
       <select
+        className="chart-option-select"
         value={type}
         onChange={e => {
           setHistoricalTypeAction(
@@ -60,8 +61,9 @@ export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalance
       </select>
     </>
     <>
-      <div>Group by:</div>
+      <div className="chart-option-header">Group by:</div>
       <select
+        className="chart-option-select"
         value={graphFidelity}
         onChange={e => {
           setGraphFidelityAction({
@@ -76,8 +78,9 @@ export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalance
       </select>
     </>
     <>
-      <div>Date range:</div>
+      <div className="chart-option-header">Date range:</div>
       <select
+        className="chart-option-select"
         value={convertDateSelectObject({
           historicalTimeCount,
           historicalTimeUnit,

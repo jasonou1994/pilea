@@ -183,3 +183,12 @@ export const confirmUserBypassDB: (
     .update({ confirmed: true })
     .where({ username })
 }
+
+export const updateUserTransactionLoadingCount: (
+  count: number,
+  userId: string
+) => Promise<void> = async (count, userId) => {
+  await dbClient(USERS)
+    .update({ transactionLoadingCount: count })
+    .where({ id: userId })
+}

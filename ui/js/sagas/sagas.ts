@@ -14,7 +14,7 @@ import {
   FetchSendPasswordResetEmailAction,
   addActiveNotification,
   setHistoricalBalances,
-  fetchTransactionsCount,
+  setTransactionsRefreshedCount,
 } from '../actions'
 import {
   TRANSACTIONS,
@@ -34,10 +34,10 @@ import {
   LOGIN,
   API_USER_SEND_PASSWORD_RESET_EMAIL,
   FETCH_SEND_PASSWORD_RESET_EMAIL,
-  FETCH_GET_HISTORICAL_BALANCES,
   API_ACCOUNTS_GET_DAILY_BALANCES,
   FETCH_TRANSACTIONS_COUNT,
   API_TRANSACTIONS_COUNT,
+  TRANSACTIONS_REFRESHING,
 } from '../konstants'
 import { services } from '../utilities/services'
 import {
@@ -366,7 +366,8 @@ function* fetchCreateUser({
 }
 
 function* refreshTransactions() {
-  yield put(startLoading(TRANSACTIONS))
+  yield put(setTransactionsRefreshedCount(0))
+  yield put(startLoading(TRANSACTIONS_REFRESHING))
   yield put(readdTransactions({}))
 
   try {
@@ -413,7 +414,7 @@ function* refreshTransactions() {
     )
   }
 
-  yield put(stopLoading(TRANSACTIONS))
+  yield put(stopLoading(TRANSACTIONS_REFRESHING))
 }
 
 function* sendPasswordResetEmail({
@@ -453,7 +454,7 @@ function* getTransactionsCount() {
       services[API_TRANSACTIONS_COUNT]
     )
 
-    console.log(count)
+    yield put(setTransactionsRefreshedCount(count))
   } catch ({ error, status }) {
     console.error('Error in retrieving transaction count:', error, status)
   }

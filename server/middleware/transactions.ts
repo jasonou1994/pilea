@@ -17,11 +17,13 @@ import {
   insertCards,
   getCards,
   dbDailySumByCard,
+  DBCard,
 } from '../database/cards'
 import { ContractResponse, generateGenericErrorResponse } from '.'
 import { convertPlaidCardsToDBCards, add, subtract } from '../utils'
 import { logger } from '../logger'
 import moment from 'moment'
+import { updateUserTransactionLoadingCount } from '../database/users'
 
 export interface ContractRetrieveTransactions extends ContractResponse {
   cards: PlaidCard[]
@@ -60,7 +62,7 @@ export const getTransactionCount = async (
     const count = await dbGetTransactionCount({ userId })
 
     const resBody: ContractTransactionsCount = {
-      status: 'Successfully retrieved transactions',
+      status: 'Successfully retrieved transaction count',
       success: true,
       error: null,
       count,
@@ -83,6 +85,7 @@ export const refreshTransactions = async (
   const { userId } = res.locals
 
   try {
+    await updateUserTransactionLoadingCount(0, userId)
     await deleteTransactions({ userId })
     await deleteCards({ userId })
 
@@ -91,9 +94,11 @@ export const refreshTransactions = async (
     const tokenProms = items.map(item => {
       const { accessToken: token, id: itemId } = item
 
+      let processedTxsCount = 0
+
       return new Promise<{
         transactions: PlaidTransaction[]
-        cards: PlaidCard[]
+        cards: DBCard[]
         itemId: number
       }>(async (tokenResolve, tokenReject) => {
         // One promise for each item. Each item can fail up to 3 times before it rejects.
@@ -125,6 +130,10 @@ export const refreshTransactions = async (
               options,
             })
 
+            processedTxsCount += transactions.length
+
+            updateUserTransactionLoadingCount(processedTxsCount, userId)
+
             transactionsResult = transactionsResult.concat(transactions)
             accounts.forEach(card => {
               if (!cardsResult[card.account_id]) {
@@ -152,21 +161,17 @@ export const refreshTransactions = async (
             errorCount++
           }
         }
-        //update date
-        await updateItemById({ id: itemId })
 
-        await insertTransactions({
-          plaidTransactions: transactionsResult,
+        const dbCards = convertPlaidCardsToDBCards(
+          Object.values(cardsResult),
           userId,
-        })
-        await insertCards(
-          convertPlaidCardsToDBCards(Object.values(cardsResult), userId, itemId)
+          itemId
         )
 
         errorCount < maxError
           ? tokenResolve({
               transactions: transactionsResult,
-              cards: Object.values(cardsResult),
+              cards: dbCards,
               itemId,
             })
           : tokenReject({
@@ -177,9 +182,25 @@ export const refreshTransactions = async (
       })
     })
 
-    await Promise.all(tokenProms)
+    const combinedResult = await Promise.all(tokenProms)
 
-    // One DB insertion for all transactions, One DB insertion each per item for cards...can be refactored
+    // UNSURE WHY THIS DOES NOT WORK
+    // await insertTransactions({
+    //   plaidTransactions: combinedResult.reduce(
+    //     (acc, { transactions }) => [...acc, ...transactions],
+    //     []
+    //   ),
+    //   userId,
+    // })
+
+    for (const { transactions, cards, itemId } of combinedResult) {
+      await insertTransactions({
+        plaidTransactions: transactions,
+        userId,
+      })
+      await insertCards(cards)
+      await updateItemById({ id: itemId })
+    }
 
     logger.info(
       `Transactions successfully processed for user ${userId} for items ${items.map(
@@ -189,6 +210,7 @@ export const refreshTransactions = async (
 
     next()
   } catch (error) {
+    console.log(error)
     logger.error(`Transactions refresh failure for user ${userId}`, error)
     res.status(500).json({
       status: 'Failed to refresh transactions',

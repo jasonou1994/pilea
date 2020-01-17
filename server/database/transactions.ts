@@ -1,5 +1,5 @@
 import { dbClient } from '../database'
-import { TRANSACTIONS } from '../constants'
+import { TRANSACTIONS, USERS } from '../constants'
 import {
   Iso8601DateString,
   Transaction as PlaidTransaction,
@@ -99,9 +99,11 @@ export const deleteTransactions: ({ userId }) => Promise<void> = async ({
 export const dbGetTransactionCount: ({ userId }) => Promise<number> = async ({
   userId,
 }) => {
-  const result = await dbClient(TRANSACTIONS)
-    .count('*')
-    .where({ userId })
+  const result = await dbClient(USERS)
+    .select('transactionLoadingCount')
+    .where({ id: userId })
+
+  console.log(result)
 
   return Number(Object.values(result[0])[0])
 }

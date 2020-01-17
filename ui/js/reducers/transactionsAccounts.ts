@@ -17,6 +17,8 @@ import {
   SELECT_SINGLE_CATEGORY,
   HISTORICAL_BALANCES,
   SET_HISTORICAL_BALANCES,
+  SET_TRANSACTIONS_REFRESHED_COUNT,
+  TRANSACTIONS_REFRESHED_COUNT,
 } from '../konstants'
 import { updateIn, set, setIn } from 'timm'
 import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
@@ -24,7 +26,6 @@ import { DBItem, PileaCard } from '../sagas/sagas'
 import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 import { parseRawTransaction } from '../utilities/translation'
 import { RootState } from '.'
-import { createSelector } from 'reselect'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean
@@ -51,6 +52,7 @@ export interface TransactionsAccountsState {
   [ITEMS]: ItemWithFilter[]
   [CATEGORIES]: Categories
   [HISTORICAL_BALANCES]: HistoricalBalances
+  [TRANSACTIONS_REFRESHED_COUNT]: number
 }
 
 const initialState: TransactionsAccountsState = {
@@ -59,6 +61,7 @@ const initialState: TransactionsAccountsState = {
   [ITEMS]: [],
   [CATEGORIES]: {},
   [HISTORICAL_BALANCES]: {},
+  [TRANSACTIONS_REFRESHED_COUNT]: 0,
 }
 
 const transactions: (
@@ -279,6 +282,11 @@ const transactions: (
       break
     }
 
+    case SET_TRANSACTIONS_REFRESHED_COUNT: {
+      newState = set(state, TRANSACTIONS_REFRESHED_COUNT, action.payload)
+      break
+    }
+
     default: {
       newState = state
     }
@@ -315,3 +323,7 @@ export const categoriesSelector: (state: RootState) => Categories = state =>
 export const historicalBalancesSelector: (
   state: RootState
 ) => HistoricalBalances = state => state[TRANSACTIONS][HISTORICAL_BALANCES]
+
+export const transactionsRefreshedCountSelector: (
+  state: RootState
+) => number = state => state[TRANSACTIONS][TRANSACTIONS_REFRESHED_COUNT]

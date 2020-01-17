@@ -25,22 +25,14 @@ import { activeNotificationsSelector } from '../reducers/notifications'
 
 interface AppProps {
   loggedIn: boolean
-  isTransactionsLoading: boolean
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
-  fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
-  fetchTransactionsCountAction: FetchTransactionsCountActionCreator
-  cardsByItems: ItemWithCards[]
 }
 
 const _App: FunctionComponent<AppProps> = ({
   loggedIn,
-  isTransactionsLoading,
   activeNotifications,
   expireNotificationsAction,
-  fetchGetHistoricalBalancesAction,
-  cardsByItems,
-  fetchTransactionsCountAction,
 }) => {
   return (
     <>
@@ -67,18 +59,7 @@ const _App: FunctionComponent<AppProps> = ({
         >
           <HeaderContainer />
 
-          {!loggedIn ? (
-            <LogInContainer />
-          ) : (
-            <MainView
-              {...{
-                isTransactionsLoading,
-                fetchGetHistoricalBalancesAction,
-                fetchTransactionsCountAction,
-                cardsByItems,
-              }}
-            />
-          )}
+          {!loggedIn ? <LogInContainer /> : <MainView />}
         </Route>
       </Router>
     </>
@@ -88,13 +69,9 @@ const _App: FunctionComponent<AppProps> = ({
 export default connect(
   (state: RootState) => ({
     loggedIn: loggedInSelector(state),
-    isTransactionsLoading: isTransactionsLoadingSelector(state),
     activeNotifications: activeNotificationsSelector(state),
-    cardsByItems: itemsWithCardsSelector(state),
   }),
   {
     expireNotificationsAction: expireNotifications,
-    fetchGetHistoricalBalancesAction: fetchGetHistoricalBalances,
-    fetchTransactionsCountAction: fetchTransactionsCount,
   }
 )(_App)

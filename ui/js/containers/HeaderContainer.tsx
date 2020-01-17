@@ -8,20 +8,20 @@ import {
   FetchAddItemActionCreator,
   fetchAddItem,
 } from '../actions'
-import { USER_ID, USER_NAME } from '../konstants'
+import { USER_NAME } from '../konstants'
 import { Button } from '../components/common/Button'
 import { RefreshData } from '../components/RefreshData'
 import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { loggedInSelector, userSelector, User } from '../reducers/login'
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom'
 import { AddNewItem } from '../components/AddNewItem'
-import { isTransactionsLoadingSelector } from '../reducers/loading'
+import { isTransactionsRefreshingSelector } from '../reducers/loading'
 
 interface HeaderContainerProps extends RouteComponentProps {
   fetchLogOutAction: FetchLogOutActionCreator
   fetchRefreshTransactionsAction: FetchRefreshTransactionsActionCreator
   fetchAddItemAction: FetchAddItemActionCreator
-  isTransactionsLoading: boolean
+  isTransactionsRefreshing: boolean
 
   cardsByItems: ItemWithCards[]
   loggedIn: boolean
@@ -38,7 +38,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       cardsByItems,
       location: { pathname },
       fetchAddItemAction,
-      isTransactionsLoading,
+      isTransactionsRefreshing,
     } = this.props
 
     return (
@@ -66,7 +66,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             </span>
           </div>
         )}
-        {cardsByItems.length > 0 && !isTransactionsLoading && (
+        {cardsByItems.length > 0 && !isTransactionsRefreshing && (
           <RefreshData
             {...{
               cardsByItems,
@@ -126,7 +126,7 @@ export default connect(
 
     loggedIn: loggedInSelector(state),
     user: userSelector(state),
-    isTransactionsLoading: isTransactionsLoadingSelector(state),
+    isTransactionsRefreshing: isTransactionsRefreshingSelector(state),
   }),
   {
     fetchAddItemAction: fetchAddItem,

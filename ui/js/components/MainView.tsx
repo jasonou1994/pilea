@@ -5,23 +5,34 @@ import FiltersContainer from '../containers/FiltersContainer'
 import AnalysisContainer from '../containers/AnalysisContainer'
 import { PivotContainer } from '../containers/PivotContainer'
 import {
-  FetchGetHistoricalBalancesActionCreator,
   FetchTransactionsCountActionCreator,
+  fetchTransactionsCount,
 } from '../actions'
-import { ItemWithCards } from '../reducers'
+import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
+import { connect } from 'react-redux'
+import Loader from 'react-loader-spinner'
+import {
+  isTransactionsLoadingSelector,
+  isTransactionsRefreshingSelector,
+} from '../reducers/loading'
+import { transactionsRefreshedCountSelector } from '../reducers/transactionsAccounts'
+import { TransactionsLoading, TransactionsRefreshing } from './common/Loaders'
 
 interface MainViewProps extends RouteComponentProps {
   isTransactionsLoading: boolean
-  fetchGetHistoricalBalancesAction: FetchGetHistoricalBalancesActionCreator
+  isTransactionsRefreshing: boolean
   cardsByItems: ItemWithCards[]
   fetchTransactionsCountAction: FetchTransactionsCountActionCreator
+  refreshedCount: number
 }
 
 const _MainView: FunctionComponent<MainViewProps> = ({
   isTransactionsLoading,
+  isTransactionsRefreshing,
   history,
   cardsByItems,
   fetchTransactionsCountAction,
+  refreshedCount,
 }) => {
   useEffect(() => {
     history.push('/view/accounts')
@@ -34,23 +45,22 @@ const _MainView: FunctionComponent<MainViewProps> = ({
     // @ts-ignore
     let interval
 
-    if (isTransactionsLoading) {
+    if (isTransactionsRefreshing) {
       interval = setInterval(() => {
         fetchTransactionsCountAction()
-      }, 1500)
+      }, 3000)
     }
 
     return () => {
-      console.log('clearing interval')
       // @ts-ignore
       clearInterval(interval)
     }
-  }, [isTransactionsLoading])
+  }, [isTransactionsRefreshing])
 
   return isTransactionsLoading ? (
-    <div style={{ color: 'blue', border: '1px solid blue' }}>
-      Loading transactions and account data...
-    </div>
+    <TransactionsLoading />
+  ) : isTransactionsRefreshing ? (
+    <TransactionsRefreshing count={refreshedCount} />
   ) : cardsByItems.length === 0 ? (
     <p>
       Uh oh, you haven't added any active institutions. Please add an
@@ -75,4 +85,16 @@ const _MainView: FunctionComponent<MainViewProps> = ({
   )
 }
 
-export const MainView = withRouter(_MainView)
+export const MainView = withRouter(
+  connect(
+    (state: RootState) => ({
+      isTransactionsLoading: isTransactionsLoadingSelector(state),
+      isTransactionsRefreshing: isTransactionsRefreshingSelector(state),
+      cardsByItems: itemsWithCardsSelector(state),
+      refreshedCount: transactionsRefreshedCountSelector(state),
+    }),
+    {
+      fetchTransactionsCountAction: fetchTransactionsCount,
+    }
+  )(_MainView)
+)

@@ -2,7 +2,7 @@ import React, { FunctionComponent, useState, useMemo } from 'react'
 import { LineSeries } from '../../reducers'
 import { LineMarkSeries, Crosshair, DiscreteColorLegend } from 'react-vis'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
-import { useLineSeriesMap, useCurrentYs, LineSeriesMap } from './utilities'
+import { useCurrentYs, LineSeriesMap } from './utilities'
 import { Plot } from './Plot'
 import { Legend } from './Legend'
 
@@ -41,12 +41,24 @@ export const IndividualPlot: FunctionComponent<IndividualPlotProps> = ({
   width,
   height,
 }) => {
-  const individualLineSeriesMaps = Object.entries(individualLineSeries).reduce(
-    (acc, [cardName, lineSeries]) => ({
-      ...acc,
-      [cardName]: useLineSeriesMap(lineSeries),
-    }),
-    {} as { [cardName: string]: LineSeriesMap }
+  const individualLineSeriesMaps = useMemo(
+    () =>
+      Object.entries(individualLineSeries).reduce(
+        (acc, [cardName, series]) => ({
+          ...acc,
+          [cardName]: series.reduce(
+            (innerAcc, { x, y }) => ({
+              ...innerAcc,
+              [x]: y,
+            }),
+            {} as LineSeriesMap
+          ),
+        }),
+        {} as {
+          [cardName: string]: LineSeriesMap
+        }
+      ),
+    [individualLineSeries]
   )
 
   const [currentX, setCurrentX] = useState(0)

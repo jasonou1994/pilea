@@ -19,9 +19,9 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
   height,
 }) => {
   const {
-    Combined,
-    Assets,
-    Liabilities,
+    combined,
+    assets,
+    liabilities,
     ...individual
   } = historicalBalancesLineSeries
 
@@ -30,8 +30,8 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
       {...{
         width: width,
         height: height,
-        assetLineSeries: Assets,
-        liabilityLineSeries: Liabilities,
+        assetLineSeries: assets,
+        liabilityLineSeries: liabilities,
       }}
     />
   ) : type === 'combined' ? (
@@ -39,7 +39,7 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
       {...{
         width: width,
         height: height,
-        combinedLineSeries: Combined,
+        combinedLineSeries: combined,
       }}
     />
   ) : (
@@ -47,7 +47,7 @@ export const HistoricalBalancesChart: FunctionComponent<Props> = ({
       {...{
         width: width,
         height: height,
-        combinedLineSeries: Combined,
+        combinedLineSeries: combined,
         individualLineSeries: individual,
       }}
     />

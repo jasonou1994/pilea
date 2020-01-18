@@ -12,6 +12,7 @@ import {
 import { Link } from 'react-router-dom'
 import { RootState } from '../reducers'
 import { isLoginLoadingSelector } from '../reducers/loading'
+import { LogInLoading } from '../components/common/Loaders'
 
 interface LogInContainerProps {
   fetchLogIn: FetchLogInActionCreator
@@ -26,9 +27,7 @@ class _LogInContainer extends Component<LogInContainerProps> {
     return (
       <div>
         {isLoginLoading ? (
-          <div style={{ color: 'blue', border: '1px solid blue' }}>
-            Logging in...
-          </div>
+          <LogInLoading />
         ) : (
           <div>
             <div className="login-container">

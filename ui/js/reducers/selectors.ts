@@ -36,6 +36,7 @@ import {
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
 } from '../konstants'
+import { LineSeriesMap } from '../components/historicalBalances/utilities'
 
 // Graph
 const orderedDatesSelector: (state: RootState) => string[] = createSelector(
@@ -241,9 +242,9 @@ export interface IncomeSpendingLineSeries extends GraphLineSeries {
 }
 
 export interface HistoricalBalanceLineSeries extends GraphLineSeries {
-  Combined: LineSeries
-  Assets: LineSeries
-  Liabilities: LineSeries
+  combined: LineSeries
+  assets: LineSeries
+  liabilities: LineSeries
 }
 
 export const incomeSpendingLineSeriesSelector: (
@@ -361,22 +362,24 @@ export const historicalBalancesLineSeriesSelector: (
         x: number
         y: number
       }>
-    }> = cards.map(({ official_name, name, account_id }) => ({
-      cardName: official_name ? official_name : name,
-      lineSeries: balanceArr
-        .map(({ date, balances }) => ({
-          x: moment(date).valueOf(),
-          y: balances[account_id],
-        }))
-        .filter(({ y }) => y !== undefined && y !== 0),
-    }))
+    }> = cards
+      .map(({ official_name, name, account_id }) => ({
+        cardName: official_name ? official_name : name,
+        lineSeries: balanceArr
+          .map(({ date, balances }) => ({
+            x: moment(date).valueOf(),
+            y: balances[account_id],
+          }))
+          .filter(({ y }) => y !== undefined && y !== 0),
+      }))
+      .filter(({ lineSeries }) => lineSeries.length !== 0)
 
     return individuals.reduce(
       (acc, { cardName, lineSeries }) => ({ ...acc, [cardName]: lineSeries }),
       {
-        Combined: combined,
-        Assets: assets,
-        Liabilities: liabilities,
+        combined,
+        assets,
+        liabilities,
       }
     )
   }
@@ -428,7 +431,6 @@ export const consolidatedDataSelector: (
 )
 
 // Card combination
-
 export const itemsWithCardsSelector: (
   state: RootState
 ) => ItemWithCards[] = createSelector(

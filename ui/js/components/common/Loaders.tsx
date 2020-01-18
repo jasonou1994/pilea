@@ -1,6 +1,15 @@
 import React, { FunctionComponent } from 'react'
 import Loader from 'react-loader-spinner'
 
+export const LogInLoading: FunctionComponent = () => (
+  <div className="loader">
+    <div className="loader-title" style={{ marginBottom: '35px' }}>
+      Logging in...
+    </div>
+    <Loader {...{ type: 'Grid', color: 'grey', height: 60, width: 60 }} />
+  </div>
+)
+
 export const TransactionsLoading: FunctionComponent = () => (
   <div className="loader">
     <div className="loader-title" style={{ marginBottom: '35px' }}>

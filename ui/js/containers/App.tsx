@@ -1,39 +1,51 @@
-import React, { FunctionComponent } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import HeaderContainer from './HeaderContainer'
 import LogInContainer from './LogInContainer'
 import PasswordResetContainer from './PasswordResetContainer'
 import { MainView } from '../components/MainView'
-import { RootState, ItemWithCards, itemsWithCardsSelector } from '../reducers'
+import { RootState } from '../reducers'
 import '../../scss/index.scss'
 import {
   expireNotifications,
   ExpireNotificationsActionCreator,
-  FetchGetHistoricalBalancesActionCreator,
-  fetchGetHistoricalBalances,
-  fetchTransactionsCount,
-  FetchTransactionsCountActionCreator,
+  FetchLogOutActionCreator,
+  fetchLogOut,
 } from '../actions'
 import {
   NotificationsContainer,
   NotificationWithDuration,
 } from '../components/NotificationsContainer'
 import { loggedInSelector } from '../reducers/login'
-import { isTransactionsLoadingSelector } from '../reducers/loading'
 import { activeNotificationsSelector } from '../reducers/notifications'
+import { useActiveUser } from '../utilities/hooks'
+import { IdleWarning } from '../components/IdleWarning'
 
 interface AppProps {
   loggedIn: boolean
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
+  fetchLogOutAction: FetchLogOutActionCreator
 }
 
 const _App: FunctionComponent<AppProps> = ({
   loggedIn,
   activeNotifications,
   expireNotificationsAction,
+  fetchLogOutAction,
 }) => {
+  const { isWarning, isLogout, setWarning, setLogout } = useActiveUser({
+    warningTime: 120000,
+    signoutTime: 180000,
+  })
+
+  useEffect(() => {
+    if (isLogout) {
+      location.reload()
+    }
+  }, [isLogout])
+
   return (
     <>
       <NotificationsContainer
@@ -57,9 +69,25 @@ const _App: FunctionComponent<AppProps> = ({
           exact
           path="(/|/view|/view/accounts|/view/transactions|/view/pivot)"
         >
-          <HeaderContainer />
+          {isWarning ? (
+            <IdleWarning
+              {...{
+                onRemainClick: () => {
+                  setWarning(false)
+                },
+                onLogOutClick: () => {
+                  setLogout(true)
+                  fetchLogOutAction({})
+                },
+              }}
+            />
+          ) : (
+            <>
+              <HeaderContainer />
 
-          {!loggedIn ? <LogInContainer /> : <MainView />}
+              {!loggedIn ? <LogInContainer /> : <MainView />}
+            </>
+          )}
         </Route>
       </Router>
     </>
@@ -73,5 +101,6 @@ export default connect(
   }),
   {
     expireNotificationsAction: expireNotifications,
+    fetchLogOutAction: fetchLogOut,
   }
 )(_App)

@@ -1,5 +1,7 @@
 import * as webpack from 'webpack'
 import HtmlWebPackPlugin from 'html-webpack-plugin'
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 const config = (env: any): webpack.Configuration => {
   const API_PORT = env ? env.API_PORT : undefined
@@ -65,6 +67,7 @@ const config = (env: any): webpack.Configuration => {
           : JSON.stringify('development'),
       }),
       new webpack.HotModuleReplacementPlugin(),
+      new BundleAnalyzerPlugin(),
     ],
   }
 }

@@ -24,17 +24,11 @@ import {
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
-let debug: (
-  baseElement?:
-    | HTMLElement
-    | DocumentFragment
-    | Array<HTMLElement | DocumentFragment>
-) => void
 export const dbClient = knex({ client: 'pg', connection })
 
 describe('Log in tests', () => {
   beforeEach(() => {
-    ;({ getById, getByText, debug } = render(<App></App>))
+    ;({ getById, getByText } = render(<App></App>))
   })
 
   afterEach(cleanup)

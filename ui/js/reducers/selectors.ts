@@ -3,16 +3,7 @@ import { Transaction as PlaidTransaction } from 'plaid'
 import { createSelector } from 'reselect'
 
 import { RootState } from '.'
-import { LineSeriesMap } from '../components/historicalBalances/utilities'
-import {
-  HISTORICAL_TIME_COUNT,
-  HISTORICAL_TIME_UNIT,
-  INPUT,
-  MONTH,
-  OUTPUT,
-  WEEK,
-  YEAR,
-} from '../konstants'
+import { INPUT, MONTH, OUTPUT, WEEK, YEAR } from '../konstants'
 import {
   getSelectedHistoricalDates,
   getTypeOfCard,
@@ -134,8 +125,7 @@ export const transactionsNoIntraAccountSelector: (
           cards,
         }),
       }))
-      .filter(({ cardType, ...tx }) =>
-        shouldKeepTransaction(tx, cardType))
+      .filter(({ cardType, ...tx }) => shouldKeepTransaction(tx, cardType))
 )
 
 export const cardAndTimeFilteredTransactionsSelector: (

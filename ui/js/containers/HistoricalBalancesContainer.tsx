@@ -12,7 +12,7 @@ import {
   HISTORICAL_TIME_UNIT,
   AvailableTimeUnits,
 } from '../konstants'
-import graph, {
+import {
   historicalGraphHistoricalLengthSelector,
   historicalGraphFidelitySelector,
   historicalGraphTypeSelector,

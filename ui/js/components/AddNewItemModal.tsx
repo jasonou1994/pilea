@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useState } from 'react'
-import { FetchAddItemActionCreator } from '../actions'
 import { TextInput } from './common/TextInput'
 import { Button } from './common/Button'
 

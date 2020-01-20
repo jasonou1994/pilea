@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState, useMemo } from 'react'
 import { LineSeries } from '../../reducers'
-import { LineMarkSeries, Crosshair, DiscreteColorLegend } from 'react-vis'
+import { LineMarkSeries, Crosshair } from 'react-vis'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
 import { useCurrentYs, LineSeriesMap } from './utilities'
 import { Plot } from './Plot'

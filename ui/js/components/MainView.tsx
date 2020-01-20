@@ -10,7 +10,6 @@ import {
 } from '../actions'
 import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { connect } from 'react-redux'
-import Loader from 'react-loader-spinner'
 import {
   isTransactionsLoadingSelector,
   isTransactionsRefreshingSelector,

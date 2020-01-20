@@ -1,4 +1,4 @@
-import React, { Component, FunctionComponent } from 'react'
+import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
 import {
   setGraphFidelity,

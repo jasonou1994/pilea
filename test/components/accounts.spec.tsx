@@ -2,8 +2,6 @@ import React from 'react'
 import knex from 'knex'
 import App from '../../ui/js/containers/App'
 import {
-  VALID_USER,
-  VALID_PASS,
   NEW_USER_EMAIL,
   NEW_USER_PASSWORD,
   API_HOST,
@@ -19,19 +17,11 @@ import {
   SelectorMatcherOptions,
   fireEvent,
   wait,
-  queryAllByAttribute,
-  queryHelpers,
 } from '../setup/testUtils'
 // import { dbClient } from '../../server/database'
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
-let debug: (
-  baseElement?:
-    | HTMLElement
-    | DocumentFragment
-    | Array<HTMLElement | DocumentFragment>
-) => void
 export const dbClient = knex({ client: 'pg', connection })
 
 describe('Account tests', () => {
@@ -69,7 +59,7 @@ describe('Account tests', () => {
   })
 
   beforeEach(async () => {
-    ;({ getById, getByText, debug } = render(<App></App>))
+    ;({ getById, getByText } = render(<App></App>))
 
     const userInput = getById('sign-in-user') as HTMLInputElement
     const passwordInput = getById('sign-in-password') as HTMLInputElement

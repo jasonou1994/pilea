@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import classNames from 'classnames'
 import { FetchCreateUserActionCreator } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'

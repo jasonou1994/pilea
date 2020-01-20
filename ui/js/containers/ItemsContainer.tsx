@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
-import { AddNewItem } from '../components/AddNewItem'
 import {
   fetchAddItem,
   FetchAddItemActionCreator,

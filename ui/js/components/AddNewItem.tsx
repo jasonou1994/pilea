@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react'
-import { FetchAddItemActionCreator, fetchAddItem } from '../actions'
+import { FetchAddItemActionCreator } from '../actions'
 import { AddNewItemButton } from './AddNewItemButton'
 import { AddNewItemModal } from './AddNewItemModal'
 

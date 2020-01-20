@@ -1,6 +1,6 @@
+import { AgGridColumnProps } from 'ag-grid-react'
 import numeral from 'numeral'
 import { AvailableGridLayouts, GRID_LAYOUT_BY_TIME } from '../konstants'
-import { AgGridColumnProps } from 'ag-grid-react'
 
 export interface GridColumnDef extends AgGridColumnProps {
   widthRatio?: number
@@ -50,9 +50,8 @@ const dataGridColumnDefs: GridColumnDefWithShown[] = [
     shown: [GRID_LAYOUT_BY_TIME],
 
     cellStyle: { display: 'flex', 'justify-content': 'flex-end' },
-    cellRenderer: colData => {
-      return numeral(colData.data.amount).format('$0,0.00')
-    },
+    cellRenderer: colData =>
+      numeral(colData.data.amount).format('$0,0.00'),
   },
 ]
 

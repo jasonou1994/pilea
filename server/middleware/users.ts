@@ -1,33 +1,33 @@
-import { Request, Response, NextFunction } from 'express'
 import bcrypt from 'bcrypt'
+import { NextFunction, Request, Response } from 'express'
 import uuid from 'uuidv4'
+import { ContractResponse, generateGenericErrorResponse } from '.'
 import {
-  getUsers,
-  insertUser,
-  DBUser,
-  confirmUserDB,
-  dbCheckIfUserVerified,
   addPasswordResetTokenToUser,
   checkIfPasswordResetTokenMatches,
-  updatePassword,
-  deleteUserByUsername,
   confirmUserBypassDB,
+  confirmUserDB,
+  dbCheckIfUserVerified,
+  DBUser,
+  deleteUserByUsername,
   getUserFromUserAccessToken,
+  getUsers,
+  insertUser,
+  updatePassword,
 } from '../database/users'
-import { encryptPassword } from '../utils'
-import { ContractResponse, generateGenericErrorResponse } from '.'
-import { sendSignUpEmail, sendForgotPasswordEmail } from '../mailer'
 import { logger } from '../logger'
+import { sendForgotPasswordEmail, sendSignUpEmail } from '../mailer'
+import { encryptPassword } from '../utils'
 
 export interface ContractLogin extends ContractResponse {
-  username: string
-  userId: number
   confirmed: boolean
+  userId: number
+  username: string
 }
 
 export interface ContractCreateUser extends ContractResponse {
-  username: string
   userId: number
+  username: string
 }
 
 const HOST = process.env.HOST || 'mypilea.com'

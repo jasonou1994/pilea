@@ -1,28 +1,28 @@
 import moment, { Moment } from 'moment'
+import uuid from 'uuid'
 import {
+  NotificationWithDuration,
+  PERSISTENT,
+  TEMPORARY,
+} from '../components/NotificationsContainer'
+import {
+  AvailableTimeStrings,
+  AvailableTimeUnits,
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
-  AvailableTimeUnits,
-  ONE_YEAR,
-  YEAR,
-  AvailableTimeStrings,
-  TWO_YEARS,
-  SIX_MONTHS,
   MONTH,
+  ONE_YEAR,
+  SIX_MONTHS,
   THREE_MONTHS,
+  TWO_YEARS,
   WEEK,
+  YEAR,
 } from '../konstants'
-import { PileaCard } from '../sagas/sagas'
 import {
   TimeConsolidatedTransactionGroup,
   TimeConsolidatedTransactionGroups,
 } from '../reducers'
-import {
-  NotificationWithDuration,
-  TEMPORARY,
-  PERSISTENT,
-} from '../components/NotificationsContainer'
-import uuid from 'uuid'
+import { PileaCard } from '../sagas/sagas'
 
 export const formatMilliseconds: (milli: number) => string = milli =>
   moment(milli).format('MMM Do, YYYY')
@@ -150,15 +150,14 @@ export const convertDateSelectObject: ({
 }: {
   historicalTimeCount: number
   historicalTimeUnit: AvailableTimeUnits
-}) => AvailableTimeStrings = ({ historicalTimeCount, historicalTimeUnit }) => {
-  return historicalTimeCount === 2 && historicalTimeUnit === 'year'
+}) => AvailableTimeStrings = ({ historicalTimeCount, historicalTimeUnit }) =>
+  historicalTimeCount === 2 && historicalTimeUnit === 'year'
     ? TWO_YEARS
     : historicalTimeCount === 1 && historicalTimeUnit === 'year'
     ? ONE_YEAR
     : historicalTimeCount === 6 && historicalTimeUnit === 'month'
     ? SIX_MONTHS
     : THREE_MONTHS
-}
 
 export const getTypeOfCard: ({
   cards,
@@ -249,8 +248,8 @@ export const createNotification: (
   success,
   duration = 5,
   temporary = true
-) => {
-  return {
+) =>
+  ({
     timeCreated: Date.now(),
     durationType: temporary ? TEMPORARY : PERSISTENT,
     durationInSeconds: duration,
@@ -258,8 +257,7 @@ export const createNotification: (
     success,
     title,
     message,
-  }
-}
+  })
 
 export const getSelectedHistoricalDates: (
   historicalTimeCount: number,
@@ -269,7 +267,7 @@ export const getSelectedHistoricalDates: (
   const firstDate = moment().subtract(historicalTimeCount, historicalTimeUnit)
 
   let inBounds = true
-  let selectedDates = [firstDate]
+  const selectedDates = [firstDate]
   let counter = 1
   const now = moment()
   while (inBounds) {

@@ -1,11 +1,11 @@
 import { Router } from 'express'
 import {
-  refreshTransactions,
   checkUpdateAuthToken,
-  getUserId,
-  retrieveTransactions,
   getHistoricalBalanceByCard,
   getTransactionCount,
+  getUserId,
+  refreshTransactions,
+  retrieveTransactions,
 } from '../middleware'
 
 export const transactions = Router()

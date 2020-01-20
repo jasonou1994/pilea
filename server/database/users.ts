@@ -1,13 +1,13 @@
+import { ACCESS_TOKENS, USERS } from '../constants'
 import { dbClient } from '../database'
-import { USERS, ACCESS_TOKENS } from '../constants'
 
 export interface DBUser {
-  id?: number
-  username: string
-  passwordHash?: string
-  confirmed?: boolean
   confirmationString?: string
+  confirmed?: boolean
+  id?: number
+  passwordHash?: string
   passwordResetToken?: string
+  username: string
 }
 
 export const insertUser: ({
@@ -33,8 +33,8 @@ export const addPasswordResetTokenToUser: ({
   username,
   passwordResetToken,
 }: {
-  username: string
   passwordResetToken: string
+  username: string
 }) => Promise<boolean> = async ({ username, passwordResetToken }) => {
   const result = await dbClient(USERS)
     .update({ passwordResetToken })
@@ -70,8 +70,8 @@ export const addUserAccessToken: ({
   username,
   token,
 }: {
-  username: string
   token: string
+  username: string
 }) => Promise<void> = async ({ username, token }) =>
   await dbClient(ACCESS_TOKENS).insert({ token, username })
 
@@ -111,11 +111,11 @@ export const getUserFromUserAccessToken: ({
 }: {
   token: string
 }) => Promise<{
-  id: number
-  username: string
-  confirmed: boolean
   confirmationString: string
+  confirmed: boolean
+  id: number
   passwordResetToken: string
+  username: string
 }> = async ({ token }) => {
   const results = await dbClient
     .select(

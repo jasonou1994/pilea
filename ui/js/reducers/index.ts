@@ -1,20 +1,20 @@
 import { combineReducers } from 'redux'
 import {
-  TRANSACTIONS,
-  LOGIN,
   GRAPH,
   GRID,
   LOADING,
+  LOGIN,
   NOTIFICATIONS,
   SIZING,
+  TRANSACTIONS,
 } from '../konstants'
-import transactions, { TransactionsAccountsState } from './transactionsAccounts'
-import login, { LoginState } from './login'
 import graph, { GraphState } from './graph'
 import grid, { GridState } from './grid'
 import loading, { LoadingState } from './loading'
+import login, { LoginState } from './login'
 import notifications, { NotificationsState } from './notifications'
 import sizing, { SizingState } from './sizing'
+import transactions, { TransactionsAccountsState } from './transactionsAccounts'
 
 export * from './selectors'
 

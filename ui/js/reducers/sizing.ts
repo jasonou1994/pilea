@@ -1,14 +1,14 @@
 import { set } from 'timm'
+import { RootState } from '.'
 import { SizingActions } from '../actions'
 import {
-  WINDOW_WIDTH,
-  SET_CURRENT_WINDOW_WIDTH,
-  SIZING,
   FILTER_SIDEBAR_WIDTH,
   SET_CURRENT_WINDOW_HEIGHT,
+  SET_CURRENT_WINDOW_WIDTH,
+  SIZING,
   WINDOW_HEIGHT,
+  WINDOW_WIDTH,
 } from '../konstants'
-import { RootState } from '.'
 
 export interface SizingState {
   [WINDOW_WIDTH]: number

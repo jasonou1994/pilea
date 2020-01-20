@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
-import { SALT_ROUNDS } from './constants'
 import { Account as PlaidCard } from 'plaid'
+import { SALT_ROUNDS } from './constants'
 import { DBCard } from './database/cards'
 
 export const encryptPassword: ({ password }) => Promise<string> = async ({

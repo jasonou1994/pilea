@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { client } from '../constants'
 import { ContractResponse } from '.'
+import { client } from '../constants'
 import { logger } from '../logger'
 
 export interface ContractPlaidGetAccessToken extends ContractResponse {

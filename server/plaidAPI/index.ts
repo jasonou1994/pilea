@@ -7,13 +7,13 @@ export const plaidGetTransactions: ({
   end,
   options,
 }: {
-  token: string
-  start: string
   end: string
   options: {
     count: number
     offset: number
   }
+  start: string
+  token: string
 }) => Promise<TransactionsResponse> = ({ token, start, end, options }) =>
   new Promise((resolve, reject) => {
     client.getTransactions(token, start, end, options, (err, result) => {

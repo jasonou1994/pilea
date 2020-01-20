@@ -1,14 +1,14 @@
 import { Router } from 'express'
 import {
   addItem,
-  checkUpdateAuthToken,
-  getUserId,
-  getAllItems,
-  removeItem,
-  sendEmptyResponse,
-  retrieveTransactions,
-  refreshTransactions,
   checkIfVerifiedAccount,
+  checkUpdateAuthToken,
+  getAllItems,
+  getUserId,
+  refreshTransactions,
+  removeItem,
+  retrieveTransactions,
+  sendEmptyResponse,
 } from '../middleware'
 
 export const items = Router()

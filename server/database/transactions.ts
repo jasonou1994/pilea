@@ -1,38 +1,38 @@
-import { dbClient } from '../database'
-import { TRANSACTIONS, USERS } from '../constants'
 import {
   Iso8601DateString,
   Transaction as PlaidTransaction,
   TransactionsResponse,
 } from 'plaid'
+import { TRANSACTIONS, USERS } from '../constants'
+import { dbClient } from '../database'
 
 export interface DBTransaction {
   account_id: string
   account_owner: string | null
+  address: string | null
   amount: number | null
-  iso_currency_code: string | null
+  by_order_of: string | null
   category: Array<string> | null
   category_id: string | null
-  date: Iso8601DateString
-  name: string | null
-  pending: boolean | null
-  pending_transaction_id: string | null
-  transaction_id: string
-  transaction_type: string | null
-  userId: number
-  address: string | null
   city: string | null
+  date: Iso8601DateString
+  iso_currency_code: string | null
   lat: number | null
   lon: number | null
-  store_number: string | null
-  by_order_of: string | null
+  name: string | null
   payee: string | null
   payer: string | null
   payment_method: string | null
   payment_processor: string | null
+  pending: boolean | null
+  pending_transaction_id: string | null
   ppd_id: string | null
   reason: string | null
   reference_number: string | null
+  store_number: string | null
+  transaction_id: string
+  transaction_type: string | null
+  userId: number
 }
 
 export const getTransactions: ({
@@ -112,8 +112,8 @@ export const deleteTransactionsForGivenCardAndUser: ({
   userId,
   cardId,
 }: {
-  userId: number
   cardId: string
+  userId: number
 }) => Promise<void> = async ({ userId, cardId }) =>
   await dbClient(TRANSACTIONS)
     .where({ userId, account_id: cardId })

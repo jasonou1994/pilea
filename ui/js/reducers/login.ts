@@ -1,16 +1,16 @@
+import { set } from 'timm'
+import { RootState } from '.'
+import { LogInActions } from '../actions'
 import {
-  USER_ID,
-  USER,
-  USER_NAME,
+  CONFIRMED,
   LOGGED_IN,
+  LOGIN,
   SET_LOGGED_IN,
   SET_USER_INFO,
-  CONFIRMED,
-  LOGIN,
+  USER,
+  USER_ID,
+  USER_NAME,
 } from '../konstants/index'
-import { set } from 'timm'
-import { LogInActions } from '../actions'
-import { RootState } from '.'
 
 export interface User {
   [USER_ID]: string

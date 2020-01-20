@@ -1,90 +1,90 @@
-import { call, put, takeLatest, all } from 'redux-saga/effects'
 import moment from 'moment'
-import {
-  readdTransactions,
-  setLoggedIn,
-  setUserInfo,
-  setItems,
-  FetchCreateUserAction,
-  FetchAddItemInterface,
-  FetchLogInAction,
-  FetchRemoveItemInterface,
-  setCards,
-  setTransactions,
-  FetchSendPasswordResetEmailAction,
-  addActiveNotification,
-  setHistoricalBalances,
-  setTransactionsRefreshedCount,
-} from '../actions'
-import {
-  TRANSACTIONS,
-  FETCH_LOG_IN,
-  FETCH_LOG_OUT,
-  FETCH_CREATE_USER,
-  FETCH_REFRESH_TRANSACTIONS,
-  API_ITEMS_ADD,
-  API_USER_LOGIN,
-  API_TRANSACTIONS_RETRIEVE,
-  API_USER_LOGOUT,
-  API_USER_CREATE,
-  FETCH_ADD_ITEM,
-  API_TRANSACTIONS_REFRESH,
-  API_ITEMS_REMOVE,
-  FETCH_REMOVE_ITEM,
-  LOGIN,
-  API_USER_SEND_PASSWORD_RESET_EMAIL,
-  FETCH_SEND_PASSWORD_RESET_EMAIL,
-  API_ACCOUNTS_GET_DAILY_BALANCES,
-  FETCH_TRANSACTIONS_COUNT,
-  API_TRANSACTIONS_COUNT,
-  TRANSACTIONS_REFRESHING,
-} from '../konstants'
-import { services } from '../utilities/services'
 import {
   Account as PlaidCard,
   Iso8601DateString,
   TransactionLocation,
   TransactionPaymentMeta,
 } from 'plaid'
+import { all, call, put, takeLatest } from 'redux-saga/effects'
+import {
+  addActiveNotification,
+  FetchAddItemInterface,
+  FetchCreateUserAction,
+  FetchLogInAction,
+  FetchRemoveItemInterface,
+  FetchSendPasswordResetEmailAction,
+  readdTransactions,
+  setCards,
+  setHistoricalBalances,
+  setItems,
+  setLoggedIn,
+  setTransactions,
+  setTransactionsRefreshedCount,
+  setUserInfo,
+} from '../actions'
 import { startLoading, stopLoading } from '../actions/loading'
-import { createNotification } from '../utilities/utils'
+import {
+  API_ACCOUNTS_GET_DAILY_BALANCES,
+  API_ITEMS_ADD,
+  API_ITEMS_REMOVE,
+  API_TRANSACTIONS_COUNT,
+  API_TRANSACTIONS_REFRESH,
+  API_TRANSACTIONS_RETRIEVE,
+  API_USER_CREATE,
+  API_USER_LOGIN,
+  API_USER_LOGOUT,
+  API_USER_SEND_PASSWORD_RESET_EMAIL,
+  FETCH_ADD_ITEM,
+  FETCH_CREATE_USER,
+  FETCH_LOG_IN,
+  FETCH_LOG_OUT,
+  FETCH_REFRESH_TRANSACTIONS,
+  FETCH_REMOVE_ITEM,
+  FETCH_SEND_PASSWORD_RESET_EMAIL,
+  FETCH_TRANSACTIONS_COUNT,
+  LOGIN,
+  TRANSACTIONS,
+  TRANSACTIONS_REFRESHING,
+} from '../konstants'
 import { HistoricalBalances } from '../reducers/transactionsAccounts'
+import { services } from '../utilities/services'
+import { createNotification } from '../utilities/utils'
 
 export interface DBItem {
-  id: number
-  userId: number
   accessToken: string
-  lastUpdated?: string
   alias?: string
+  id: number
+  lastUpdated?: string
+  userId: number
 }
 
 export interface PileaCard extends PlaidCard {
-  userId: number
   itemId: number
+  userId: number
 }
 export interface APIResponse {
-  success: boolean
-  status: string
   error: string
+  status: string
+  success: boolean
 }
 
 export interface GetItemsResponse extends AddItemResponse {}
 
 export interface CreateUserResponse extends APIResponse {
-  username: string
   userId: number
+  username: string
 }
 
 export interface UserLogInResponse extends APIResponse {
-  username: string
-  userId: number
   confirmed: boolean
+  userId: number
+  username: string
 }
 
 export interface TransactionsRetrieveResponse extends APIResponse {
   cards: PileaCard[]
-  transactions: RawTransaction[]
   items: DBItem[]
+  transactions: RawTransaction[]
 }
 
 export interface HistoricalBalancesResponse extends APIResponse {
@@ -102,13 +102,13 @@ export interface RawTransaction {
   account_id: string
   account_owner: string | null
   amount: number | null
-  iso_currency_code: string | null
-  official_currency_code: string | null
   category: string
   category_id: string | null
   date: Iso8601DateString
+  iso_currency_code: string | null
   location: TransactionLocation
   name: string | null
+  official_currency_code: string | null
   payment_meta: TransactionPaymentMeta
   pending: boolean | null
   pending_transaction_id: string | null

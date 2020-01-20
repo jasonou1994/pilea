@@ -1,4 +1,4 @@
-import { Response, Request } from 'express'
+import { Request, Response } from 'express'
 
 export * from './items'
 export * from './auth'
@@ -8,9 +8,9 @@ export * from './users'
 export * from '../mailer'
 
 export interface ContractResponse {
+  error: any
   status: string
   success: boolean
-  error: any
 }
 
 export const generateGenericErrorResponse: (

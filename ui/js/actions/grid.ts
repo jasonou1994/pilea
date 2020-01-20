@@ -1,8 +1,8 @@
-import {
-  SET_SELECTED_TRANSACTION_KEY,
-  RESET_SELECTED_TRANSACTION_KEY,
-} from '../konstants/index'
 import { Action } from 'redux'
+import {
+  RESET_SELECTED_TRANSACTION_KEY,
+  SET_SELECTED_TRANSACTION_KEY,
+} from '../konstants/index'
 
 type GridActionTypes =
   | typeof SET_SELECTED_TRANSACTION_KEY
@@ -14,8 +14,8 @@ export type GridActions =
 
 // Generics
 interface GridAction<P, AT extends GridActionTypes> extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 type GridActionCreator<P, AT extends GridActionTypes> = (
   payload: P

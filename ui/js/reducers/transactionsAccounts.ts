@@ -1,31 +1,31 @@
+import { Account as PlaidCard, Transaction as PlaidTransaction } from 'plaid'
+import { set, setIn, updateIn } from 'timm'
+import { RootState } from '.'
+import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 import {
-  ADD_TRANSACTIONS,
-  TRANSACTIONS,
-  READD_TRANSACTIONS,
-  CARDS,
-  ITEMS,
   ADD_CARDS,
-  SET_ITEMS,
-  TOGGLE_CARD_SELECTED,
-  TOGGLE_ITEM_SELECTED,
+  ADD_TRANSACTIONS,
+  CARDS,
   CATEGORIES,
-  TOGGLE_CATEGORY_SELECTED,
-  SELECT_ALL_CATEGORIES,
-  SET_CATEGORIES_SELECTED,
-  SET_CARDS,
-  SET_TRANSACTIONS,
-  SELECT_SINGLE_CATEGORY,
   HISTORICAL_BALANCES,
+  ITEMS,
+  READD_TRANSACTIONS,
+  SELECT_ALL_CATEGORIES,
+  SELECT_SINGLE_CATEGORY,
+  SET_CARDS,
+  SET_CATEGORIES_SELECTED,
   SET_HISTORICAL_BALANCES,
+  SET_ITEMS,
+  SET_TRANSACTIONS,
   SET_TRANSACTIONS_REFRESHED_COUNT,
+  TOGGLE_CARD_SELECTED,
+  TOGGLE_CATEGORY_SELECTED,
+  TOGGLE_ITEM_SELECTED,
+  TRANSACTIONS,
   TRANSACTIONS_REFRESHED_COUNT,
 } from '../konstants'
-import { updateIn, set, setIn } from 'timm'
-import { Transaction as PlaidTransaction, Account as PlaidCard } from 'plaid'
 import { DBItem, PileaCard } from '../sagas/sagas'
-import { AccountsInterfaces, TransactionsInterfaces } from '../actions'
 import { parseRawTransaction } from '../utilities/translation'
-import { RootState } from '.'
 
 export interface CardWithFilter extends PileaCard {
   selected: boolean

@@ -1,24 +1,24 @@
 import {
+  API_ACCOUNTS_GET_DAILY_BALANCES,
   API_ITEMS_ADD,
+  API_ITEMS_GET,
+  API_ITEMS_REMOVE,
+  API_TRANSACTIONS_COUNT,
+  API_TRANSACTIONS_REFRESH,
   API_TRANSACTIONS_RETRIEVE,
   API_USER_CREATE,
   API_USER_LOGIN,
   API_USER_LOGOUT,
-  AvailableAPIs,
-  API_ITEMS_GET,
-  API_ITEMS_REMOVE,
-  API_TRANSACTIONS_REFRESH,
   API_USER_SEND_PASSWORD_RESET_EMAIL,
-  API_ACCOUNTS_GET_DAILY_BALANCES,
-  API_TRANSACTIONS_COUNT,
+  AvailableAPIs,
 } from '../konstants'
 
 interface ServiceDefinition {
+  credentials: RequestCredentials
+  headers: any
+  method: 'POST' | 'GET'
   name: AvailableAPIs
   path: string
-  method: 'POST' | 'GET'
-  headers: any
-  credentials: RequestCredentials
 }
 
 const defaultOptions = {

@@ -1,11 +1,11 @@
+import { Action } from 'redux'
 import {
+  AvailableGraphs,
+  AvailableTimeUnits,
   SET_GRAPH_FIDELITY,
   SET_GRAPH_HISTORICAL_LENGTH,
-  AvailableTimeUnits,
-  AvailableGraphs,
   SET_HISTORICAL_TYPE,
 } from '../konstants/index'
-import { Action } from 'redux'
 import { AvailableHistoricalGraphTypes } from '../reducers/graph'
 
 type GraphActionTypes =
@@ -21,8 +21,8 @@ export type GraphInterfaces =
 // Generics
 export interface GraphAction<P, AT extends GraphActionTypes>
   extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 export type GraphActionCreator<P, AT extends GraphActionTypes> = (
   payload: P
@@ -47,15 +47,15 @@ export const setGraphFidelity: SetGraphFidelityActionCreator = ({
 
 export type SetGraphHistoricalLengthActionCreator = GraphActionCreator<
   {
-    length: { count: number; unit: string }
     graph: AvailableGraphs
+    length: { count: number; unit: string }
   },
   typeof SET_GRAPH_HISTORICAL_LENGTH
 >
 export type SetGraphHistoricalLengthInterface = GraphAction<
   {
-    length: { count: number; unit: string }
     graph: AvailableGraphs
+    length: { count: number; unit: string }
   },
   typeof SET_GRAPH_HISTORICAL_LENGTH
 >

@@ -1,26 +1,24 @@
-import path from 'path'
-import https from 'https'
-import fs from 'fs'
-import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
-import cookieParser from 'cookie-parser'
 import compression from 'compression'
+import cookieParser from 'cookie-parser'
+import express, { NextFunction, Request, Response } from 'express'
 import { redirectToHTTPS } from 'express-http-to-https'
-import { expressLogger, logger, logReq } from './logger'
-import { transactions } from './controllers/transactions'
-import { plaid } from './controllers/plaid'
-import { user } from './controllers/user'
+import fs from 'fs'
+import https from 'https'
+import path from 'path'
 import { items } from './controllers/items'
-import { PORT, INSECURE_PORT, MODE, CORS_URL } from './env'
+import { plaid } from './controllers/plaid'
+import { transactions } from './controllers/transactions'
+import { user } from './controllers/user'
+import { CORS_URL, INSECURE_PORT, MODE, PORT } from './env'
+import { expressLogger, logger, logReq } from './logger'
 
 const app = express()
 
 if (MODE === 'PRODUCTION') {
   app.use(redirectToHTTPS())
 }
-app.use(compression)
 app.use(expressLogger)
-app.use(express.static('build'))
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
@@ -42,6 +40,8 @@ app.use('/plaid', plaid)
 app.use('/user', user)
 app.use('/items', items)
 
+app.use(compression)
+app.use(express.static('build'))
 app.get('/*', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/index.html'))
 )

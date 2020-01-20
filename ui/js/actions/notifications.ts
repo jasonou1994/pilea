@@ -13,8 +13,8 @@ export type NotificationActions =
 // Generics
 export interface NotificationsAction<P, AT extends NotificationActionTypes>
   extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 
 export type NotificationsActionCreator<

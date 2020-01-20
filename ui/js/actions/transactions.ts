@@ -1,18 +1,18 @@
+import { Action } from 'redux'
 import {
-  FETCH_REFRESH_TRANSACTIONS,
   ADD_TRANSACTIONS,
+  FETCH_REFRESH_TRANSACTIONS,
+  FETCH_TRANSACTIONS_COUNT,
   READD_TRANSACTIONS,
+  SELECT_ALL_CATEGORIES,
+  SELECT_SINGLE_CATEGORY,
+  SET_CATEGORIES_SELECTED,
+  SET_TRANSACTIONS,
+  SET_TRANSACTIONS_REFRESHED_COUNT,
   START_LOADING_TRANSACTIONS,
   STOP_LOADING_TRANSACTIONS,
   TOGGLE_CATEGORY_SELECTED,
-  SELECT_ALL_CATEGORIES,
-  SET_CATEGORIES_SELECTED,
-  SET_TRANSACTIONS,
-  SELECT_SINGLE_CATEGORY,
-  FETCH_TRANSACTIONS_COUNT,
-  SET_TRANSACTIONS_REFRESHED_COUNT,
 } from '../konstants/index'
-import { Action } from 'redux'
 import { RawTransaction } from '../sagas/sagas'
 
 type TransactionsActionTypes =
@@ -43,8 +43,8 @@ export type TransactionsInterfaces =
 // Generics
 export interface TransactionsAction<P, AT extends TransactionsActionTypes>
   extends Action<TransactionsActionTypes> {
-  type: AT
   payload: P
+  type: AT
 }
 export type TransactionsActionCreator<P, AT extends TransactionsActionTypes> = (
   payload: P

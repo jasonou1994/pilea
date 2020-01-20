@@ -1,41 +1,41 @@
-import { Transaction as PlaidTransaction } from 'plaid'
 import moment = require('moment')
+import { Transaction as PlaidTransaction } from 'plaid'
 import { createSelector } from 'reselect'
 
 import { RootState } from '.'
+import { LineSeriesMap } from '../components/historicalBalances/utilities'
 import {
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+  INPUT,
+  MONTH,
+  OUTPUT,
+  WEEK,
+  YEAR,
+} from '../konstants'
+import {
+  getSelectedHistoricalDates,
   getTypeOfCard,
   shouldKeepTransaction,
-  getSelectedHistoricalDates,
 } from '../utilities/utils'
 import {
-  cardsSelector,
-  ItemWithFilter,
-  CardWithFilter,
-  transactionsSelector,
-  categoriesSelector,
-  itemsSelector,
-  historicalBalancesSelector,
-  DailyBalances,
-  cardTypeMapSelector,
-} from './transactionsAccounts'
-import {
-  incomeSpendingGraphHistoricalLengthSelector,
-  incomeSpendingGraphFidelitySelector,
   historicalGraphFidelitySelector,
   historicalGraphHistoricalLengthSelector,
+  incomeSpendingGraphFidelitySelector,
+  incomeSpendingGraphHistoricalLengthSelector,
 } from './graph'
 import { selectedTransactionKeySelector } from './grid'
 import {
-  YEAR,
-  MONTH,
-  WEEK,
-  INPUT,
-  OUTPUT,
-  HISTORICAL_TIME_COUNT,
-  HISTORICAL_TIME_UNIT,
-} from '../konstants'
-import { LineSeriesMap } from '../components/historicalBalances/utilities'
+  cardsSelector,
+  cardTypeMapSelector,
+  CardWithFilter,
+  categoriesSelector,
+  DailyBalances,
+  historicalBalancesSelector,
+  itemsSelector,
+  ItemWithFilter,
+  transactionsSelector,
+} from './transactionsAccounts'
 
 // Graph
 const orderedDatesSelector: (state: RootState) => string[] = createSelector(
@@ -125,8 +125,8 @@ export const transactionsNoIntraAccountSelector: (
 ) => TxWithCardType[] = createSelector(
   transactionsSelector,
   cardsSelector,
-  (transactions, cards) => {
-    return transactions
+  (transactions, cards) =>
+    transactions
       .map(tx => ({
         ...tx,
         cardType: getTypeOfCard({
@@ -134,10 +134,8 @@ export const transactionsNoIntraAccountSelector: (
           cards,
         }),
       }))
-      .filter(({ cardType, ...tx }) => {
-        return shouldKeepTransaction(tx, cardType)
-      })
-  }
+      .filter(({ cardType, ...tx }) =>
+        shouldKeepTransaction(tx, cardType))
 )
 
 export const cardAndTimeFilteredTransactionsSelector: (
@@ -164,8 +162,8 @@ export const categoryFilteredTransactionsSelector: (
 ) => TxWithCardType[] = createSelector(
   cardAndTimeFilteredTransactionsSelector,
   categoriesSelector,
-  (transactions, categories) => {
-    return transactions.filter(tx => {
+  (transactions, categories) =>
+    transactions.filter(tx => {
       const keepTx = tx.category.reduce((acc, cur) => {
         if (categories[cur]) {
           acc = true
@@ -174,7 +172,6 @@ export const categoryFilteredTransactionsSelector: (
       }, false as boolean)
       return keepTx
     })
-  }
 )
 
 const timeConsolidatedTransactionsSelector: (
@@ -241,8 +238,8 @@ export interface IncomeSpendingLineSeries extends GraphLineSeries {
 }
 
 export interface HistoricalBalanceLineSeries extends GraphLineSeries {
-  combined: LineSeries
   assets: LineSeries
+  combined: LineSeries
   liabilities: LineSeries
 }
 
@@ -389,15 +386,14 @@ export const selectedTransactionsSelector: (
 ) => TimeConsolidatedTransactionGroup = createSelector(
   timeConsolidatedTransactionsSelector,
   selectedTransactionKeySelector,
-  (transactions, selectedKey) => {
-    return transactions === {} || selectedKey === ''
+  (transactions, selectedKey) =>
+    transactions === {} || selectedKey === ''
       ? {
           input: 0,
           output: 0,
           transactions: [],
         }
       : transactions[selectedKey]
-  }
 )
 
 export interface FlattenedTransaction extends PlaidTransaction {
@@ -435,12 +431,11 @@ export const itemsWithCardsSelector: (
 ) => ItemWithCards[] = createSelector(
   cardsSelector,
   itemsSelector,
-  (cards, items) => {
-    return items.map(item => ({
+  (cards, items) =>
+    items.map(item => ({
       ...item,
       cards: cards.filter(card => card.itemId === item.id),
     }))
-  }
 )
 
 // Categories

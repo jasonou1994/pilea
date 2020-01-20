@@ -1,14 +1,14 @@
-import { Loaders, LoadingActions } from '../actions/loading'
 import { set } from 'timm'
+import { RootState } from '.'
+import { Loaders, LoadingActions } from '../actions/loading'
 import {
+  LOADING,
   LOGIN,
-  TRANSACTIONS,
   START,
   STOP,
-  LOADING,
+  TRANSACTIONS,
   TRANSACTIONS_REFRESHING,
 } from '../konstants'
-import { RootState } from '.'
 
 export type LoadingState = {
   [loader in Loaders]: boolean

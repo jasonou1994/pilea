@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 import { nodemailerConfig } from './constants'
-import { logger } from './logger'
 import { HOST, MODE } from './env'
+import { logger } from './logger'
 
 logger.debug(`Email sent to following url: ${HOST}`)
 

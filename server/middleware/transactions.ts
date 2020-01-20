@@ -1,34 +1,34 @@
-import { Request, Response, NextFunction } from 'express'
+import { NextFunction, Request, Response } from 'express'
+import moment from 'moment'
 import {
-  TransactionsResponse,
   Account as PlaidCard,
   Transaction as PlaidTransaction,
+  TransactionsResponse,
 } from 'plaid'
-import {
-  deleteTransactions,
-  insertTransactions,
-  getTransactions,
-  dbGetTransactionCount,
-} from '../database/transactions'
-import { DBItem, getItems, updateItemById } from '../database/items'
-import { plaidGetTransactions } from '../plaidAPI'
-import {
-  deleteCards,
-  insertCards,
-  getCards,
-  dbDailySumByCard,
-  DBCard,
-} from '../database/cards'
 import { ContractResponse, generateGenericErrorResponse } from '.'
-import { convertPlaidCardsToDBCards, add, subtract } from '../utils'
-import { logger } from '../logger'
-import moment from 'moment'
+import {
+  DBCard,
+  dbDailySumByCard,
+  deleteCards,
+  getCards,
+  insertCards,
+} from '../database/cards'
+import { DBItem, getItems, updateItemById } from '../database/items'
+import {
+  dbGetTransactionCount,
+  deleteTransactions,
+  getTransactions,
+  insertTransactions,
+} from '../database/transactions'
 import { updateUserTransactionLoadingCount } from '../database/users'
+import { logger } from '../logger'
+import { plaidGetTransactions } from '../plaidAPI'
+import { add, convertPlaidCardsToDBCards, subtract } from '../utils'
 
 export interface ContractRetrieveTransactions extends ContractResponse {
   cards: PlaidCard[]
-  transactions: PlaidTransaction[]
   items: DBItem[]
+  transactions: PlaidTransaction[]
 }
 
 export interface ContractTransactionsCount extends ContractResponse {
@@ -43,8 +43,8 @@ interface DailyBalances {
   [name: string]: number
 }
 interface DailyBalancesWithDate {
-  date: string
   balances: DailyBalances
+  date: string
 }
 interface HistoricalBalances {
   [date: string]: DailyBalances
@@ -97,9 +97,9 @@ export const refreshTransactions = async (
       let processedTxsCount = 0
 
       return new Promise<{
-        transactions: PlaidTransaction[]
         cards: DBCard[]
         itemId: number
+        transactions: PlaidTransaction[]
       }>(async (tokenResolve, tokenReject) => {
         // One promise for each item. Each item can fail up to 3 times before it rejects.
         const maxError = 3
@@ -110,7 +110,7 @@ export const refreshTransactions = async (
         let txOffset = 0
 
         let transactionsResult: PlaidTransaction[] = []
-        let cardsResult: { [key: string]: PlaidCard } = {}
+        const cardsResult: { [key: string]: PlaidCard } = {}
 
         // For a given item, must retrieve transactions 500 at a time as we don't know the total number of transactions in the last 2 years
         while (!completed && errorCount < maxError) {
@@ -273,9 +273,9 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
 
     // Get current balances.
     const cards: Array<{
+      amount: number
       id: string
       type: string
-      amount: number
     }> = (await getCards({ userId })).map(card => ({
       id: card.account_id,
       type: card.type,

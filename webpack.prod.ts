@@ -3,6 +3,7 @@ import * as webpack from 'webpack'
 import HtmlWebPackPlugin from 'html-webpack-plugin'
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin
+const TerserPlugin = require('terser-webpack-plugin')
 
 const config = (env: any): webpack.Configuration => {
   const API_PORT = env ? env.API_PORT : undefined
@@ -11,6 +12,9 @@ const config = (env: any): webpack.Configuration => {
 
   return {
     mode: 'production',
+    optimization: {
+      minimizer: [new TerserPlugin({})],
+    },
     entry: './ui/index.tsx',
     output: {
       path: path.resolve(__dirname, 'build'),
@@ -53,6 +57,7 @@ const config = (env: any): webpack.Configuration => {
           : JSON.stringify('http'),
         'env.NODE_ENV': JSON.stringify('production'),
       }),
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
       new BundleAnalyzerPlugin(),
     ],
   }

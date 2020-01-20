@@ -1,21 +1,21 @@
 import { setIn } from 'timm'
+import { RootState } from '.'
+import { GraphInterfaces } from '../actions'
 import {
+  AvailableTimeUnits,
+  GRAPH,
   GRAPH_FIDELITY,
-  SET_GRAPH_FIDELITY,
+  HISTORICAL_BALANCES,
   HISTORICAL_LENGTH,
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
-  AvailableTimeUnits,
-  SET_GRAPH_HISTORICAL_LENGTH,
-  MONTH,
-  GRAPH,
   INCOME_SPENDING,
-  HISTORICAL_BALANCES,
-  TYPE,
+  MONTH,
+  SET_GRAPH_FIDELITY,
+  SET_GRAPH_HISTORICAL_LENGTH,
   SET_HISTORICAL_TYPE,
+  TYPE,
 } from '../konstants/index'
-import { GraphInterfaces } from '../actions'
-import { RootState } from '.'
 
 export type AvailableHistoricalGraphTypes =
   | 'combined'

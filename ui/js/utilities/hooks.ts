@@ -15,7 +15,7 @@ export const useInterval = (callback: any, delay: any) => {
       savedCallback.current()
     }
     if (delay !== null) {
-      let id = setInterval(tick, delay)
+      const id = setInterval(tick, delay)
       return () => clearInterval(id)
     }
   }, [delay])
@@ -52,8 +52,8 @@ export const useActiveUser = ({
   warningTime,
   signoutTime,
 }: {
-  warningTime: number
   signoutTime: number
+  warningTime: number
 }) => {
   let warnTimeout: ReturnType<typeof setTimeout>
   let logoutTimeout: ReturnType<typeof setTimeout>
@@ -93,14 +93,14 @@ export const useActiveUser = ({
       setTimeouts()
     }
 
-    for (let i in events) {
+    for (const i in events) {
       window.addEventListener(events[i], resetTimeout)
     }
 
     setTimeouts()
 
     return () => {
-      for (let i in events) {
+      for (const i in events) {
         window.removeEventListener(events[i], resetTimeout)
         clearTimeouts()
       }

@@ -1,17 +1,17 @@
+import { Action } from 'redux'
 import {
   ADD_CARDS,
-  SET_ITEMS,
   FETCH_ADD_ITEM,
-  TOGGLE_CARD_SELECTED,
-  TOGGLE_ITEM_SELECTED,
+  FETCH_GET_HISTORICAL_BALANCES,
   FETCH_REMOVE_ITEM,
   SET_CARDS,
-  FETCH_GET_HISTORICAL_BALANCES,
   SET_HISTORICAL_BALANCES,
+  SET_ITEMS,
+  TOGGLE_CARD_SELECTED,
+  TOGGLE_ITEM_SELECTED,
 } from '../konstants/index'
-import { Action } from 'redux'
-import { DBItem, PileaCard } from '../sagas/sagas'
 import { HistoricalBalances } from '../reducers/transactionsAccounts'
+import { DBItem, PileaCard } from '../sagas/sagas'
 
 export type AccountsActionTypes =
   | typeof SET_ITEMS
@@ -35,8 +35,8 @@ export type AccountsInterfaces =
 // Generics
 export interface AccountsAction<P, AT extends AccountsActionTypes>
   extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 export type AccountsActionCreator<P, AT extends AccountsActionTypes> = (
   payload: P

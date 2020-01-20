@@ -1,5 +1,5 @@
-import { RawTransaction } from '../sagas/sagas'
 import { Transaction as PlaidTransaction } from 'plaid'
+import { RawTransaction } from '../sagas/sagas'
 
 export const parseRawTransaction: (
   rawTxs: RawTransaction[]

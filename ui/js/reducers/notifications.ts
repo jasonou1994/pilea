@@ -1,14 +1,14 @@
-import {
-  ACTIVE_NOTIFICATIONS,
-  EXPIRED_NOTIFICATIONS,
-  ADD_ACTIVE_NOTIFICATIONS,
-  EXPIRE_NOTIFICATIONS,
-  NOTIFICATIONS,
-} from '../konstants/index'
 import { setIn, update } from 'timm'
+import { RootState } from '.'
 import { NotificationActions } from '../actions'
 import { NotificationWithDuration } from '../components/NotificationsContainer'
-import { RootState } from '.'
+import {
+  ACTIVE_NOTIFICATIONS,
+  ADD_ACTIVE_NOTIFICATIONS,
+  EXPIRE_NOTIFICATIONS,
+  EXPIRED_NOTIFICATIONS,
+  NOTIFICATIONS,
+} from '../konstants/index'
 
 export interface NotificationsState {
   [ACTIVE_NOTIFICATIONS]: NotificationWithDuration[]
@@ -63,9 +63,7 @@ const notifications: (
 }
 export default notifications
 
-export const activeNotificationsSelector = (state: RootState) => {
-  return state[NOTIFICATIONS][ACTIVE_NOTIFICATIONS]
-}
-export const expiredNotificationsSelector = (state: RootState) => {
-  return state[NOTIFICATIONS][EXPIRED_NOTIFICATIONS]
-}
+export const activeNotificationsSelector = (state: RootState) =>
+  state[NOTIFICATIONS][ACTIVE_NOTIFICATIONS]
+export const expiredNotificationsSelector = (state: RootState) =>
+  state[NOTIFICATIONS][EXPIRED_NOTIFICATIONS]

@@ -1,12 +1,12 @@
+import { Action } from 'redux'
 import {
+  FETCH_CREATE_USER,
   FETCH_LOG_IN,
+  FETCH_LOG_OUT,
+  FETCH_SEND_PASSWORD_RESET_EMAIL,
   SET_LOGGED_IN,
   SET_USER_INFO,
-  FETCH_LOG_OUT,
-  FETCH_CREATE_USER,
-  FETCH_SEND_PASSWORD_RESET_EMAIL,
 } from '../konstants/index'
-import { Action } from 'redux'
 
 type LogInActionTypes =
   | typeof FETCH_LOG_IN
@@ -26,8 +26,8 @@ export type LogInActions =
 // Generics
 export interface LogInAction<P, AT extends LogInActionTypes>
   extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 export type LogInActionCreator<P, AT extends LogInActionTypes> = (
   payload: P
@@ -37,15 +37,15 @@ export type LogInActionCreator<P, AT extends LogInActionTypes> = (
 
 export type FetchLogInActionCreator = LogInActionCreator<
   {
-    user: string
     password: string
+    user: string
   },
   typeof FETCH_LOG_IN
 >
 export type FetchLogInAction = LogInAction<
   {
-    user: string
     password: string
+    user: string
   },
   typeof FETCH_LOG_IN
 >
@@ -66,15 +66,15 @@ export const fetchLogOut: FetchLogOutActionCreator = () => ({
 
 export type FetchCreateUserActionCreator = LogInActionCreator<
   {
-    user: string
     password: string
+    user: string
   },
   typeof FETCH_CREATE_USER
 >
 export type FetchCreateUserAction = LogInAction<
   {
-    user: string
     password: string
+    user: string
   },
   typeof FETCH_CREATE_USER
 >
@@ -105,17 +105,17 @@ export const setLoggedIn: SetLoggedInUserActionCreator = ({ status }) => ({
 
 export type SetUserInfoActionCreator = LogInActionCreator<
   {
-    userName: string
-    userId: number
     confirmed: boolean
+    userId: number
+    userName: string
   },
   typeof SET_USER_INFO
 >
 export type SetUserInfoAction = LogInAction<
   {
-    userName: string
-    userId: number
     confirmed: boolean
+    userId: number
+    userName: string
   },
   typeof SET_USER_INFO
 >

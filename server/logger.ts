@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express'
-import pino from 'pino'
+import { NextFunction, Request, Response } from 'express'
 import expressPino from 'express-pino-logger'
+import pino from 'pino'
 
 export const logger = pino({ level: 'debug' })
 export const expressLogger = expressPino({ logger })

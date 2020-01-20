@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { LineSeries } from '../../reducers'
 
 // Converts line series array to map for quicker access

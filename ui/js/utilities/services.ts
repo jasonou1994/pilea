@@ -26,8 +26,8 @@ const parseCookies: (response: Response) => void = response => {
 export const services = serviceDefs.reduce((acc, service) => {
   const { name, path, ...options } = service
 
-  acc[name] = ({ body }: { body: any } = { body: '{}' }) => {
-    return new Promise(async (resolve, reject) => {
+  acc[name] = ({ body }: { body: any } = { body: '{}' }) =>
+    new Promise(async (resolve, reject) => {
       try {
         const host = `${API_PROTOCOL}://${API_HOST}:${API_PORT}`
 
@@ -68,7 +68,6 @@ export const services = serviceDefs.reduce((acc, service) => {
         reject({ error: `Unknown error: ${e}`, status: `Error in ${name}` })
       }
     })
-  }
 
   return acc
 }, {} as Services)

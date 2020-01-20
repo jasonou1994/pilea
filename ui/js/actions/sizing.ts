@@ -1,8 +1,8 @@
-import {
-  SET_CURRENT_WINDOW_WIDTH,
-  SET_CURRENT_WINDOW_HEIGHT,
-} from '../konstants'
 import { Action } from 'redux'
+import {
+  SET_CURRENT_WINDOW_HEIGHT,
+  SET_CURRENT_WINDOW_WIDTH,
+} from '../konstants'
 
 export type SizingActions =
   | SetCurrentWindowWidthAction
@@ -16,8 +16,8 @@ export type SetCurrentWindowWidthActionCreator = ({
 }) => SetCurrentWindowWidthAction
 export interface SetCurrentWindowWidthAction
   extends Action<typeof SET_CURRENT_WINDOW_WIDTH> {
-  type: typeof SET_CURRENT_WINDOW_WIDTH
   payload: { width: number }
+  type: typeof SET_CURRENT_WINDOW_WIDTH
 }
 export const setCurrentWindowWidth: SetCurrentWindowWidthActionCreator = ({
   width,
@@ -30,8 +30,8 @@ export type SetCurrentWindowHeightActionCreator = ({
 }) => SetCurrentWindowHeightAction
 export interface SetCurrentWindowHeightAction
   extends Action<typeof SET_CURRENT_WINDOW_HEIGHT> {
-  type: typeof SET_CURRENT_WINDOW_HEIGHT
   payload: { height: number }
+  type: typeof SET_CURRENT_WINDOW_HEIGHT
 }
 export const setCurrentWindowHeight: SetCurrentWindowHeightActionCreator = ({
   height,

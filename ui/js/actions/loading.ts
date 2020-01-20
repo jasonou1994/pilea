@@ -1,5 +1,5 @@
-import { TRANSACTIONS, LOGIN, TRANSACTIONS_REFRESHING } from '../konstants'
 import { Action } from 'redux'
+import { LOGIN, TRANSACTIONS, TRANSACTIONS_REFRESHING } from '../konstants'
 
 export type Loaders =
   | typeof TRANSACTIONS
@@ -13,8 +13,8 @@ export interface LoadingAction<
   P extends Loaders,
   AT extends LoadingActionTypes
 > extends Action<AT> {
-  type: AT
   payload: P
+  type: AT
 }
 export type LoadingActionCreator<
   P extends Loaders,

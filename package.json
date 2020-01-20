@@ -7,11 +7,11 @@
   "scripts": {
     "ui-dev": "webpack-dev-server --config webpack.dev.ts",
     "ui-local": "webpack-dev-server --config webpack.dev.ts --env.API_PORT=8000 --env.API_HOST=localhost --env.API_PROTOCOL=http",
-    "ui-build": "webpack --config webpack.prod.ts",
+    "ui-build": "tslint --fix  -c tslint.json 'ui/**/*.ts' && webpack --config webpack.prod.ts",
     "server-dev": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c",
     "server-local": "MODE=DEVELOPMENT PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
     "server-test": "MODE=TEST PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
-    "server": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
+    "server": "tslint --fix  -c tslint.json 'server/**/*.ts' && ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
     "test": "npm run jest",
     "jest": "jest test/ --coverage --runInBand"
   },
@@ -79,6 +79,7 @@
     "timm": "^1.6.1",
     "ts-jest": "^24.2.0",
     "ts-node-dev": "^1.0.0-pre.40",
+    "tslint": "^5.20.1",
     "uuidv4": "^4.0.0",
     "webpack-bundle-analyzer": "^3.6.0"
   },

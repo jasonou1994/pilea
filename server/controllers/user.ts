@@ -1,18 +1,18 @@
 import { Router } from 'express'
 import {
-  createUser,
-  sendEmptyResponse,
   addAuthToken,
-  processLogIn,
-  sendLogInResponse,
   checkDeleteAuthToken,
-  sendCreateUserResponse,
-  getUserId,
   confirmUser,
-  processForgotPassword,
-  resetPassword,
-  deleteAccount,
   confirmUserBypass,
+  createUser,
+  deleteAccount,
+  getUserId,
+  processForgotPassword,
+  processLogIn,
+  resetPassword,
+  sendCreateUserResponse,
+  sendEmptyResponse,
+  sendLogInResponse,
 } from '../middleware'
 
 export const user = Router()

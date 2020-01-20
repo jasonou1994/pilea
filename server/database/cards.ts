@@ -1,34 +1,34 @@
-import { dbClient } from '../database'
-import { CARDS, USERS, TRANSACTIONS } from '../constants'
 import { Account as PlaidCard } from 'plaid'
+import { CARDS, TRANSACTIONS, USERS } from '../constants'
+import { dbClient } from '../database'
 
 export interface DBCard {
   account_id: string
-  userId: number
+  available: number | null
+  credit_limit: number | null
+  current: number | null
+  iso_currency_code: string | null
   itemId: number
   mask: string | null
   name: string | null
+  official_currency_code: string | null
   official_name: string | null
   subtype: string | null
   type: string | null
-  available: number | null
-  current: number | null
-  credit_limit: number | null
-  iso_currency_code: string | null
-  official_currency_code: string | null
+  userId: number
 }
 
 export interface PileaCard extends PlaidCard {
-  userId: number
   itemId: number
+  userId: number
 }
 
 export const getCards: ({
   userId,
   itemId,
 }: {
-  userId: number
   itemId?: number
+  userId: number
 }) => Promise<PileaCard[]> = async ({ userId, itemId }) => {
   const dbCards: DBCard[] = await dbClient
     .select('*')
@@ -70,8 +70,8 @@ export const deleteCards: ({
   userId,
   itemId,
 }: {
-  userId: number
   itemId?: number
+  userId: number
 }) => Promise<void> = async ({ userId, itemId }) => {
   await dbClient(CARDS)
     .where({ userId, ...(itemId ? { itemId } : {}) })
@@ -85,10 +85,10 @@ export const dbDailySumByCard: (
   userId: number
 ) => Promise<
   Array<{
-    id: string
-    type: 'depository' | 'credit'
-    sum: number
     date: string
+    id: string
+    sum: number
+    type: 'depository' | 'credit'
   }>
 > = async userId =>
   (

@@ -1,13 +1,13 @@
-import { dbClient } from '../database'
-import { ITEMS } from '../constants'
 import moment from 'moment'
+import { ITEMS } from '../constants'
+import { dbClient } from '../database'
 
 export interface DBItem {
-  id?: number
-  userId: number
   accessToken: string
-  lastUpdated?: string
   alias?: string
+  id?: number
+  lastUpdated?: string
+  userId: number
 }
 
 export const getItems: ({ userId }) => Promise<DBItem[]> = async ({ userId }) =>
@@ -37,8 +37,8 @@ export const deleteItem: ({
   userId,
   itemId,
 }: {
-  userId: number
   itemId: number
+  userId: number
 }) => Promise<void> = async ({ userId, itemId }) =>
   await dbClient(ITEMS)
     .where({ userId, id: itemId })

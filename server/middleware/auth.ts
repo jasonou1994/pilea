@@ -1,20 +1,20 @@
-import { logger } from '../logger'
-import { Router, Request, Response, NextFunction } from 'express'
-import {
-  key,
-  NO_TOKEN_AUTH_ERROR,
-  INVALID_TOKEN_AUTH_ERROR,
-  EXPIRED_TOKEN_ERROR,
-} from '../constants'
+import { NextFunction, Request, Response, Router } from 'express'
 import jwt from 'jsonwebtoken'
 import { generateGenericErrorResponse } from '.'
 import {
+  EXPIRED_TOKEN_ERROR,
+  INVALID_TOKEN_AUTH_ERROR,
+  key,
+  NO_TOKEN_AUTH_ERROR,
+} from '../constants'
+import {
   addUserAccessToken,
+  deleteAllUserAccessTokensByUsername,
+  deleteUserAccessToken,
   doesUserAccessTokenExist,
   getUserFromUserAccessToken,
-  deleteUserAccessToken,
-  deleteAllUserAccessTokensByUsername,
 } from '../database/users'
+import { logger } from '../logger'
 
 export const auth = Router()
 

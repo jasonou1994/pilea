@@ -4,6 +4,7 @@ import fs from 'fs'
 import express, { Request, Response, NextFunction } from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
+import compression from 'compression'
 import { redirectToHTTPS } from 'express-http-to-https'
 import { expressLogger, logger, logReq } from './logger'
 import { transactions } from './controllers/transactions'
@@ -17,6 +18,7 @@ const app = express()
 if (MODE === 'PRODUCTION') {
   app.use(redirectToHTTPS())
 }
+app.use(compression)
 app.use(expressLogger)
 app.use(express.static('build'))
 app.use(bodyParser.json())

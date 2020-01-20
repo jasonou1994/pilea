@@ -1,6 +1,5 @@
 import { Transaction as PlaidTransaction } from 'plaid'
 import moment = require('moment')
-import { isEmpty } from 'lodash'
 import { createSelector } from 'reselect'
 
 import { RootState } from '.'
@@ -391,7 +390,7 @@ export const selectedTransactionsSelector: (
   timeConsolidatedTransactionsSelector,
   selectedTransactionKeySelector,
   (transactions, selectedKey) => {
-    return isEmpty(transactions) || selectedKey === ''
+    return transactions === {} || selectedKey === ''
       ? {
           input: 0,
           output: 0,

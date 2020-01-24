@@ -9,18 +9,27 @@ import { TimeConsolidatedTransactionGroup } from '../../reducers'
 import { GridColumnDef, getDataGridColumnDefs } from '../../utilities/layout'
 import { GRID_LAYOUT_BY_TIME } from '../../konstants'
 import { getCardName } from '../../utilities/utils'
+import { ResetSelectedTransactionActionCreator } from '../../actions'
 
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]
   selectedTransactions: TimeConsolidatedTransactionGroup
-  allowedWidth: number
+  width: number
+  // height: number
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  historicalDuration: string
+  startingDate: string
 }
 
 export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsGridProps> = ({
   cards,
   selectedTransactions,
   selectedTransactions: { transactions, input, output },
-  allowedWidth,
+  width,
+  resetSelectedTransactionKeyAction,
+  historicalDuration,
+  startingDate,
+  // height,
 }) => {
   const [columnDefs, setColumnDefs] = useState<GridColumnDef[]>([])
   const [rowData, setRowData] = useState([])
@@ -35,9 +44,12 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
       0
     )
 
+    console.log('total width ratio', totalWidthRatio)
     const columnDefsWithWidth = rawColumnDefs.map(
       ({ widthRatio, minWidth, width, ...col }) => {
-        const calculatedWidth = (widthRatio / totalWidthRatio) * allowedWidth
+        const calculatedWidth = (widthRatio / totalWidthRatio) * width
+
+        console.log('calculatedWidth', calculatedWidth)
 
         return {
           ...col,
@@ -48,9 +60,9 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
         }
       }
     )
-
+    console.log(width, columnDefsWithWidth)
     setColumnDefs(columnDefsWithWidth)
-  }, [allowedWidth])
+  }, [width])
   useEffect(() => {
     const rows = transactions.map(
       ({ name: merchant, account_id, amount, date }) => ({
@@ -64,20 +76,43 @@ export const IncomeSpendingDetailsGrid: FunctionComponent<IncomeSpendingDetailsG
     setRowData(rows)
   }, [selectedTransactions])
 
+  const titleTimeUnit =
+    historicalDuration === 'year'
+      ? 'Year'
+      : historicalDuration === 'month'
+      ? 'Month'
+      : historicalDuration === 'week'
+      ? 'Week'
+      : 'Day'
+
   return (
     <div>
-      <h2>Transactions</h2>
-      <div>Income: {numeral(input).format('$0,0.00')}</div>
-      <div>Spending: {numeral(output).format('$0,0.00')}</div>
       <div
-        className="ag-theme-balham"
-        style={{
-          height: '500px',
-          width: `${allowedWidth}px`,
-          margin: '0',
-          marginTop: '10px',
-        }}
+        className="show-legend"
+        onClick={() => resetSelectedTransactionKeyAction()}
       >
+        Go back
+      </div>
+
+      <h4 style={{ marginTop: 0 }}>
+        {`Transactions Looking Back 1 ${titleTimeUnit} From ${startingDate}`}
+      </h4>
+
+      <div>
+        Income:
+        <span className="grid-income-line">
+          {numeral(input).format('$0,0.00')}
+        </span>
+      </div>
+
+      <div>
+        Spending:
+        <span className="grid-spending-line">
+          {numeral(output).format('$0,0.00')}
+        </span>
+      </div>
+
+      <div className="ag-theme-balham income-spending-grid">
         <AgGridReact columnDefs={columnDefs} rowData={rowData} />
       </div>
     </div>

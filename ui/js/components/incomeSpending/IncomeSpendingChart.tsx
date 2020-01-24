@@ -1,5 +1,3 @@
-/// <reference path="../../../../typings/react-vis.d.ts"/>
-
 import React, { FunctionComponent, useState, useEffect } from 'react'
 import '../../../../node_modules/react-vis/dist/style.css'
 import moment from 'moment'
@@ -16,18 +14,22 @@ import {
 import { SetSelectedTransactionActionCreator } from '../../actions'
 import { IncomeSpendingCrosshairDisplay } from './IncomeSpendingCrosshairDisplay'
 import { GraphLineSeries } from '../../reducers'
+import { useHover } from '../../utilities/hooks'
 
 interface IncomeSpendingChartProps {
   lineSeries: GraphLineSeries
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
-  windowWidth: number
+  width: number
+  height: number
 }
 
 export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = ({
   setSelectedTransactionKeyAction,
-  windowWidth,
+  width,
+  height,
   lineSeries: { incomeSeries, spendingSeries },
 }) => {
+  const [hoverRef, isHovered] = useHover()
   const [currentX, setCurrentX] = useState(0)
   const [currentYs, setCurrentYs] = useState({ incomeY: 0, spendingY: 0 })
 
@@ -47,45 +49,49 @@ export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = 
   const { incomeY, spendingY } = currentYs
 
   return (
-    <XYPlot
-      height={300}
-      width={windowWidth - 330}
-      xType="time"
-      margin={{ left: 70, right: 10, top: 10, bottom: 70 }}
-      style={{ cursor: 'pointer' }}
-      onClick={() => {
-        setSelectedTransactionKeyAction(moment(currentX).format('YYYY-MM-DD'))
-      }}
-    >
-      <VerticalGridLines />
-      <HorizontalGridLines />
-      <XAxis
-        tickLabelAngle={315}
-        tickFormat={time => moment(time).format('MMM Do, YYYY')}
-      />
-      <YAxis tickFormat={amount => `$${amount}`} />
-      <LineMarkSeries
-        color={'#00b44b'}
-        data={incomeSeries}
-        onNearestX={value => {
-          if (currentX !== value.x) {
-            setCurrentX(value.x as number)
-          }
+    <div ref={hoverRef as React.MutableRefObject<any>}>
+      <XYPlot
+        height={height}
+        width={width}
+        xType="time"
+        margin={{ left: 50, right: 10, top: 20, bottom: 70 }}
+        style={{ cursor: 'pointer' }}
+        onClick={() => {
+          setSelectedTransactionKeyAction(moment(currentX).format('YYYY-MM-DD'))
         }}
-        curve={'curveMonotoneX'}
-      />
-      <LineMarkSeries
-        color="#bb0120"
-        data={spendingSeries}
-        curve={'curveMonotoneX'}
-      />
-      <Crosshair values={[{ x: currentX }]}>
-        <IncomeSpendingCrosshairDisplay
-          time={currentX}
-          income={incomeY}
-          spending={spendingY}
+      >
+        <VerticalGridLines />
+        <HorizontalGridLines />
+        <XAxis
+          tickLabelAngle={315}
+          tickFormat={time => moment(time).format('MMM Do, YYYY')}
         />
-      </Crosshair>
-    </XYPlot>
+        <YAxis tickFormat={amount => `$${amount}`} />
+        <LineMarkSeries
+          color={'#00b44b'}
+          data={incomeSeries}
+          onNearestX={value => {
+            if (currentX !== value.x) {
+              setCurrentX(value.x as number)
+            }
+          }}
+          curve={'curveMonotoneX'}
+        />
+        <LineMarkSeries
+          color="#bb0120"
+          data={spendingSeries}
+          curve={'curveMonotoneX'}
+        />
+        {isHovered && (
+          <Crosshair values={[{ x: currentX }]}>
+            <IncomeSpendingCrosshairDisplay
+              time={currentX}
+              income={incomeY}
+              spending={spendingY}
+            />
+          </Crosshair>
+        )}
+      </XYPlot>
+    </div>
   )
 }

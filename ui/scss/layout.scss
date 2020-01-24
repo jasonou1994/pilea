@@ -15,17 +15,15 @@
 #filters {
   width: 250px;
   flex-shrink: 0;
-  margin-right: 5px;
-  border: 1px solid black;
-  border-radius: 5px;
-  padding: 0 10px;
+  height: calc(100vh - 175px);
+  overflow-y: scroll;
+  padding: 0 5px;
 }
 
 #analysis {
   padding: 0 10px 10px 10px;
   width: 100%;
-  border: 1px solid black;
-  border-radius: 5px;
+  border-left: 1px solid rgb(66, 66, 66);
 }
 
 * {

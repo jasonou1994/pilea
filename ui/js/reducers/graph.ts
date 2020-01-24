@@ -43,8 +43,8 @@ const initialState: GraphState = {
   [INCOME_SPENDING]: {
     [GRAPH_FIDELITY]: MONTH,
     [HISTORICAL_LENGTH]: {
-      [HISTORICAL_TIME_COUNT]: 1,
-      [HISTORICAL_TIME_UNIT]: 'year',
+      [HISTORICAL_TIME_COUNT]: 6,
+      [HISTORICAL_TIME_UNIT]: 'month',
     },
   },
   [HISTORICAL_BALANCES]: {

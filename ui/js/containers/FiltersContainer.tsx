@@ -52,7 +52,6 @@ const FiltersContainer: FunctionComponent<FiltersContainerProps> = ({
 }) => {
   return (
     <div id="filters">
-      <h2>Filters</h2>
       <CardFilter
         {...{
           cardsByItems,

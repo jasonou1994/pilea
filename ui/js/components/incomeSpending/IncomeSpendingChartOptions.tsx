@@ -48,8 +48,9 @@ export class IncomeSpendingChartOptions extends Component<
     return (
       <div style={{ display: 'flex' }}>
         <>
-          <div>Group by:</div>
+          <div className="chart-option-header">Group by:</div>
           <select
+            className="chart-option-select"
             value={graphFidelity}
             onChange={e => {
               resetSelectedTransactionKeyAction()
@@ -65,8 +66,9 @@ export class IncomeSpendingChartOptions extends Component<
           </select>
         </>
         <>
-          <div>Date range:</div>
+          <div className="chart-option-header">Date range:</div>
           <select
+            className="chart-option-select"
             value={convertDateSelectObject({
               historicalTimeCount,
               historicalTimeUnit,

@@ -33,10 +33,13 @@ import { cardsSelector } from '../reducers/transactionsAccounts'
 import {
   windowWidthSelector,
   filterSidebarWidthSelector,
+  windowHeightSelector,
 } from '../reducers/sizing'
 import { IncomeSpendingChart } from '../components/incomeSpending/IncomeSpendingChart'
 import { IncomeSpendingChartOptions } from '../components/incomeSpending/IncomeSpendingChartOptions'
 import { IncomeSpendingDetailsGrid } from '../components/incomeSpending/IncomeSpendingDetailsGrid'
+import { selectedTransactionKeySelector } from '../reducers/grid'
+import moment from 'moment'
 
 interface AnalysisContainerProps {
   graphFidelity: AvailableTimeUnits
@@ -51,13 +54,14 @@ interface AnalysisContainerProps {
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   windowWidth: number
+  windowHeight: number
   filterSidebarWidth: number
   lineSeries: GraphLineSeries
+  selectedTransactionKey: string
 }
 
 const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
   graphFidelity,
-
   cards,
   selectedTransactions,
   setGraphFidelityAction,
@@ -66,38 +70,72 @@ const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
   graphHistoricalLength,
   resetSelectedTransactionKeyAction,
   windowWidth,
+  windowHeight,
   filterSidebarWidth,
   lineSeries,
+  selectedTransactionKey,
 }) => {
+  const titleTimeFidelity =
+    graphFidelity === 'year'
+      ? 'Yearly'
+      : graphFidelity === 'month'
+      ? 'Monthly'
+      : graphFidelity === 'week'
+      ? 'Weekly'
+      : 'Daily'
+  const titleTimeDuration = graphHistoricalLength[HISTORICAL_TIME_COUNT]
+  const titleTimeUnit =
+    graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'year'
+      ? 'Year(s)'
+      : graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'month'
+      ? 'Month(s)'
+      : graphHistoricalLength[HISTORICAL_TIME_UNIT] === 'week'
+      ? 'Week(s)'
+      : 'Day(s)'
+
   return (
     <div id="analysis">
-      <div>
-        <h2>Income and Spending</h2>
-        <IncomeSpendingChart
-          {...{
-            lineSeries,
-            windowWidth,
+      {!selectedTransactions ||
+      selectedTransactions.transactions.length === 0 ? (
+        <>
+          <h4>{`Income and Spending Displayed ${titleTimeFidelity} for the Past ${titleTimeDuration} ${titleTimeUnit}`}</h4>
+          <IncomeSpendingChartOptions
+            {...{
+              setGraphFidelityAction,
+              graphFidelity,
+              setGraphHistoricalLengthAction,
+              graphHistoricalLength,
+              resetSelectedTransactionKeyAction,
+            }}
+          />
 
-            setSelectedTransactionKeyAction,
-          }}
-        />
-        <IncomeSpendingChartOptions
-          {...{
-            setGraphFidelityAction,
-            graphFidelity,
-            setGraphHistoricalLengthAction,
-            graphHistoricalLength,
-            resetSelectedTransactionKeyAction,
-          }}
-        />
+          <div className="income-spending-click-detail-popup">
+            Click on a datapoint to analyze transactions
+          </div>
+
+          <IncomeSpendingChart
+            {...{
+              lineSeries,
+              width: windowWidth - 330,
+              height: windowHeight - 250,
+              setSelectedTransactionKeyAction,
+            }}
+          />
+        </>
+      ) : (
         <IncomeSpendingDetailsGrid
           {...{
-            allowedWidth: windowWidth - filterSidebarWidth - 70,
+            width: windowWidth - filterSidebarWidth - 70,
             cards,
             selectedTransactions,
+            historicalDuration: graphFidelity,
+            resetSelectedTransactionKeyAction,
+            startingDate: moment(selectedTransactionKey).format(
+              'dddd, MMMM Do YYYY'
+            ),
           }}
         />
-      </div>
+      )}
     </div>
   )
 }
@@ -110,6 +148,9 @@ export default connect(
     selectedTransactions: selectedTransactionsSelector(state),
     graphHistoricalLength: incomeSpendingGraphHistoricalLengthSelector(state),
     windowWidth: windowWidthSelector(state),
+    windowHeight: windowHeightSelector(state),
+    selectedTransactionKey: selectedTransactionKeySelector(state),
+
     filterSidebarWidth: filterSidebarWidthSelector(state),
     lineSeries: incomeSpendingLineSeriesSelector(state),
   }),

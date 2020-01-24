@@ -1,3 +1,5 @@
+@import 'colors';
+
 .reactPivot {
   margin-top: 0 !important;
 }
@@ -10,4 +12,26 @@
 
 .reactPivot-paginate::-webkit-scrollbar {
   width: 0 !important;
+}
+
+.income-spending-click-detail-popup {
+  font-size: 14px;
+  margin-top: 5px;
+  text-decoration: underline;
+}
+
+.grid-spending-line {
+  color: $red;
+  margin-left: 5px;
+}
+
+.grid-income-line {
+  color: $green;
+  margin-left: 5px;
+}
+
+.income-spending-grid {
+  height: calc(100vh - 275px);
+  width: calc(100vw - 290px);
+  margin-top: 10px;
 }

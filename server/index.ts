@@ -35,12 +35,12 @@ app.use((_, res: Response, next: NextFunction) => {
   next()
 })
 
+app.use(compression())
 app.use('/transactions', transactions)
 app.use('/plaid', plaid)
 app.use('/user', user)
 app.use('/items', items)
 
-app.use(compression)
 app.use(express.static('build'))
 app.get('/*', (_: Request, res: Response) =>
   res.sendFile(path.join(__dirname, '../build/index.html'))

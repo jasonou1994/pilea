@@ -130,9 +130,7 @@ const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({
             selectedTransactions,
             historicalDuration: graphFidelity,
             resetSelectedTransactionKeyAction,
-            startingDate: moment(selectedTransactionKey).format(
-              'dddd, MMMM Do YYYY'
-            ),
+            startingDate: moment(selectedTransactionKey).valueOf(),
           }}
         />
       )}

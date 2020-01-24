@@ -58,7 +58,7 @@ const config = (env: any): webpack.Configuration => {
         'env.NODE_ENV': JSON.stringify('production'),
       }),
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-      new BundleAnalyzerPlugin(),
+      // new BundleAnalyzerPlugin(),
     ],
   }
 }

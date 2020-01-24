@@ -22,6 +22,7 @@ app.use(expressLogger)
 app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(logReq)
+app.use(compression())
 app.use((_, res: Response, next: NextFunction) => {
   res.header(
     'Access-Control-Allow-Origin',
@@ -35,7 +36,6 @@ app.use((_, res: Response, next: NextFunction) => {
   next()
 })
 
-app.use(compression())
 app.use('/transactions', transactions)
 app.use('/plaid', plaid)
 app.use('/user', user)

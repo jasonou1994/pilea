@@ -1,4 +1,21 @@
-import knex from "knex";
-import { connection } from "./constants";
+import knex from 'knex'
+import { getDBCredentials } from './secrets'
+import { logger } from './logger'
 
-export const dbClient = knex({ client: "pg", connection });
+let dbClient = undefined
+
+getDBCredentials()
+  .then(({ username, password, host, dbname }) => {
+    dbClient = knex({
+      client: 'pg',
+      connection: {
+        host,
+        user: username,
+        password,
+        database: dbname,
+      },
+    })
+  })
+  .catch(err => logger.error(err))
+
+export const getDbClient = () => dbClient

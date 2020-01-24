@@ -1,6 +1,6 @@
 import moment from 'moment'
 import { ITEMS } from '../constants'
-import { dbClient } from '../database'
+import { getDbClient } from '../database'
 
 export interface DBItem {
   accessToken: string
@@ -12,7 +12,7 @@ export interface DBItem {
 
 export const getItems: ({ userId }) => Promise<DBItem[]> = async ({ userId }) =>
   await new Promise((resolve, reject) => {
-    dbClient
+    getDbClient()
       .select('*')
       .from(ITEMS)
       .where({ userId })
@@ -25,7 +25,7 @@ export const insertItem: ({
   accessToken,
   alias,
 }: DBItem) => Promise<void> = async ({ userId, accessToken, alias }) => {
-  await dbClient(ITEMS).insert({
+  await getDbClient()(ITEMS).insert({
     userId,
     accessToken,
     alias,
@@ -40,12 +40,12 @@ export const deleteItem: ({
   itemId: number
   userId: number
 }) => Promise<void> = async ({ userId, itemId }) =>
-  await dbClient(ITEMS)
+  await getDbClient()(ITEMS)
     .where({ userId, id: itemId })
     .del()
 
 export const updateItemById: ({ id }) => Promise<void> = async ({ id }) => {
-  await dbClient(ITEMS)
+  await getDbClient()(ITEMS)
     .update({
       lastUpdated: moment(),
     })

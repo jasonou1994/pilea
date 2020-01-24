@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import { ContractResponse } from '.'
-import { client } from '../constants'
 import { logger } from '../logger'
+import { getPlaidClient } from '../plaidAPI'
 
 export interface ContractPlaidGetAccessToken extends ContractResponse {
   access_token: string | null
@@ -15,9 +15,12 @@ export const getAccessToken = async (req: Request, res: Response) => {
     const { public_token: PUBLIC_TOKEN } = req.body
 
     const { access_token, item_id } = await new Promise((resolve, reject) => {
-      client.exchangePublicToken(PUBLIC_TOKEN, (error, tokenResponse) => {
-        error ? reject(error) : resolve(tokenResponse)
-      })
+      getPlaidClient().exchangePublicToken(
+        PUBLIC_TOKEN,
+        (error, tokenResponse) => {
+          error ? reject(error) : resolve(tokenResponse)
+        }
+      )
     })
 
     res.json({

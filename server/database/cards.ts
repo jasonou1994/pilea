@@ -1,6 +1,6 @@
 import { Account as PlaidCard } from 'plaid'
 import { CARDS, TRANSACTIONS, USERS } from '../constants'
-import { dbClient } from '../database'
+import { getDbClient } from '../database'
 
 export interface DBCard {
   account_id: string
@@ -30,7 +30,7 @@ export const getCards: ({
   itemId?: number
   userId: number
 }) => Promise<PileaCard[]> = async ({ userId, itemId }) => {
-  const dbCards: DBCard[] = await dbClient
+  const dbCards: DBCard[] = await getDbClient()
     .select('*')
     .from(CARDS)
     .where({
@@ -73,13 +73,13 @@ export const deleteCards: ({
   itemId?: number
   userId: number
 }) => Promise<void> = async ({ userId, itemId }) => {
-  await dbClient(CARDS)
+  await getDbClient()(CARDS)
     .where({ userId, ...(itemId ? { itemId } : {}) })
     .del()
 }
 
 export const insertCards: (cards: DBCard[]) => Promise<void> = async cards =>
-  await dbClient(CARDS).insert(cards)
+  await getDbClient()(CARDS).insert(cards)
 
 export const dbDailySumByCard: (
   userId: number
@@ -92,7 +92,7 @@ export const dbDailySumByCard: (
   }>
 > = async userId =>
   (
-    await dbClient
+    await getDbClient()
       .select('cards.account_id', 'type', 'date')
       .sum('amount')
       .from(TRANSACTIONS)

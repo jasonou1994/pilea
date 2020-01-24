@@ -1,5 +1,22 @@
-import { TransactionsResponse } from 'plaid'
-import { client } from '../constants'
+import { TransactionsResponse, Client, environments } from 'plaid'
+import { getPlaidCredentials } from '../secrets'
+import { MODE } from '../env'
+import { logger } from '../logger'
+
+let client: Client = undefined
+getPlaidCredentials()
+  .then(({ clientId, testSecret, devSecret, publicKey }) => {
+    client = new Client(
+      clientId,
+      MODE === 'TEST' ? testSecret : devSecret,
+      publicKey,
+      environments[MODE === 'TEST' ? 'sandbox' : 'development']
+    )
+    logger.debug('Plaid client successfully created.')
+  })
+  .catch(err => logger.error(err))
+
+export const getPlaidClient = () => client
 
 export const plaidGetTransactions: ({
   token,

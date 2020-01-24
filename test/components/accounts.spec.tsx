@@ -18,16 +18,16 @@ import {
   fireEvent,
   wait,
 } from '../setup/testUtils'
-// import { dbClient } from '../../server/database'
+// import { getDbClient() } from '../../server/database'
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
-export const dbClient = knex({ client: 'pg', connection })
+export const getDbClient() = knex({ client: 'pg', connection })
 
 describe('Account tests', () => {
   beforeAll(async () => {
     // Set up test account
-    await dbClient
+    await getDbClient()
       .delete()
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -44,7 +44,7 @@ describe('Account tests', () => {
       redirect: 'manual',
     })
 
-    const dbCreateUserCheck = await dbClient
+    const dbCreateUserCheck = await getDbClient()
       .select('*')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -75,11 +75,11 @@ describe('Account tests', () => {
   afterEach(cleanup)
 
   afterAll(async () => {
-    await dbClient
+    await getDbClient()
       .delete()
       .from('users')
       .where({ username: NEW_USER_EMAIL })
-    dbClient.destroy()
+    getDbClient().destroy()
   })
 
   test('Add account flow', async () => {

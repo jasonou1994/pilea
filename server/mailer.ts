@@ -1,9 +1,19 @@
 import nodemailer from 'nodemailer'
-import { nodemailerConfig } from './constants'
 import { HOST, MODE } from './env'
 import { logger } from './logger'
+import { getEmailCredentials } from './secrets'
 
-logger.debug(`Email sent to following url: ${HOST}`)
+logger.debug(`Emails are sent to following url: ${HOST}`)
+
+let nodemailerConfig = undefined
+getEmailCredentials().then(({ user, pass }) => {
+  nodemailerConfig = {
+    auth: {
+      user,
+      pass,
+    },
+  }
+})
 
 export const sendSignUpEmail = async (
   address: string,

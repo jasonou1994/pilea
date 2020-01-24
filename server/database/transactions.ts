@@ -1,10 +1,6 @@
-import {
-  Iso8601DateString,
-  Transaction as PlaidTransaction,
-  TransactionsResponse,
-} from 'plaid'
+import { Iso8601DateString, Transaction as PlaidTransaction } from 'plaid'
 import { TRANSACTIONS, USERS } from '../constants'
-import { dbClient } from '../database'
+import { getDbClient } from '../database'
 
 export interface DBTransaction {
   account_id: string
@@ -38,7 +34,7 @@ export interface DBTransaction {
 export const getTransactions: ({
   userId,
 }) => Promise<PlaidTransaction[]> = async ({ userId }) => {
-  const dbTransactions: DBTransaction[] = await dbClient
+  const dbTransactions: DBTransaction[] = await getDbClient()
     .select('*')
     .from(TRANSACTIONS)
     .where({ userId })
@@ -91,7 +87,7 @@ export const getTransactions: ({
 export const deleteTransactions: ({ userId }) => Promise<void> = async ({
   userId,
 }) => {
-  await dbClient(TRANSACTIONS)
+  await getDbClient()(TRANSACTIONS)
     .where({ userId })
     .del()
 }
@@ -99,7 +95,7 @@ export const deleteTransactions: ({ userId }) => Promise<void> = async ({
 export const dbGetTransactionCount: ({ userId }) => Promise<number> = async ({
   userId,
 }) => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .select('transactionLoadingCount')
     .where({ id: userId })
 
@@ -115,7 +111,7 @@ export const deleteTransactionsForGivenCardAndUser: ({
   cardId: string
   userId: number
 }) => Promise<void> = async ({ userId, cardId }) =>
-  await dbClient(TRANSACTIONS)
+  await getDbClient()(TRANSACTIONS)
     .where({ userId, account_id: cardId })
     .del()
 
@@ -166,6 +162,6 @@ export const insertTransactions: ({
     }
   })
 
-  await dbClient(TRANSACTIONS).insert(dbTransactions)
+  await getDbClient()(TRANSACTIONS).insert(dbTransactions)
   // .debug(true)
 }

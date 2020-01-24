@@ -1,5 +1,5 @@
 import { ACCESS_TOKENS, USERS } from '../constants'
-import { dbClient } from '../database'
+import { getDbClient } from '../database'
 
 export interface DBUser {
   confirmationString?: string
@@ -21,7 +21,7 @@ export const insertUser: ({
   confirmationString,
   confirmed,
 }) => {
-  await dbClient(USERS).insert({
+  await getDbClient()(USERS).insert({
     passwordHash,
     username,
     confirmed,
@@ -36,7 +36,7 @@ export const addPasswordResetTokenToUser: ({
   passwordResetToken: string
   username: string
 }) => Promise<boolean> = async ({ username, passwordResetToken }) => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .update({ passwordResetToken })
     .where({ username })
 
@@ -46,7 +46,7 @@ export const addPasswordResetTokenToUser: ({
 export const confirmUserDB = async (
   confirmationString: string
 ): Promise<boolean> => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .update({ confirmed: true })
     .where({ confirmationString })
 
@@ -60,7 +60,7 @@ export const confirmUserDB = async (
 export const getUsers: ({ username }) => Promise<DBUser[]> = async ({
   username,
 }) => {
-  return await dbClient
+  return await getDbClient()
     .select('*')
     .from(USERS)
     .where({ username })
@@ -73,14 +73,14 @@ export const addUserAccessToken: ({
   token: string
   username: string
 }) => Promise<void> = async ({ username, token }) =>
-  await dbClient(ACCESS_TOKENS).insert({ token, username })
+  await getDbClient()(ACCESS_TOKENS).insert({ token, username })
 
 export const deleteUserAccessToken: ({
   token,
 }: {
   token: string
 }) => Promise<number> = async ({ token }) =>
-  await dbClient(ACCESS_TOKENS)
+  await getDbClient()(ACCESS_TOKENS)
     .delete()
     .where({ token })
 
@@ -89,7 +89,7 @@ export const deleteAllUserAccessTokensByUsername: ({
 }: {
   username: string
 }) => Promise<void> = async ({ username }) => {
-  await dbClient(ACCESS_TOKENS)
+  await getDbClient()(ACCESS_TOKENS)
     .delete()
     .where({ username })
 }
@@ -99,7 +99,7 @@ export const doesUserAccessTokenExist: ({
 }: {
   token: string
 }) => Promise<boolean> = async ({ token }) => {
-  const results = await dbClient(ACCESS_TOKENS)
+  const results = await getDbClient()(ACCESS_TOKENS)
     .select('*')
     .where({ token })
 
@@ -117,7 +117,7 @@ export const getUserFromUserAccessToken: ({
   passwordResetToken: string
   username: string
 }> = async ({ token }) => {
-  const results = await dbClient
+  const results = await getDbClient()
     .select(
       'users.id',
       'users.username',
@@ -136,7 +136,7 @@ export const getUserFromUserAccessToken: ({
 export const dbCheckIfUserVerified: ({ id }) => Promise<boolean> = async ({
   id,
 }) => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .where({ id, confirmed: true })
     .count('*')
 
@@ -146,7 +146,7 @@ export const dbCheckIfUserVerified: ({ id }) => Promise<boolean> = async ({
 export const checkIfPasswordResetTokenMatches: ({
   resetToken: string,
 }) => Promise<boolean> = async ({ resetToken }) => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .where({ passwordResetToken: resetToken })
     .count('*')
 
@@ -157,11 +157,11 @@ export const updatePassword: (
   password: string,
   resetToken: string
 ) => Promise<boolean> = async (passwordHash, resetToken) => {
-  const result = await dbClient(USERS)
+  const result = await getDbClient()(USERS)
     .update({ passwordHash })
     .where({ passwordResetToken: resetToken })
 
-  await dbClient(USERS)
+  await getDbClient()(USERS)
     .update({ passwordResetToken: '' })
     .where({ passwordResetToken: resetToken })
 
@@ -171,7 +171,7 @@ export const updatePassword: (
 export const deleteUserByUsername: (
   username: string
 ) => Promise<void> = async username => {
-  await dbClient(USERS)
+  await getDbClient()(USERS)
     .del()
     .where({ username })
 }
@@ -179,7 +179,7 @@ export const deleteUserByUsername: (
 export const confirmUserBypassDB: (
   username: string
 ) => Promise<void> = async username => {
-  await dbClient(USERS)
+  await getDbClient()(USERS)
     .update({ confirmed: true })
     .where({ username })
 }
@@ -188,7 +188,7 @@ export const updateUserTransactionLoadingCount: (
   count: number,
   userId: string
 ) => Promise<void> = async (count, userId) => {
-  await dbClient(USERS)
+  await getDbClient()(USERS)
     .update({ transactionLoadingCount: count })
     .where({ id: userId })
 }

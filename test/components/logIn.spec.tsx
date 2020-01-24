@@ -20,11 +20,11 @@ import {
   fireEvent,
   wait,
 } from '../setup/testUtils'
-// import { dbClient } from '../database'
+// import { getDbClient() } from '../database'
 
 let getById: (text: any, options?: any) => HTMLElement
 let getByText: (text: Matcher, options?: SelectorMatcherOptions) => HTMLElement
-export const dbClient = knex({ client: 'pg', connection })
+export const getDbClient() = knex({ client: 'pg', connection })
 
 describe('Log in tests', () => {
   beforeEach(() => {
@@ -33,7 +33,7 @@ describe('Log in tests', () => {
 
   afterEach(cleanup)
 
-  afterAll(() => dbClient.destroy())
+  afterAll(() => getDbClient().destroy())
 
   test('Log in button is disabled without input', () => {
     const signInButton = getById('sign-in-button') as HTMLButtonElement
@@ -86,7 +86,7 @@ describe('Log in tests', () => {
 
   test('User creation, confirmation, and password reset flow', async () => {
     // Prep
-    await dbClient
+    await getDbClient()
       .del()
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -108,7 +108,7 @@ describe('Log in tests', () => {
     await wait(() => getByText('Log Out'))
     expect(getByText('Log Out')).toBeTruthy()
 
-    const dbCreateUserCheck = await dbClient
+    const dbCreateUserCheck = await getDbClient()
       .select('*')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -122,7 +122,7 @@ describe('Log in tests', () => {
       redirect: 'manual',
     })
 
-    const dbConfirmationCheck = await dbClient
+    const dbConfirmationCheck = await getDbClient()
       .select('confirmed')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -143,7 +143,7 @@ describe('Log in tests', () => {
 
     await new Promise(resolve => setTimeout(() => resolve(), 2000))
 
-    const dbResetToken = await dbClient
+    const dbResetToken = await getDbClient()
       .select('passwordResetToken')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
@@ -161,14 +161,14 @@ describe('Log in tests', () => {
       redirect: 'manual',
     })
 
-    const dbConfirmPasswordUpdate = await dbClient
+    const dbConfirmPasswordUpdate = await getDbClient()
       .select('passwordResetToken')
       .from('users')
       .where({ username: NEW_USER_EMAIL })
     expect(dbConfirmPasswordUpdate[0].passwordResetToken).toBe('')
 
     // Clean up
-    await dbClient
+    await getDbClient()
       .del()
       .from('users')
       .where({ username: NEW_USER_EMAIL })

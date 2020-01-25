@@ -1,4 +1,10 @@
-import { SecretsManager } from 'aws-sdk'
+import { SecretsManager, config } from 'aws-sdk'
+import { AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY } from './env'
+
+config.update({
+  accessKeyId: AWS_ACCESS_KEY,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
+})
 
 const region = 'us-east-2'
 

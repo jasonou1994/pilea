@@ -11,7 +11,7 @@
     "server-dev": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c",
     "server-local": "MODE=DEVELOPMENT PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
     "server-test": "MODE=TEST PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
-    "server": "tslint --fix  -c tslint.json 'server/**/*.ts' && ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
+    "server": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
     "test": "npm run jest",
     "jest": "jest test/ --coverage --runInBand",
     "lint": "tslint --fix  -c tslint.json 'ui/**/*.ts'"

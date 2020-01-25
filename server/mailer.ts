@@ -6,14 +6,17 @@ import { getEmailCredentials } from './secrets'
 logger.debug(`Emails are sent to following url: ${HOST}`)
 
 let nodemailerConfig = undefined
-getEmailCredentials().then(({ user, pass }) => {
-  nodemailerConfig = {
-    auth: {
-      user,
-      pass,
-    },
-  }
-})
+getEmailCredentials()
+  .then(({ user, pass }) => {
+    logger.debug('Mailer client successfully created.')
+    nodemailerConfig = {
+      auth: {
+        user,
+        pass,
+      },
+    }
+  })
+  .catch(err => logger.error(err))
 
 export const sendSignUpEmail = async (
   address: string,

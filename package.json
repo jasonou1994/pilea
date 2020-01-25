@@ -7,13 +7,14 @@
   "scripts": {
     "ui-dev": "webpack-dev-server --config webpack.dev.ts",
     "ui-local": "webpack-dev-server --config webpack.dev.ts --env.API_PORT=8000 --env.API_HOST=localhost --env.API_PROTOCOL=http",
-    "ui-build": "tslint --fix  -c tslint.json 'ui/**/*.ts' && webpack --config webpack.prod.ts",
+    "ui-build": "webpack --config webpack.prod.ts",
     "server-dev": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c",
     "server-local": "MODE=DEVELOPMENT PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
     "server-test": "MODE=TEST PORT=8443 INSECURE_PORT=8000 CORS_URL=http://localhost:3000 HOST=http://localhost:3000 npm run server-dev",
     "server": "tslint --fix  -c tslint.json 'server/**/*.ts' && ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
     "test": "npm run jest",
-    "jest": "jest test/ --coverage --runInBand"
+    "jest": "jest test/ --coverage --runInBand",
+    "lint": "tslint --fix  -c tslint.json 'ui/**/*.ts'"
   },
   "keywords": [],
   "author": "",

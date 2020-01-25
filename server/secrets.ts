@@ -8,6 +8,7 @@ export const getSecret: (secretName: string) => Promise<any> = secretName =>
   new Promise((resolve, reject) => {
     secretManager.getSecretValue({ SecretId: secretName }, (err, data) => {
       if (err) {
+        console.log(err)
         reject(err)
       } else {
         // Decrypts secret using the associated KMS CMK.

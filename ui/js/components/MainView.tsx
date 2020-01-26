@@ -13,16 +13,24 @@ import { connect } from 'react-redux'
 import {
   isTransactionsLoadingSelector,
   isTransactionsRefreshingSelector,
+  isLoginLoadingSelector,
 } from '../reducers/loading'
 import { transactionsRefreshedCountSelector } from '../reducers/transactionsAccounts'
-import { TransactionsLoading, TransactionsRefreshing } from './common/Loaders'
+import {
+  TransactionsLoading,
+  TransactionsRefreshing,
+  LogInLoading,
+} from './common/Loaders'
+import { loggedInSelector } from '../reducers/login'
 
 interface MainViewProps extends RouteComponentProps {
+  isLoginLoading: boolean
   isTransactionsLoading: boolean
   isTransactionsRefreshing: boolean
   cardsByItems: ItemWithCards[]
   fetchTransactionsCountAction: FetchTransactionsCountActionCreator
   refreshedCount: number
+  isLoggedIn: boolean
 }
 
 const _MainView: FunctionComponent<MainViewProps> = ({
@@ -32,9 +40,15 @@ const _MainView: FunctionComponent<MainViewProps> = ({
   cardsByItems,
   fetchTransactionsCountAction,
   refreshedCount,
+  isLoginLoading,
+  isLoggedIn,
 }) => {
   useEffect(() => {
-    history.push('/view/accounts')
+    if (!isLoggedIn && !isLoginLoading) {
+      history.push('/')
+    }
+
+    // history.push('/view/accounts')
     return () => {
       history.push('/')
     }
@@ -56,7 +70,9 @@ const _MainView: FunctionComponent<MainViewProps> = ({
     }
   }, [isTransactionsRefreshing])
 
-  return isTransactionsLoading ? (
+  return isLoginLoading ? (
+    <LogInLoading />
+  ) : isTransactionsLoading ? (
     <TransactionsLoading />
   ) : isTransactionsRefreshing ? (
     <TransactionsRefreshing count={refreshedCount} />
@@ -89,6 +105,8 @@ export const MainView = withRouter(
     (state: RootState) => ({
       isTransactionsLoading: isTransactionsLoadingSelector(state),
       isTransactionsRefreshing: isTransactionsRefreshingSelector(state),
+      isLoggedIn: loggedInSelector(state),
+      isLoginLoading: isLoginLoadingSelector(state),
       cardsByItems: itemsWithCardsSelector(state),
       refreshedCount: transactionsRefreshedCountSelector(state),
     }),

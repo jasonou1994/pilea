@@ -39,6 +39,7 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
       location: { pathname },
       fetchAddItemAction,
       isTransactionsRefreshing,
+      history,
     } = this.props
 
     return (
@@ -47,7 +48,13 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
           <div className="welcome-bar">
             <span className="welcome">
               {`Welcome, ${user[USER_NAME]} to `}
-              <span className="pilea-logo">PILEA</span>
+              <span
+                className="pilea-logo"
+                onClick={() => history.push('/')}
+                style={{ cursor: 'pointer' }}
+              >
+                PILEA
+              </span>
             </span>
 
             <Button
@@ -55,17 +62,46 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
               type="normal"
               disabled={false}
               text="Log Out"
-              onClick={() => fetchLogOutAction({})}
+              onClick={() => {
+                fetchLogOutAction({})
+                history.push('/')
+              }}
             />
           </div>
         ) : (
           <div className="welcome-bar">
             <span className="welcome">
               {`Welcome to `}
-              <span className="pilea-logo">PILEA</span>.
+              <span
+                className="pilea-logo"
+                onClick={() => history.push('/')}
+                style={{ cursor: 'pointer' }}
+              >
+                PILEA
+              </span>
+              .
             </span>
+
+            {history.location.pathname === '/' && (
+              <div>
+                <Button
+                  type="normal"
+                  disabled={false}
+                  text="Log In"
+                  onClick={() => history.push('/login')}
+                  style={{ marginRight: '5px' }}
+                />
+                <Button
+                  type="normal"
+                  disabled={false}
+                  text="Sign Up"
+                  onClick={() => history.push('/signin')}
+                />
+              </div>
+            )}
           </div>
         )}
+
         {cardsByItems.length > 0 && !isTransactionsRefreshing && (
           <RefreshData
             {...{
@@ -76,41 +112,41 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
         )}
 
         {loggedIn && (
-          <AddNewItem
-            {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
-          />
-        )}
-
-        {loggedIn && (
           <>
-            <Link to="/view/accounts">
-              <span
-                style={{
-                  fontWeight: pathname === '/view/accounts' ? 'bold' : 'normal',
-                }}
-              >
-                Accounts
-              </span>
-            </Link>
-            <Link to="/view/transactions">
-              <span
-                style={{
-                  fontWeight:
-                    pathname === '/view/transactions' ? 'bold' : 'normal',
-                }}
-              >
-                Transactions
-              </span>
-            </Link>
-            <Link to="/view/pivot">
-              <span
-                style={{
-                  fontWeight: pathname === '/view/pivot' ? 'bold' : 'normal',
-                }}
-              >
-                Pivot
-              </span>
-            </Link>
+            <AddNewItem
+              {...{ onConfirm: fetchAddItemAction, hidden: !user.confirmed }}
+            />
+            <>
+              <Link to="/view/accounts">
+                <span
+                  style={{
+                    fontWeight:
+                      pathname === '/view/accounts' ? 'bold' : 'normal',
+                  }}
+                >
+                  Accounts
+                </span>
+              </Link>
+              <Link to="/view/transactions">
+                <span
+                  style={{
+                    fontWeight:
+                      pathname === '/view/transactions' ? 'bold' : 'normal',
+                  }}
+                >
+                  Transactions
+                </span>
+              </Link>
+              <Link to="/view/pivot">
+                <span
+                  style={{
+                    fontWeight: pathname === '/view/pivot' ? 'bold' : 'normal',
+                  }}
+                >
+                  Pivot
+                </span>
+              </Link>
+            </>
           </>
         )}
 

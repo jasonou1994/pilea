@@ -8,8 +8,6 @@ import saga from './js/sagas/sagas'
 import createSagaMiddleware from 'redux-saga'
 import App from './js/containers/App'
 import { setCurrentWindowWidth, setCurrentWindowHeight } from './js/actions'
-// import { accounts } from "./mockData/setAccounts";
-// import { transactions } from "./mockData/addTransactions";
 
 const sagaMiddleware = createSagaMiddleware()
 
@@ -27,13 +25,13 @@ window.onresize = () => {
   store.dispatch(setCurrentWindowHeight({ height: window.innerHeight }))
 }
 
-store.dispatch({
-  type: 'FETCH_LOG_IN',
-  payload: {
-    user: 'jasonou122894@gmail.com',
-    password: 'jasonou1',
-  },
-})
+// store.dispatch({
+//   type: 'FETCH_LOG_IN',
+//   payload: {
+//     user: 'jasonou122894@gmail.com',
+//     password: 'jasonou1',
+//   },
+// })
 
 ReactDOM.render(
   <Provider store={store}>

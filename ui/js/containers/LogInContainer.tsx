@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
 import { LogIn } from '../components/LogIn'
 import { CreateUser } from '../components/CreateUser'
@@ -8,49 +8,33 @@ import {
   fetchCreateUser,
   FetchCreateUserActionCreator,
 } from '../actions'
-
-import { Link } from 'react-router-dom'
-import { RootState } from '../reducers'
-import { isLoginLoadingSelector } from '../reducers/loading'
-import { LogInLoading } from '../components/common/Loaders'
+import { Link, withRouter } from 'react-router-dom'
 
 interface LogInContainerProps {
   fetchLogIn: FetchLogInActionCreator
   fetchCreateUser: FetchCreateUserActionCreator
-  isLoginLoading: boolean
 }
 
-class _LogInContainer extends Component<LogInContainerProps> {
-  render() {
-    const { fetchLogIn, fetchCreateUser, isLoginLoading } = this.props
-
-    return (
-      <div>
-        {isLoginLoading ? (
-          <LogInLoading />
-        ) : (
-          <div>
-            <div className="login-container">
-              <CreateUser {...{ fetchCreateUser }} />
-              <LogIn {...{ fetchLogIn }} />
-            </div>
-
-            <Link id="forgot-password-link" to="/password/forgot">
-              Forgot password?
-            </Link>
-          </div>
-        )}
+const _LogInContainer: FunctionComponent<LogInContainerProps> = ({
+  fetchCreateUser,
+  fetchLogIn,
+}) => {
+  return (
+    <>
+      <div className="login-container">
+        <CreateUser {...{ fetchCreateUser }} />
+        <LogIn {...{ fetchLogIn }} />
       </div>
-    )
-  }
+      <Link id="forgot-password-link" to="/password/forgot">
+        Forgot password?
+      </Link>
+    </>
+  )
 }
 
-export default connect(
-  (state: RootState) => ({
-    isLoginLoading: isLoginLoadingSelector(state),
-  }),
-  {
+export default withRouter(
+  connect(() => ({}), {
     fetchLogIn,
     fetchCreateUser,
-  }
-)(_LogInContainer)
+  })(_LogInContainer)
+)

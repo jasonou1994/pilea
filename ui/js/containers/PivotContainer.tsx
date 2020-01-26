@@ -100,7 +100,6 @@ const _PivotContainer: FunctionComponent<PivotContainerProps> = ({
     </p>
   ) : (
     <>
-      <h2>Pivot</h2>
       <Pivot
         {...{
           reduce,

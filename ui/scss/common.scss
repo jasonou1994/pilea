@@ -81,3 +81,13 @@ a:focus {
     font-weight: bold;
   }
 }
+
+.home-page-text {
+  padding-top: 5px;
+}
+.home-page-image {
+  border: 1px solid $faded-grey;
+  margin: 5px 0 20px;
+  width: 66%;
+  min-width: 450px;
+}

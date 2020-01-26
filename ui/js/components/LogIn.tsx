@@ -2,6 +2,7 @@ import React, { FunctionComponent, useState } from 'react'
 import { FetchLogInActionCreator } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
+import { useHistory } from 'react-router-dom'
 
 interface LogInProps {
   fetchLogIn: FetchLogInActionCreator
@@ -10,6 +11,7 @@ interface LogInProps {
 export const LogIn: FunctionComponent<LogInProps> = ({ fetchLogIn }) => {
   const [userInput, setUserInput] = useState('')
   const [passwordInput, setPasswordInput] = useState('')
+  const history = useHistory()
 
   return (
     <div className="sign-in left-border">
@@ -37,7 +39,10 @@ export const LogIn: FunctionComponent<LogInProps> = ({ fetchLogIn }) => {
 
       <Button
         id="sign-in-button"
-        onClick={() => fetchLogIn({ user: userInput, password: passwordInput })}
+        onClick={() => {
+          fetchLogIn({ user: userInput, password: passwordInput })
+          history.push('/view/accounts')
+        }}
         type="primary"
         disabled={passwordInput.length === 0 || userInput.length === 0}
         text="Log In"

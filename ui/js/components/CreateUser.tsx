@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { FetchCreateUserActionCreator } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
+import { RouteChildrenProps, withRouter } from 'react-router-dom'
 
-interface CreateUserProps {
+interface CreateUserProps extends RouteChildrenProps {
   fetchCreateUser: FetchCreateUserActionCreator
 }
 
@@ -18,7 +19,7 @@ interface CreateUserState {
 
 const emailRegex = /^[a-z].*@.+\.[a-z]+/i
 
-export class CreateUser extends Component<CreateUserProps, CreateUserState> {
+class _CreateUser extends Component<CreateUserProps, CreateUserState> {
   constructor(props: CreateUserProps) {
     super(props)
     this.state = {
@@ -107,7 +108,10 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
 
         <Button
           id="new-account-button"
-          onClick={this.submitCreateAccount}
+          onClick={() => {
+            this.submitCreateAccount()
+            this.props.history.push('/view/accounts')
+          }}
           type="primary"
           disabled={
             !userInputValid ||
@@ -123,3 +127,5 @@ export class CreateUser extends Component<CreateUserProps, CreateUserState> {
     )
   }
 }
+
+export const CreateUser = withRouter(_CreateUser)

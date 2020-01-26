@@ -125,20 +125,18 @@ function* addItem({ payload: { accessToken, alias } }: FetchAddItemInterface) {
 
     yield put(startLoading(TRANSACTIONS))
 
-    const [{ cards, transactions, items }, { historicalBalances }]: [
-      TransactionsRetrieveResponse,
-      HistoricalBalancesResponse
-    ] = yield all([
-      call(services[API_ITEMS_ADD], {
-        body: JSON.stringify({
-          publicToken: accessToken,
-          alias,
-          start,
-          end,
-        }),
+    const { cards, transactions, items } = yield call(services[API_ITEMS_ADD], {
+      body: JSON.stringify({
+        publicToken: accessToken,
+        alias,
+        start,
+        end,
       }),
-      call(services[API_ACCOUNTS_GET_DAILY_BALANCES]),
-    ])
+    })
+
+    const { historicalBalances } = yield call(
+      services[API_ACCOUNTS_GET_DAILY_BALANCES]
+    )
 
     yield put(setCards(cards))
     yield put(setTransactions(transactions))

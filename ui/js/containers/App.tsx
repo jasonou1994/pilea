@@ -21,6 +21,7 @@ import { loggedInSelector } from '../reducers/login'
 import { activeNotificationsSelector } from '../reducers/notifications'
 import { useActiveUser } from '../utilities/hooks'
 import { IdleWarning } from '../components/IdleWarning'
+import { HomePageText } from '../components/HomePageText'
 
 interface AppProps {
   loggedIn: boolean
@@ -55,7 +56,9 @@ const _App: FunctionComponent<AppProps> = ({
             expireNotificationsAction({ notifications }),
         }}
       />
+
       <Router>
+        <HeaderContainer />
         <Route path="/confirmed">
           <>
             <div>Thanks for confirming your email!</div>
@@ -65,9 +68,19 @@ const _App: FunctionComponent<AppProps> = ({
         <Route path="/password">
           <PasswordResetContainer />
         </Route>
+        <Route path="/login">
+          <LogInContainer />
+        </Route>
+        <Route path="/signin">
+          <LogInContainer />
+        </Route>
+        <Route exact path="/">
+          <HomePageText />
+        </Route>
+
         <Route
           exact
-          path="(/|/view|/view/accounts|/view/transactions|/view/pivot)"
+          path="(/view|/view/accounts|/view/transactions|/view/pivot)"
         >
           {isWarning ? (
             <IdleWarning
@@ -83,9 +96,7 @@ const _App: FunctionComponent<AppProps> = ({
             />
           ) : (
             <>
-              <HeaderContainer />
-
-              {!loggedIn ? <LogInContainer /> : <MainView />}
+              <MainView />
             </>
           )}
         </Route>

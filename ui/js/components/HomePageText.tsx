@@ -35,6 +35,18 @@ export const HomePageText = () => (
       </a>
     </div>
     <br />
+    <div>
+      Pilea is created and maintained by a single developer. Have questions or
+      concerns or want to help add new features? Contact{' '}
+      <a
+        href="mailto:jason@mypilea.com?Subject=Pilea"
+        target="_top"
+        style={{ textDecoration: 'underline' }}
+      >
+        jason@mypilea.com
+      </a>
+    </div>
+    <hr />
     <div>View day-by-day historical balances across all your accounts:</div>
     <img
       src="https://pilea-assets.s3.us-east-2.amazonaws.com/Balances.png"

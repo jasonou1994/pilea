@@ -46,7 +46,7 @@ export const HomePageText = () => (
         jason@mypilea.com
       </a>
     </div>
-    <hr />
+    <br />
     <div>View day-by-day historical balances across all your accounts:</div>
     <img
       src="https://pilea-assets.s3.us-east-2.amazonaws.com/Balances.png"

@@ -259,7 +259,15 @@ export const getHistoricalBalanceByCard = async (_: Request, res: Response) => {
     // Get historical daily sums
     const sortedDailyCardSums = await dbDailySumByCard(userId)
     if (sortedDailyCardSums.length <= 0) {
-      throw new Error('No transactions found to compute historical balances.')
+      const resBody: ContractRetrieveHistoricalBalance = {
+        status: 'No transactions to calculate historical balances.',
+        success: true,
+        error: null,
+        historicalBalances: {},
+      }
+
+      res.json(resBody)
+      return
     }
 
     const dailySums = sortedDailyCardSums.reduce((acc, { id, sum, date }) => {

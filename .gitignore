@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+node_modules
 /.pnp
 .pnp.js
 
@@ -12,6 +13,7 @@
 
 # production
 /build
+build
 
 # misc
 .DS_Store
@@ -25,3 +27,4 @@ yarn-debug.log*
 yarn-error.log*
 
 log.txt
+awsconfig.json

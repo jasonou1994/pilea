@@ -6,6 +6,8 @@ let dbClient = undefined
 
 getDBCredentials()
   .then(({ username, password, host, dbname }) => {
+    logger.debug('Mailer client successfully created.')
+
     dbClient = knex({
       client: 'pg',
       connection: {

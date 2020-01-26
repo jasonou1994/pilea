@@ -1,4 +1,7 @@
 import { SecretsManager } from 'aws-sdk'
+import { config } from 'aws-sdk'
+
+config.loadFromPath('./awsconfig.json')
 
 const secretManager = new SecretsManager({ region: 'us-east-2' })
 

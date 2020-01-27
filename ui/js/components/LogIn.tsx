@@ -1,20 +1,20 @@
 import React, { FunctionComponent, useState } from 'react'
-import { useHistory } from 'react-router-dom'
-import { FetchLogInActionCreator } from '../actions'
+import { useDispatch } from 'react-redux'
+import { Link, useHistory } from 'react-router-dom'
+import { fetchLogIn } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
 
-interface LogInProps {
-  fetchLogIn: FetchLogInActionCreator
-}
+interface LogInProps {}
 
-export const LogIn: FunctionComponent<LogInProps> = ({ fetchLogIn }) => {
+export const LogIn: FunctionComponent<LogInProps> = () => {
   const [userInput, setUserInput] = useState('')
   const [passwordInput, setPasswordInput] = useState('')
   const history = useHistory()
+  const dispatch = useDispatch()
 
   return (
-    <div className="sign-in left-border">
+    <div className="sign-in ">
       <div className="header">Sign In</div>
 
       <TextInput
@@ -40,7 +40,7 @@ export const LogIn: FunctionComponent<LogInProps> = ({ fetchLogIn }) => {
       <Button
         id="sign-in-button"
         onClick={() => {
-          fetchLogIn({ user: userInput, password: passwordInput })
+          dispatch(fetchLogIn({ user: userInput, password: passwordInput }))
           history.push('/view/accounts')
         }}
         type="primary"
@@ -48,6 +48,10 @@ export const LogIn: FunctionComponent<LogInProps> = ({ fetchLogIn }) => {
         text="Log In"
         width={65}
       />
+
+      <Link id="forgot-password-link" to="/password/forgot">
+        Forgot password?
+      </Link>
     </div>
   )
 }

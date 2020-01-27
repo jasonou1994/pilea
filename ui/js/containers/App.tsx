@@ -8,8 +8,10 @@ import {
   fetchLogOut,
   FetchLogOutActionCreator,
 } from '../actions'
+import { CreateUser } from '../components/CreateUser'
 import { HomePageText } from '../components/HomePageText'
 import { IdleWarning } from '../components/IdleWarning'
+import { LogIn } from '../components/LogIn'
 import { MainView } from '../components/MainView'
 import {
   NotificationsContainer,
@@ -20,7 +22,6 @@ import { loggedInSelector } from '../reducers/login'
 import { activeNotificationsSelector } from '../reducers/notifications'
 import { useActiveUser } from '../utilities/hooks'
 import HeaderContainer from './HeaderContainer'
-import LogInContainer from './LogInContainer'
 import PasswordResetContainer from './PasswordResetContainer'
 
 interface AppProps {
@@ -69,10 +70,10 @@ const _App: FunctionComponent<AppProps> = ({
           <PasswordResetContainer />
         </Route>
         <Route path="/login">
-          <LogInContainer />
+          <LogIn />
         </Route>
-        <Route path="/signin">
-          <LogInContainer />
+        <Route path="/signup">
+          <CreateUser />
         </Route>
         <Route exact path="/">
           <HomePageText />

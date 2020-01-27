@@ -1,12 +1,9 @@
-import React, { Component } from 'react'
-import { RouteChildrenProps, withRouter } from 'react-router-dom'
-import { FetchCreateUserActionCreator } from '../actions'
+import React, { FunctionComponent, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useHistory } from 'react-router-dom'
+import { fetchCreateUser } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
-
-interface CreateUserProps extends RouteChildrenProps {
-  fetchCreateUser: FetchCreateUserActionCreator
-}
 
 interface CreateUserState {
   passwordInput: string
@@ -19,113 +16,109 @@ interface CreateUserState {
 
 const emailRegex = /^[a-z].*@.+\.[a-z]+/i
 
-class _CreateUser extends Component<CreateUserProps, CreateUserState> {
-  constructor(props: CreateUserProps) {
-    super(props)
-    this.state = {
-      userInput: '',
-      passwordInput: '',
-      passwordRepeat: '',
-      userInputValid: true,
-      passwordInputValid: true,
-      passwordMatch: true,
-    }
-  }
+export const CreateUser: FunctionComponent = () => {
+  const [state, setState] = useState<CreateUserState>({
+    userInput: '',
+    passwordInput: '',
+    passwordRepeat: '',
+    userInputValid: true,
+    passwordInputValid: true,
+    passwordMatch: true,
+  })
+  const dispatch = useDispatch()
+  const history = useHistory()
 
-  public render() {
-    const {
-      userInput,
-      passwordInput,
-      userInputValid,
-      passwordMatch,
-      passwordInputValid,
-      passwordRepeat,
-    } = this.state
+  const {
+    userInput,
+    passwordInput,
+    userInputValid,
+    passwordMatch,
+    passwordInputValid,
+    passwordRepeat,
+  } = state
 
-    return (
-      <div className="sign-in right-padding">
-        <div className="header">New Account</div>
-
-        <TextInput
-          id="new-account-user"
-          label="Email address"
-          invalid={!userInputValid}
-          type="text"
-          placeholder="Email"
-          value={userInput}
-          onChange={this.updateUserInput}
-        />
-
-        <TextInput
-          id="new-account-password-1"
-          label="Enter password (8 char min)"
-          invalid={!passwordInputValid}
-          type="password"
-          placeholder="Password"
-          value={passwordInput}
-          onChange={this.updateFirstPassword}
-        />
-
-        <TextInput
-          id="new-account-password-2"
-          label="Re-enter password"
-          invalid={!passwordMatch}
-          type="password"
-          placeholder="Password"
-          value={passwordRepeat}
-          onChange={this.updateSecondPassword}
-        />
-
-        <Button
-          id="new-account-button"
-          onClick={() => {
-            this.submitCreateAccount()
-            this.props.history.push('/view/accounts')
-          }}
-          type="primary"
-          disabled={
-            !userInputValid ||
-            !passwordMatch ||
-            !passwordInputValid ||
-            passwordRepeat.length === 0 ||
-            userInput.length === 0
-          }
-          text="Create"
-          width={65}
-        />
-      </div>
+  const submitCreateAccount = () =>
+    dispatch(
+      fetchCreateUser({
+        user: userInput,
+        password: passwordInput,
+      })
     )
-  }
 
-  public submitCreateAccount = () => {
-    const { userInput, passwordInput } = this.state
-    const { fetchCreateUser } = this.props
-
-    fetchCreateUser({
-      user: userInput,
-      password: passwordInput,
-    })
-  }
-
-  public updateFirstPassword = (input: string) => {
+  const updateFirstPassword = (input: string) => {
     const isValidPassword = input.length >= 8
-    this.setState({
+    setState({
+      ...state,
       passwordInput: input,
       passwordInputValid: isValidPassword,
     })
   }
 
-  public updateSecondPassword = (input: string) =>
-    this.setState({
+  const updateSecondPassword = (input: string) =>
+    setState({
+      ...state,
       passwordRepeat: input,
-      passwordMatch: this.state.passwordInput === input,
+      passwordMatch: passwordInput === input,
     })
 
-  public updateUserInput = (input: string) =>
-    this.setState({
+  const updateUserInput = (input: string) =>
+    setState({
+      ...state,
       userInput: input,
       userInputValid: input.match(emailRegex) !== null,
     })
-}
 
-export const CreateUser = withRouter(_CreateUser)
+  return (
+    <div className="sign-in right-padding">
+      <div className="header">New Account</div>
+
+      <TextInput
+        id="new-account-user"
+        label="Email address"
+        invalid={!userInputValid}
+        type="text"
+        placeholder="Email"
+        value={userInput}
+        onChange={updateUserInput}
+      />
+
+      <TextInput
+        id="new-account-password-1"
+        label="Enter password (8 char min)"
+        invalid={!passwordInputValid}
+        type="password"
+        placeholder="Password"
+        value={passwordInput}
+        onChange={updateFirstPassword}
+      />
+
+      <TextInput
+        id="new-account-password-2"
+        label="Re-enter password"
+        invalid={!passwordMatch}
+        type="password"
+        placeholder="Password"
+        value={passwordRepeat}
+        onChange={updateSecondPassword}
+      />
+
+      <Button
+        id="new-account-button"
+        onClick={() => {
+          submitCreateAccount()
+          history.push('/view/accounts')
+        }}
+        type="primary"
+        disabled={
+          !userInputValid ||
+          !passwordMatch ||
+          !passwordInputValid ||
+          passwordRepeat.length === 0 ||
+          userInput.length === 0
+        }
+        text="Create"
+        width={65}
+      />
+    </div>
+  )
+}

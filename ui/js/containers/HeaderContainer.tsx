@@ -69,38 +69,38 @@ class _HeaderContainer extends Component<HeaderContainerProps> {
             />
           </div>
         ) : (
-          <div className="welcome-bar">
-            <span className="welcome">
-              {`Welcome to `}
-              <span
-                className="pilea-logo"
-                onClick={() => history.push('/')}
-                style={{ cursor: 'pointer' }}
-              >
-                PILEA
+            <div className="welcome-bar">
+              <span className="welcome">
+                {`Welcome to `}
+                <span
+                  className="pilea-logo"
+                  onClick={() => history.push('/')}
+                  style={{ cursor: 'pointer' }}
+                >
+                  PILEA
               </span>
-              .
+                .
             </span>
 
-            {history.location.pathname === '/' && (
-              <div className="home-page-button-bar">
-                <Button
-                  type="normal"
-                  disabled={false}
-                  text="Log In"
-                  onClick={() => history.push('/login')}
-                  style={{ marginRight: '5px', marginBottom: '0px' }}
-                />
-                <Button
-                  type="normal"
-                  disabled={false}
-                  text="Sign Up"
-                  onClick={() => history.push('/signin')}
-                />
-              </div>
-            )}
-          </div>
-        )}
+              {history.location.pathname === '/' && (
+                <div className="home-page-button-bar">
+                  <Button
+                    type="normal"
+                    disabled={false}
+                    text="Log In"
+                    onClick={() => history.push('/login')}
+                    style={{ marginRight: '5px', marginBottom: '0px' }}
+                  />
+                  <Button
+                    type="normal"
+                    disabled={false}
+                    text="Sign Up"
+                    onClick={() => history.push('/signup')}
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
         {cardsByItems.length > 0 && !isTransactionsRefreshing && (
           <RefreshData

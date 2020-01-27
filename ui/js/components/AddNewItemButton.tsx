@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
 import PlaidLink from 'react-plaid-link'
-import { PLAID_PUBLIC_KEY, PLAID_ENV } from '../konstants'
+import { PLAID_ENV, PLAID_PUBLIC_KEY } from '../konstants'
 
 interface AddNewItemButtonProps {
   hidden: boolean

@@ -1,42 +1,42 @@
 import React, { Component } from 'react'
 import {
+  ResetSelectedTransactionActionCreator,
   SetGraphFidelityActionCreator,
   SetGraphHistoricalLengthActionCreator,
-  ResetSelectedTransactionActionCreator,
 } from '../../actions'
 import {
+  AvailableTimeStrings,
+  AvailableTimeUnits,
+  DAY,
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
-  AvailableTimeUnits,
-  TWO_YEARS,
+  MONTH,
   ONE_YEAR,
   SIX_MONTHS,
   THREE_MONTHS,
-  AvailableTimeStrings,
-  DAY,
+  TWO_YEARS,
   WEEK,
-  MONTH,
 } from '../../konstants'
 import {
-  convertDateSelectString,
   convertDateSelectObject,
+  convertDateSelectString,
 } from '../../utilities/utils'
 
 interface IncomeSpendingChartOptionsProps {
-  setGraphFidelityAction: SetGraphFidelityActionCreator
   graphFidelity: AvailableTimeUnits
-  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  setGraphFidelityAction: SetGraphFidelityActionCreator
+  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
 }
 
 export class IncomeSpendingChartOptions extends Component<
   IncomeSpendingChartOptionsProps
 > {
-  render() {
+  public render() {
     const {
       setGraphFidelityAction,
       graphFidelity,

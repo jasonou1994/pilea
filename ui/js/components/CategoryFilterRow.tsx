@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react'
 import numeral from 'numeral'
+import React, { FunctionComponent } from 'react'
 
 interface CategoryFilterRowProps {
-  selected: boolean
-  toggleSelected: (category: string) => void
-  selectSingleCategory: (category: string) => void
   category: string
+  selected: boolean
+  selectSingleCategory: (category: string) => void
   spending: number
+  toggleSelected: (category: string) => void
 }
 
 export const CategoryFilterRow: FunctionComponent<CategoryFilterRowProps> = ({

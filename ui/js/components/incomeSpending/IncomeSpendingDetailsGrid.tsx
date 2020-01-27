@@ -1,21 +1,21 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
 import 'ag-grid-community/dist/styles/ag-grid.css'
 import 'ag-grid-community/dist/styles/ag-theme-balham.css'
 import { AgGridReact } from 'ag-grid-react'
-import numeral from 'numeral'
-import { PileaCard } from '../../sagas/sagas'
-import { TimeConsolidatedTransactionGroup } from '../../reducers'
-import { getDataGridColumnDefs } from '../../utilities/layout'
-import { GRID_LAYOUT_BY_TIME } from '../../konstants'
-import { getCardName } from '../../utilities/utils'
-import { ResetSelectedTransactionActionCreator } from '../../actions'
 import moment from 'moment'
+import numeral from 'numeral'
+import React, { FunctionComponent, useEffect, useState } from 'react'
+import { ResetSelectedTransactionActionCreator } from '../../actions'
+import { GRID_LAYOUT_BY_TIME } from '../../konstants'
+import { TimeConsolidatedTransactionGroup } from '../../reducers'
+import { PileaCard } from '../../sagas/sagas'
+import { getDataGridColumnDefs } from '../../utilities/layout'
+import { getCardName } from '../../utilities/utils'
 
 interface IncomeSpendingDetailsGridProps {
   cards: PileaCard[]
-  selectedTransactions: TimeConsolidatedTransactionGroup
-  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   historicalDuration: string
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  selectedTransactions: TimeConsolidatedTransactionGroup
   startingDate: number
 }
 

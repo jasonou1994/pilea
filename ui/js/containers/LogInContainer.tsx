@@ -1,18 +1,18 @@
 import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
-import { LogIn } from '../components/LogIn'
-import { CreateUser } from '../components/CreateUser'
+import { Link, withRouter } from 'react-router-dom'
 import {
-  fetchLogIn,
-  FetchLogInActionCreator,
   fetchCreateUser,
   FetchCreateUserActionCreator,
+  fetchLogIn,
+  FetchLogInActionCreator,
 } from '../actions'
-import { Link, withRouter } from 'react-router-dom'
+import { CreateUser } from '../components/CreateUser'
+import { LogIn } from '../components/LogIn'
 
 interface LogInContainerProps {
-  fetchLogIn: FetchLogInActionCreator
   fetchCreateUser: FetchCreateUserActionCreator
+  fetchLogIn: FetchLogInActionCreator
 }
 
 const _LogInContainer: FunctionComponent<LogInContainerProps> = ({

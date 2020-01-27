@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
 import moment from 'moment'
+import React, { Component } from 'react'
 import { FetchRefreshTransactionsActionCreator } from '../actions'
 import { ItemWithCards } from '../reducers'
 import { Button } from './common/Button'
@@ -10,7 +10,7 @@ interface RefreshDataProps {
 }
 
 export class RefreshData extends Component<RefreshDataProps> {
-  render() {
+  public render() {
     const { cardsByItems, fetchRefreshTransactionsAction } = this.props
 
     return (

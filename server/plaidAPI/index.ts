@@ -1,7 +1,7 @@
-import { TransactionsResponse, Client, environments } from 'plaid'
-import { getPlaidCredentials } from '../secrets'
+import { Client, environments, TransactionsResponse } from 'plaid'
 import { MODE } from '../env'
 import { logger } from '../logger'
+import { getPlaidCredentials } from '../secrets'
 
 let client: Client = undefined
 getPlaidCredentials()

@@ -1,15 +1,15 @@
 import React, { FunctionComponent, useEffect, useState } from 'react'
-import { Notification } from './common/Notification'
 import { useInterval } from '../utilities/hooks'
+import { Notification } from './common/Notification'
 
 export const PERSISTENT = 'persistent'
 export const TEMPORARY = 'temporary'
 export type NotificationDurationType = typeof PERSISTENT | typeof TEMPORARY
 
 export interface NotificationWithDuration extends Notification {
-  timeCreated: number
   durationInSeconds?: number
   durationType: NotificationDurationType
+  timeCreated: number
 }
 
 interface NotificationsContainerProps {

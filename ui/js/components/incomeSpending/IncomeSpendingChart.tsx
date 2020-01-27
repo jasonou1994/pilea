@@ -1,26 +1,26 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
-import '../../../../node_modules/react-vis/dist/style.css'
 import moment from 'moment'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 import {
-  XYPlot,
-  VerticalGridLines,
-  HorizontalGridLines,
-  XAxis,
-  YAxis,
-  LineMarkSeries,
   Crosshair,
+  HorizontalGridLines,
+  LineMarkSeries,
+  VerticalGridLines,
+  XAxis,
+  XYPlot,
+  YAxis,
 } from 'react-vis'
+import '../../../../node_modules/react-vis/dist/style.css'
 
 import { SetSelectedTransactionActionCreator } from '../../actions'
-import { IncomeSpendingCrosshairDisplay } from './IncomeSpendingCrosshairDisplay'
 import { GraphLineSeries } from '../../reducers'
 import { useHover } from '../../utilities/hooks'
+import { IncomeSpendingCrosshairDisplay } from './IncomeSpendingCrosshairDisplay'
 
 interface IncomeSpendingChartProps {
+  height: number
   lineSeries: GraphLineSeries
   setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
   width: number
-  height: number
 }
 
 export const IncomeSpendingChart: FunctionComponent<IncomeSpendingChartProps> = ({

@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
-import { Switch, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { RootState } from '../reducers'
-import { SendReset } from '../components/SendReset'
+import { Route, Switch } from 'react-router-dom'
 import {
-  FetchSendPasswordResetEmailActionCreator,
   fetchSendPasswordResetEmail,
+  FetchSendPasswordResetEmailActionCreator,
 } from '../actions'
 import { ResetPassword } from '../components/ResetPassword'
+import { SendReset } from '../components/SendReset'
+import { RootState } from '../reducers'
 
 interface Props {
   fetchSendPasswordResetEmailAction: FetchSendPasswordResetEmailActionCreator
 }
 
 class _PasswordResetContainer extends Component<Props> {
-  render() {
+  public render() {
     const { fetchSendPasswordResetEmailAction } = this.props
 
     return (

@@ -18,7 +18,7 @@ export const getSecret: (secretName: string) => Promise<any> = secretName =>
           resolve(JSON.parse(data.SecretString))
         } else {
           // @ts-ignore
-          let buff = new Buffer(data.SecretBinary, 'base64')
+          const buff = new Buffer(data.SecretBinary, 'base64')
           resolve(JSON.parse(buff.toString('ascii')))
         }
       }
@@ -26,22 +26,22 @@ export const getSecret: (secretName: string) => Promise<any> = secretName =>
   })
 
 export const getDBCredentials: () => Promise<{
-  username: string
-  password: string
+  dbname: string
   engine: string
   host: string
+  password: string
   port: string
-  dbname: string
+  username: string
 }> = () => getSecret('prod/rdb')
 
 export const getEmailCredentials: () => Promise<{
-  user: string
   pass: string
+  user: string
 }> = () => getSecret('prod/nodemailer')
 
 export const getPlaidCredentials: () => Promise<{
   clientId: string
-  testSecret: string
   devSecret: string
   publicKey: string
+  testSecret: string
 }> = () => getSecret('prod/plaid')

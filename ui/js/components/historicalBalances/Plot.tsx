@@ -1,17 +1,17 @@
+import moment from 'moment'
 import React, { FunctionComponent } from 'react'
 import {
-  XYPlot,
-  VerticalGridLines,
   HorizontalGridLines,
+  VerticalGridLines,
   XAxis,
+  XYPlot,
   YAxis,
 } from 'react-vis'
 import { useHover } from '../../utilities/hooks'
-import moment from 'moment'
 
 interface PlotProps {
-  width: number
   height: number
+  width: number
 }
 export const Plot: FunctionComponent<PlotProps> = ({
   width,

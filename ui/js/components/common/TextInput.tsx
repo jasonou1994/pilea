@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from 'react'
 import classNames from 'classnames'
+import React, { FunctionComponent } from 'react'
 
 interface TextInputProps {
   id?: string
-  label?: string
   invalid: boolean
-  type: 'text' | 'password'
-  placeholder: string
-  value: string
+  label?: string
   onChange: (input: string) => any
+  placeholder: string
+  type: 'text' | 'password'
+  value: string
 }
 
 export const TextInput: FunctionComponent<TextInputProps> = ({

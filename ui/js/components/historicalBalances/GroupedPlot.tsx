@@ -1,15 +1,15 @@
 import React, { FunctionComponent, useState } from 'react'
+import { Crosshair, LineMarkSeries } from 'react-vis'
 import { LineSeries } from '../../reducers'
-import { LineMarkSeries, Crosshair } from 'react-vis'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
-import { useLineSeriesMap, useCurrentYs } from './utilities'
 import { Plot } from './Plot'
+import { useCurrentYs, useLineSeriesMap } from './utilities'
 
 interface GroupedPlotProps {
   assetLineSeries: LineSeries
+  height: number
   liabilityLineSeries: LineSeries
   width: number
-  height: number
 }
 
 export const GroupedPlot: FunctionComponent<GroupedPlotProps> = ({

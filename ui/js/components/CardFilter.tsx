@@ -1,17 +1,17 @@
 import React, { FunctionComponent } from 'react'
+import {
+  ResetSelectedTransactionActionCreator,
+  ToggleCardSelectedActionCreator,
+  ToggleItemSelectedActionCreator,
+} from '../actions'
 import { ItemWithCards } from '../reducers'
 import { CardFilterRow } from './CardFilterRow'
-import {
-  ToggleItemSelectedActionCreator,
-  ToggleCardSelectedActionCreator,
-  ResetSelectedTransactionActionCreator,
-} from '../actions'
 
 interface CardFilterProps {
   cardsByItems: ItemWithCards[]
-  toggleItemSelectedAction: ToggleItemSelectedActionCreator
-  toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
+  toggleCardSelectedAction: ToggleCardSelectedActionCreator
+  toggleItemSelectedAction: ToggleItemSelectedActionCreator
 }
 
 export const CardFilter: FunctionComponent<CardFilterProps> = props => {

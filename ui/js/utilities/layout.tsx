@@ -1,6 +1,6 @@
-import React from 'react'
 import { AgGridColumnProps } from 'ag-grid-react'
 import numeral from 'numeral'
+import React from 'react'
 import { AvailableGridLayouts, GRID_LAYOUT_BY_TIME } from '../konstants'
 
 export interface GridColumnDef extends AgGridColumnProps {}

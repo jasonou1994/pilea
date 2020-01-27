@@ -1,20 +1,20 @@
 import React, { Component } from 'react'
+import { RouteChildrenProps, withRouter } from 'react-router-dom'
 import { FetchCreateUserActionCreator } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
-import { RouteChildrenProps, withRouter } from 'react-router-dom'
 
 interface CreateUserProps extends RouteChildrenProps {
   fetchCreateUser: FetchCreateUserActionCreator
 }
 
 interface CreateUserState {
-  userInput: string
   passwordInput: string
-  passwordRepeat: string
-  userInputValid: boolean
   passwordInputValid: boolean
   passwordMatch: boolean
+  passwordRepeat: string
+  userInput: string
+  userInputValid: boolean
 }
 
 const emailRegex = /^[a-z].*@.+\.[a-z]+/i
@@ -32,37 +32,7 @@ class _CreateUser extends Component<CreateUserProps, CreateUserState> {
     }
   }
 
-  submitCreateAccount = () => {
-    const { userInput, passwordInput } = this.state
-    const { fetchCreateUser } = this.props
-
-    fetchCreateUser({
-      user: userInput,
-      password: passwordInput,
-    })
-  }
-
-  updateUserInput = (input: string) =>
-    this.setState({
-      userInput: input,
-      userInputValid: input.match(emailRegex) !== null,
-    })
-
-  updateFirstPassword = (input: string) => {
-    const isValidPassword = input.length >= 8
-    this.setState({
-      passwordInput: input,
-      passwordInputValid: isValidPassword,
-    })
-  }
-
-  updateSecondPassword = (input: string) =>
-    this.setState({
-      passwordRepeat: input,
-      passwordMatch: this.state.passwordInput === input,
-    })
-
-  render() {
+  public render() {
     const {
       userInput,
       passwordInput,
@@ -126,6 +96,36 @@ class _CreateUser extends Component<CreateUserProps, CreateUserState> {
       </div>
     )
   }
+
+  public submitCreateAccount = () => {
+    const { userInput, passwordInput } = this.state
+    const { fetchCreateUser } = this.props
+
+    fetchCreateUser({
+      user: userInput,
+      password: passwordInput,
+    })
+  }
+
+  public updateFirstPassword = (input: string) => {
+    const isValidPassword = input.length >= 8
+    this.setState({
+      passwordInput: input,
+      passwordInputValid: isValidPassword,
+    })
+  }
+
+  public updateSecondPassword = (input: string) =>
+    this.setState({
+      passwordRepeat: input,
+      passwordMatch: this.state.passwordInput === input,
+    })
+
+  public updateUserInput = (input: string) =>
+    this.setState({
+      userInput: input,
+      userInputValid: input.match(emailRegex) !== null,
+    })
 }
 
 export const CreateUser = withRouter(_CreateUser)

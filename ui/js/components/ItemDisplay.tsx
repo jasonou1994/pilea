@@ -1,12 +1,12 @@
-import React, { FunctionComponent } from 'react'
-import { ItemWithCards } from '../reducers'
 import numeral from 'numeral'
+import React, { FunctionComponent } from 'react'
 import { FetchRemoveItemActionCreator } from '../actions'
+import { ItemWithCards } from '../reducers'
 import { Button } from './common/Button'
 
 interface ItemDisplayProps {
-  item: ItemWithCards
   fetchRemoveItemAction: FetchRemoveItemActionCreator
+  item: ItemWithCards
 }
 
 export const ItemDisplay: FunctionComponent<ItemDisplayProps> = ({

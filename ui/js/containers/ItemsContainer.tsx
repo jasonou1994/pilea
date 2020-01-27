@@ -6,17 +6,17 @@ import {
   fetchRemoveItem,
   FetchRemoveItemActionCreator,
 } from '../actions'
-import { User, userSelector } from '../reducers/login'
-import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { CurrentItems } from '../components/ItemCollection'
+import { itemsWithCardsSelector, ItemWithCards, RootState } from '../reducers'
+import { User, userSelector } from '../reducers/login'
 import { HistoricalBalancesContainer } from './HistoricalBalancesContainer'
 
 interface ItemsContainerProps {
   cardsByItems: ItemWithCards[]
-  user: User
 
   fetchAddItemAction: FetchAddItemActionCreator
   fetchRemoveItemAction: FetchRemoveItemActionCreator
+  user: User
 }
 
 const ItemsContainer: FunctionComponent<ItemsContainerProps> = ({

@@ -1,0 +1,36 @@
+@import 'colors';
+
+.home-page-text {
+  padding-top: 5px;
+}
+.home-page-image {
+  border: 1px solid $faded-grey;
+  margin: 5px 0 5px;
+  width: 100%;
+  // min-width: 450px;
+}
+
+.home-page-features {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: space-between;
+
+  @media screen and (max-width: $break-tablet) {
+    justify-content: flex-start;
+  }
+}
+
+.home-page-feature {
+  width: 32%;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+
+  @media screen and (max-width: $break-tablet) {
+    width: 75%;
+  }
+  @media screen and (max-width: $break-phone) {
+    width: 100%;
+  }
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { FetchSendPasswordResetEmailActionCreator } from '../actions'
-import { TextInput } from './common/TextInput'
 import { Button } from './common/Button'
+import { TextInput } from './common/TextInput'
 
 interface Props {
   fetchSendPasswordResetEmailAction: FetchSendPasswordResetEmailActionCreator
@@ -21,17 +21,7 @@ export class SendReset extends Component<Props, State> {
     }
   }
 
-  submit = () => {
-    const { emailInput } = this.state
-    const { fetchSendPasswordResetEmailAction } = this.props
-
-    fetchSendPasswordResetEmailAction({
-      email: emailInput,
-    })
-    this.setState({ sent: true })
-  }
-
-  render() {
+  public render() {
     const { emailInput, sent } = this.state
 
     return (
@@ -67,5 +57,15 @@ export class SendReset extends Component<Props, State> {
         )}
       </div>
     )
+  }
+
+  public submit = () => {
+    const { emailInput } = this.state
+    const { fetchSendPasswordResetEmailAction } = this.props
+
+    fetchSendPasswordResetEmailAction({
+      email: emailInput,
+    })
+    this.setState({ sent: true })
   }
 }

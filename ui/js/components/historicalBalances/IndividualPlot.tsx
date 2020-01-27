@@ -1,16 +1,16 @@
-import React, { FunctionComponent, useState, useMemo } from 'react'
+import React, { FunctionComponent, useMemo, useState } from 'react'
+import { Crosshair, LineMarkSeries } from 'react-vis'
 import { LineSeries } from '../../reducers'
-import { LineMarkSeries, Crosshair } from 'react-vis'
 import { HistoricalBalancesCrosshairDisplay } from './HistoricalBalancesCrosshairDisplay'
-import { useCurrentYs, LineSeriesMap } from './utilities'
-import { Plot } from './Plot'
 import { Legend } from './Legend'
+import { Plot } from './Plot'
+import { LineSeriesMap, useCurrentYs } from './utilities'
 
 interface IndividualPlotProps {
   combinedLineSeries: LineSeries
+  height: number
   individualLineSeries: { [cardName: string]: LineSeries }
   width: number
-  height: number
 }
 
 const colors = [

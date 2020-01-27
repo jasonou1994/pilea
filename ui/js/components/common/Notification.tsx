@@ -1,17 +1,17 @@
-import React, { FunctionComponent } from 'react'
 import classNames from 'classnames'
+import React, { FunctionComponent } from 'react'
 
 export interface Notification {
+  dismissed?: boolean
   id: string
+  message: string
   success: boolean
   title: string
-  message: string
-  dismissed?: boolean
 }
 
 interface NotificationProps {
-  notification: Notification
   handleDismiss: (id: string) => void
+  notification: Notification
 }
 
 export const Notification: FunctionComponent<NotificationProps> = ({

@@ -1,33 +1,33 @@
 import React, { FunctionComponent, useEffect } from 'react'
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import HeaderContainer from './HeaderContainer'
-import LogInContainer from './LogInContainer'
-import PasswordResetContainer from './PasswordResetContainer'
-import { MainView } from '../components/MainView'
-import { RootState } from '../reducers'
+import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
 import '../../scss/index.scss'
 import {
   expireNotifications,
   ExpireNotificationsActionCreator,
-  FetchLogOutActionCreator,
   fetchLogOut,
+  FetchLogOutActionCreator,
 } from '../actions'
+import { HomePageText } from '../components/HomePageText'
+import { IdleWarning } from '../components/IdleWarning'
+import { MainView } from '../components/MainView'
 import {
   NotificationsContainer,
   NotificationWithDuration,
 } from '../components/NotificationsContainer'
+import { RootState } from '../reducers'
 import { loggedInSelector } from '../reducers/login'
 import { activeNotificationsSelector } from '../reducers/notifications'
 import { useActiveUser } from '../utilities/hooks'
-import { IdleWarning } from '../components/IdleWarning'
-import { HomePageText } from '../components/HomePageText'
+import HeaderContainer from './HeaderContainer'
+import LogInContainer from './LogInContainer'
+import PasswordResetContainer from './PasswordResetContainer'
 
 interface AppProps {
-  loggedIn: boolean
   activeNotifications: NotificationWithDuration[]
   expireNotificationsAction: ExpireNotificationsActionCreator
   fetchLogOutAction: FetchLogOutActionCreator
+  loggedIn: boolean
 }
 
 const _App: FunctionComponent<AppProps> = ({

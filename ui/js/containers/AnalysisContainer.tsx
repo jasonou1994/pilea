@@ -1,63 +1,63 @@
+import moment from 'moment'
 import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
+import '../../scss/index.scss'
 import {
+  ResetSelectedTransactionActionCreator,
+  resetSelectedTransactionKey,
   setGraphFidelity,
-  setSelectedTransactionKey,
   SetGraphFidelityActionCreator,
-  SetSelectedTransactionActionCreator,
   setGraphHistoricalLength,
   SetGraphHistoricalLengthActionCreator,
-  resetSelectedTransactionKey,
-  ResetSelectedTransactionActionCreator,
+  SetSelectedTransactionActionCreator,
+  setSelectedTransactionKey,
 } from '../actions'
+import { IncomeSpendingChart } from '../components/incomeSpending/IncomeSpendingChart'
+import { IncomeSpendingChartOptions } from '../components/incomeSpending/IncomeSpendingChartOptions'
+import { IncomeSpendingDetailsGrid } from '../components/incomeSpending/IncomeSpendingDetailsGrid'
 import {
-  TimeConsolidatedTransactionGroup,
-  RootState,
-  itemsWithCardsSelector,
-  selectedTransactionsSelector,
-  incomeSpendingLineSeriesSelector,
-  GraphLineSeries,
-} from '../reducers'
-import { PileaCard } from '../sagas/sagas'
-import {
+  AvailableTimeUnits,
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
-  AvailableTimeUnits,
 } from '../konstants'
-import '../../scss/index.scss'
+import {
+  GraphLineSeries,
+  incomeSpendingLineSeriesSelector,
+  itemsWithCardsSelector,
+  RootState,
+  selectedTransactionsSelector,
+  TimeConsolidatedTransactionGroup,
+} from '../reducers'
 import {
   incomeSpendingGraphFidelitySelector,
   incomeSpendingGraphHistoricalLengthSelector,
 } from '../reducers/graph'
-import { cardsSelector } from '../reducers/transactionsAccounts'
+import { selectedTransactionKeySelector } from '../reducers/grid'
 import {
-  windowWidthSelector,
   filterSidebarWidthSelector,
   windowHeightSelector,
+  windowWidthSelector,
 } from '../reducers/sizing'
-import { IncomeSpendingChart } from '../components/incomeSpending/IncomeSpendingChart'
-import { IncomeSpendingChartOptions } from '../components/incomeSpending/IncomeSpendingChartOptions'
-import { IncomeSpendingDetailsGrid } from '../components/incomeSpending/IncomeSpendingDetailsGrid'
-import { selectedTransactionKeySelector } from '../reducers/grid'
-import moment from 'moment'
+import { cardsSelector } from '../reducers/transactionsAccounts'
+import { PileaCard } from '../sagas/sagas'
 
 interface AnalysisContainerProps {
-  graphFidelity: AvailableTimeUnits
   cards: PileaCard[]
-  selectedTransactions: TimeConsolidatedTransactionGroup
-  setGraphFidelityAction: SetGraphFidelityActionCreator
-  setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
-  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
+  filterSidebarWidth: number
+  graphFidelity: AvailableTimeUnits
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
-  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
-  windowWidth: number
-  windowHeight: number
-  filterSidebarWidth: number
   lineSeries: GraphLineSeries
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   selectedTransactionKey: string
+  selectedTransactions: TimeConsolidatedTransactionGroup
+  setGraphFidelityAction: SetGraphFidelityActionCreator
+  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
+  setSelectedTransactionKeyAction: SetSelectedTransactionActionCreator
+  windowHeight: number
+  windowWidth: number
 }
 
 const AnalysisContainer: FunctionComponent<AnalysisContainerProps> = ({

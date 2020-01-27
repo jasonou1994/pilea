@@ -1,38 +1,38 @@
 import React, { FunctionComponent } from 'react'
 import {
-  SetHistoricalTypeActionCreator,
   SetGraphFidelityActionCreator,
   SetGraphHistoricalLengthActionCreator,
+  SetHistoricalTypeActionCreator,
 } from '../../actions'
 import {
+  AvailableTimeStrings,
   AvailableTimeUnits,
+  DAY,
   HISTORICAL_TIME_COUNT,
   HISTORICAL_TIME_UNIT,
-  DAY,
-  WEEK,
   MONTH,
-  AvailableTimeStrings,
-  TWO_YEARS,
   ONE_YEAR,
   SIX_MONTHS,
   THREE_MONTHS,
+  TWO_YEARS,
+  WEEK,
 } from '../../konstants'
+import { AvailableHistoricalGraphTypes } from '../../reducers/graph'
 import {
   convertDateSelectObject,
   convertDateSelectString,
 } from '../../utilities/utils'
-import { AvailableHistoricalGraphTypes } from '../../reducers/graph'
 
 interface HistoricalBalancesChartOptionsProps {
-  setGraphFidelityAction: SetGraphFidelityActionCreator
   graphFidelity: AvailableTimeUnits
-  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
-  type: AvailableHistoricalGraphTypes
+  setGraphFidelityAction: SetGraphFidelityActionCreator
+  setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
   setHistoricalTypeAction: SetHistoricalTypeActionCreator
+  type: AvailableHistoricalGraphTypes
 }
 
 export const HistoricalBalancesChartOptions: FunctionComponent<HistoricalBalancesChartOptionsProps> = ({

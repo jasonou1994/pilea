@@ -1,3 +1,5 @@
+@import 'colors';
+
 .welcome {
   margin: 8px 0px;
 }
@@ -7,6 +9,10 @@
   justify-content: space-between;
   align-items: center;
   font-size: 1.7em;
+
+  @media screen and (max-width: $break-phone) {
+    align-items: flex-start;
+  }
 }
 
 .refresh-data {
@@ -19,4 +25,15 @@
   text-decoration: underline;
   font-weight: bold;
   font-style: italic;
+}
+
+.home-page-button-bar {
+  display: flex;
+  flex-shrink: 0;
+
+  @media screen and (max-width: $break-phone) {
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 5px;
+  }
 }

@@ -1,42 +1,42 @@
 import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
+import '../../scss/index.scss'
+import {
+  ResetSelectedTransactionActionCreator,
+  resetSelectedTransactionKey,
+  selectAllCategories,
+  SelectAllCategoriesActionCreator,
+  selectSingleCategory,
+  SelectSingleCategoryActionCreator,
+  setCategoriesSelected,
+  SetCategoriesSelectedActionCreator,
+  toggleCardSelected,
+  ToggleCardSelectedActionCreator,
+  toggleCategorySelected,
+  ToggleCategorySelectedActionCreator,
+  toggleItemSelected,
+  ToggleItemSelectedActionCreator,
+} from '../actions'
 import { CardFilter } from '../components/CardFilter'
 import { CategoryFilter } from '../components/CategoryFilter'
 import {
+  CategoriesWithTxData,
+  categoryDataSelector,
   itemsWithCardsSelector,
   ItemWithCards,
   RootState,
-  categoryDataSelector,
-  CategoriesWithTxData,
 } from '../reducers'
-import {
-  toggleCardSelected,
-  toggleItemSelected,
-  ToggleItemSelectedActionCreator,
-  ToggleCardSelectedActionCreator,
-  resetSelectedTransactionKey,
-  ResetSelectedTransactionActionCreator,
-  selectAllCategories,
-  SelectAllCategoriesActionCreator,
-  setCategoriesSelected,
-  SetCategoriesSelectedActionCreator,
-  toggleCategorySelected,
-  ToggleCategorySelectedActionCreator,
-  selectSingleCategory,
-  SelectSingleCategoryActionCreator,
-} from '../actions'
-import '../../scss/index.scss'
 
 interface FiltersContainerProps {
   cardsByItems: ItemWithCards[]
   categoryData: CategoriesWithTxData
-  toggleItemSelectedAction: ToggleItemSelectedActionCreator
-  toggleCardSelectedAction: ToggleCardSelectedActionCreator
   resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   selectAllCategoriesAction: SelectAllCategoriesActionCreator
-  setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
-  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
   selectSingleCategoryAction: SelectSingleCategoryActionCreator
+  setCategoriesSelectedAction: SetCategoriesSelectedActionCreator
+  toggleCardSelectedAction: ToggleCardSelectedActionCreator
+  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
+  toggleItemSelectedAction: ToggleItemSelectedActionCreator
 }
 
 const FiltersContainer: FunctionComponent<FiltersContainerProps> = ({

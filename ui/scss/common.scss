@@ -15,6 +15,7 @@
   border-radius: 3px;
   border: 1px solid black;
   height: 22px;
+  flex-shrink: 0;
 }
 
 .button-primary {
@@ -80,14 +81,4 @@ a:focus {
   .count {
     font-weight: bold;
   }
-}
-
-.home-page-text {
-  padding-top: 5px;
-}
-.home-page-image {
-  border: 1px solid $faded-grey;
-  margin: 5px 0 20px;
-  width: 55%;
-  min-width: 450px;
 }

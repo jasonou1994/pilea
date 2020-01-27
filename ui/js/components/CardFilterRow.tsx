@@ -1,10 +1,10 @@
 import React, { FunctionComponent } from 'react'
 
 interface Props {
-  selected: boolean
   displayName: string
-  onCheckboxClick: () => void
   indentLevel: number
+  onCheckboxClick: () => void
+  selected: boolean
 }
 
 export const CardFilterRow: FunctionComponent<Props> = props => {

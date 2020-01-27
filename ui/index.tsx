@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware } from 'redux'
+import { applyMiddleware, createStore } from 'redux'
 import { composeWithDevTools } from 'redux-devtools-extension'
+import createSagaMiddleware from 'redux-saga'
+import { setCurrentWindowHeight, setCurrentWindowWidth } from './js/actions'
+import App from './js/containers/App'
 import rootReducer from './js/reducers/index'
 import saga from './js/sagas/sagas'
-import createSagaMiddleware from 'redux-saga'
-import App from './js/containers/App'
-import { setCurrentWindowWidth, setCurrentWindowHeight } from './js/actions'
 
 const sagaMiddleware = createSagaMiddleware()
 

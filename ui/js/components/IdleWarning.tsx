@@ -2,8 +2,8 @@ import React, { FunctionComponent } from 'react'
 import { Button } from './common/Button'
 
 interface IdleWarningProps {
-  onRemainClick: () => void
   onLogOutClick: () => void
+  onRemainClick: () => void
 }
 
 export const IdleWarning: FunctionComponent<IdleWarningProps> = ({

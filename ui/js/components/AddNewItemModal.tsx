@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useState } from 'react'
-import { TextInput } from './common/TextInput'
 import { Button } from './common/Button'
+import { TextInput } from './common/TextInput'
 
 interface AddNewItemModalProps {
   hideModal: () => void

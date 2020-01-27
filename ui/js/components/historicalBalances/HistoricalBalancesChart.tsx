@@ -6,10 +6,10 @@ import { GroupedPlot } from './GroupedPlot'
 import { IndividualPlot } from './IndividualPlot'
 
 interface Props {
+  height: number
   historicalBalancesLineSeries: HistoricalBalanceLineSeries
   type: AvailableHistoricalGraphTypes
   width: number
-  height: number
 }
 
 export const HistoricalBalancesChart: FunctionComponent<Props> = ({

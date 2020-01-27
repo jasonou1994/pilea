@@ -1,50 +1,50 @@
 import React, { FunctionComponent } from 'react'
-import { cardsSelector } from '../reducers/transactionsAccounts'
 import { connect } from 'react-redux'
 import {
-  RootState,
-  historicalBalancesLineSeriesSelector,
-  HistoricalBalanceLineSeries,
-} from '../reducers'
-import { HistoricalBalancesChart } from '../components/historicalBalances/HistoricalBalancesChart'
-import {
-  HISTORICAL_TIME_COUNT,
-  HISTORICAL_TIME_UNIT,
-  AvailableTimeUnits,
-} from '../konstants'
-import {
-  historicalGraphHistoricalLengthSelector,
-  historicalGraphFidelitySelector,
-  historicalGraphTypeSelector,
-  AvailableHistoricalGraphTypes,
-} from '../reducers/graph'
-import {
-  setGraphFidelity,
-  setGraphHistoricalLength,
-  SetGraphFidelityActionCreator,
-  SetGraphHistoricalLengthActionCreator,
-  resetSelectedTransactionKey,
   ResetSelectedTransactionActionCreator,
+  resetSelectedTransactionKey,
+  setGraphFidelity,
+  SetGraphFidelityActionCreator,
+  setGraphHistoricalLength,
+  SetGraphHistoricalLengthActionCreator,
   setHistoricalType,
   SetHistoricalTypeActionCreator,
 } from '../actions'
-import { windowWidthSelector, windowHeightSelector } from '../reducers/sizing'
+import { HistoricalBalancesChart } from '../components/historicalBalances/HistoricalBalancesChart'
 import { HistoricalBalancesChartOptions } from '../components/historicalBalances/HistoricalBalancesChartOptions'
+import {
+  AvailableTimeUnits,
+  HISTORICAL_TIME_COUNT,
+  HISTORICAL_TIME_UNIT,
+} from '../konstants'
+import {
+  HistoricalBalanceLineSeries,
+  historicalBalancesLineSeriesSelector,
+  RootState,
+} from '../reducers'
+import {
+  AvailableHistoricalGraphTypes,
+  historicalGraphFidelitySelector,
+  historicalGraphHistoricalLengthSelector,
+  historicalGraphTypeSelector,
+} from '../reducers/graph'
+import { windowHeightSelector, windowWidthSelector } from '../reducers/sizing'
+import { cardsSelector } from '../reducers/transactionsAccounts'
 
 interface Props {
-  historicalBalancesLineSeries: HistoricalBalanceLineSeries
-  type: AvailableHistoricalGraphTypes
+  graphFidelity: AvailableTimeUnits
   graphHistoricalLength: {
     [HISTORICAL_TIME_COUNT]: number
     [HISTORICAL_TIME_UNIT]: AvailableTimeUnits
   }
-  graphFidelity: AvailableTimeUnits
+  historicalBalancesLineSeries: HistoricalBalanceLineSeries
+  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
   setGraphFidelityAction: SetGraphFidelityActionCreator
   setGraphHistoricalLengthAction: SetGraphHistoricalLengthActionCreator
-  resetSelectedTransactionKeyAction: ResetSelectedTransactionActionCreator
-  windowWidth: number
-  windowHeight: number
   setHistoricalTypeAction: SetHistoricalTypeActionCreator
+  type: AvailableHistoricalGraphTypes
+  windowHeight: number
+  windowWidth: number
 }
 
 const _HistoricalBalancesContainer: FunctionComponent<Props> = ({

@@ -14,7 +14,7 @@
     "server": "ts-node-dev --respawn --transpileOnly ./server/index.ts | ./node_modules/.bin/pino-pretty -t SYS:standard -c > log.txt 2>&1",
     "test": "npm run jest",
     "jest": "jest test/ --coverage --runInBand",
-    "lint": "tslint --fix  -c tslint.json 'ui/**/*.ts'"
+    "lint": "tslint --fix  -c tslint.json 'ui/**/*.ts' && tslint --fix  -c tslint.json 'ui/**/*.tsx' && tslint --fix  -c tslint.json 'server/**/*.ts'"
   },
   "keywords": [],
   "author": "",

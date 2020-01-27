@@ -1,6 +1,6 @@
 import knex from 'knex'
-import { getDBCredentials } from './secrets'
 import { logger } from './logger'
+import { getDBCredentials } from './secrets'
 
 let dbClient = undefined
 

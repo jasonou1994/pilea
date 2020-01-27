@@ -1,14 +1,14 @@
+import classNames from 'classnames'
 import React, { FunctionComponent } from 'react'
 import {
   formatMilliseconds,
   formatNumberAsDollars,
 } from '../../utilities/utils'
-import classNames from 'classnames'
 
 interface CrosshairDisplayProps {
-  time: number
   income: number
   spending: number
+  time: number
 }
 
 export const IncomeSpendingCrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {

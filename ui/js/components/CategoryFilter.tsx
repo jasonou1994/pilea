@@ -1,25 +1,25 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useEffect, useState } from 'react'
 
-import { CategoriesWithTxData } from '../reducers'
 import {
-  ToggleCategorySelectedActionCreator,
-  SelectSingleCategoryActionCreator,
   SelectAllCategoriesActionCreator,
+  SelectSingleCategoryActionCreator,
+  ToggleCategorySelectedActionCreator,
 } from '../actions'
+import { CategoriesWithTxData } from '../reducers'
 import { CategoryFilterRow } from './CategoryFilterRow'
 
 interface CategoryFilterProps {
   categoryData: CategoriesWithTxData
-  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
-  selectSingleCategoryAction: SelectSingleCategoryActionCreator
   selectAllCategoriesAction: SelectAllCategoriesActionCreator
+  selectSingleCategoryAction: SelectSingleCategoryActionCreator
+  toggleCategorySelectedAction: ToggleCategorySelectedActionCreator
 }
 
 type CategoryRowData = Array<{
   category: string
   selected: boolean
-  txCount: number
   spending: number
+  txCount: number
 }>
 
 export const CategoryFilter: FunctionComponent<CategoryFilterProps> = props => {

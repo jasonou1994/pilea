@@ -35,6 +35,35 @@ export const HomePageText = () => (
       </a>
     </div>
     <br />
+    <section className="home-page-features">
+      <div className="home-page-feature">
+        <div>View day-by-day historical balances across all accounts:</div>
+        <img
+          src="https://pilea-assets.s3.us-east-2.amazonaws.com/Balances.png"
+          alt="Balances"
+          className="home-page-image"
+        />
+      </div>
+
+      <div className="home-page-feature">
+        <div>View historical transactions across all your accounts:</div>
+        <img
+          src="https://pilea-assets.s3.us-east-2.amazonaws.com/Transactions.png"
+          alt="Transactions"
+          className="home-page-image"
+        />
+      </div>
+
+      <div className="home-page-feature">
+        <div>Analyze your transactions with a Pivot table interface:</div>
+        <img
+          src="https://pilea-assets.s3.us-east-2.amazonaws.com/Pivot.png"
+          alt="Pivot"
+          className="home-page-image"
+        />
+      </div>
+    </section>
+    <br />
     <div>
       Pilea is created and maintained by a single developer. Have questions or
       concerns or want to help add new features? Contact{' '}
@@ -46,24 +75,5 @@ export const HomePageText = () => (
         jason@mypilea.com
       </a>
     </div>
-    <br />
-    <div>View day-by-day historical balances across all your accounts:</div>
-    <img
-      src="https://pilea-assets.s3.us-east-2.amazonaws.com/Balances.png"
-      alt="Balances"
-      className="home-page-image"
-    />
-    <div>View historical transactions across all your accounts:</div>
-    <img
-      src="https://pilea-assets.s3.us-east-2.amazonaws.com/Transactions.png"
-      alt="Transactions"
-      className="home-page-image"
-    />
-    <div>Analyze your transactions with a Pivot table interface:</div>
-    <img
-      src="https://pilea-assets.s3.us-east-2.amazonaws.com/Pivot.png"
-      alt="Pivot"
-      className="home-page-image"
-    />
   </section>
 )

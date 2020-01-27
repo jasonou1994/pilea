@@ -1,22 +1,22 @@
 import React, { FunctionComponent } from 'react'
 import { connect } from 'react-redux'
+import { Pivot } from '../components/Pivot'
 import {
-  RootState,
   consolidatedDataSelector,
   FlattenedTransaction,
   itemsWithCardsSelector,
   ItemWithCards,
+  RootState,
 } from '../reducers'
-import { Pivot } from '../components/Pivot'
 
 interface PivotContainerProps {
-  consolidatedData: FlattenedTransaction[]
   cardsByItems: ItemWithCards[]
+  consolidatedData: FlattenedTransaction[]
 }
 
 interface Memo {
-  count: number
   amountTotal: number
+  count: number
   largestTransaction: {
     amount: number
     date: string

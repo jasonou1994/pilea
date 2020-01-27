@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react'
-import { ItemWithCards } from '../reducers'
 import { FetchRemoveItemActionCreator } from '../actions'
+import { ItemWithCards } from '../reducers'
 import { ItemDisplay } from './ItemDisplay'
 
 interface CurrentItemsProps {

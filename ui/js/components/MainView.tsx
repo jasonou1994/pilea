@@ -1,36 +1,36 @@
 import React, { FunctionComponent, useEffect } from 'react'
-import { withRouter, RouteComponentProps, Route } from 'react-router-dom'
-import ItemsContainer from '../containers/ItemsContainer'
-import FiltersContainer from '../containers/FiltersContainer'
-import AnalysisContainer from '../containers/AnalysisContainer'
-import { PivotContainer } from '../containers/PivotContainer'
-import {
-  FetchTransactionsCountActionCreator,
-  fetchTransactionsCount,
-} from '../actions'
-import { ItemWithCards, RootState, itemsWithCardsSelector } from '../reducers'
 import { connect } from 'react-redux'
+import { Route, RouteComponentProps, withRouter } from 'react-router-dom'
 import {
+  fetchTransactionsCount,
+  FetchTransactionsCountActionCreator,
+} from '../actions'
+import AnalysisContainer from '../containers/AnalysisContainer'
+import FiltersContainer from '../containers/FiltersContainer'
+import ItemsContainer from '../containers/ItemsContainer'
+import { PivotContainer } from '../containers/PivotContainer'
+import { itemsWithCardsSelector, ItemWithCards, RootState } from '../reducers'
+import {
+  isLoginLoadingSelector,
   isTransactionsLoadingSelector,
   isTransactionsRefreshingSelector,
-  isLoginLoadingSelector,
 } from '../reducers/loading'
+import { loggedInSelector } from '../reducers/login'
 import { transactionsRefreshedCountSelector } from '../reducers/transactionsAccounts'
 import {
+  LogInLoading,
   TransactionsLoading,
   TransactionsRefreshing,
-  LogInLoading,
 } from './common/Loaders'
-import { loggedInSelector } from '../reducers/login'
 
 interface MainViewProps extends RouteComponentProps {
+  cardsByItems: ItemWithCards[]
+  fetchTransactionsCountAction: FetchTransactionsCountActionCreator
+  isLoggedIn: boolean
   isLoginLoading: boolean
   isTransactionsLoading: boolean
   isTransactionsRefreshing: boolean
-  cardsByItems: ItemWithCards[]
-  fetchTransactionsCountAction: FetchTransactionsCountActionCreator
   refreshedCount: number
-  isLoggedIn: boolean
 }
 
 const _MainView: FunctionComponent<MainViewProps> = ({

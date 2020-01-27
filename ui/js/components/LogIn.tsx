@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { FetchLogInActionCreator } from '../actions'
 import { Button } from './common/Button'
 import { TextInput } from './common/TextInput'
-import { useHistory } from 'react-router-dom'
 
 interface LogInProps {
   fetchLogIn: FetchLogInActionCreator

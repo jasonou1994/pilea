@@ -1,14 +1,14 @@
+import classNames from 'classnames'
 import React, { FunctionComponent } from 'react'
 import {
   formatMilliseconds,
   formatNumberAsDollars,
 } from '../../utilities/utils'
 import { CurrentYs } from './utilities'
-import classNames from 'classnames'
 
 interface CrosshairDisplayProps {
-  time: number
   currentYs: CurrentYs
+  time: number
 }
 
 export const HistoricalBalancesCrosshairDisplay: FunctionComponent<CrosshairDisplayProps> = props => {

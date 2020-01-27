@@ -2,8 +2,8 @@ import React, { FunctionComponent } from 'react'
 
 interface LegendProps {
   items: Array<{
-    title: string
     color: string
+    title: string
   }>
 }
 

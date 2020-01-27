@@ -1,14 +1,14 @@
-import React, { FunctionComponent } from 'react'
 import classNames from 'classnames'
+import React, { FunctionComponent } from 'react'
 
 interface ButtonProps {
+  disabled: boolean
   id?: string
   onClick: (...args: any[]) => any
-  type: 'normal' | 'primary'
-  disabled: boolean
-  text: string
-  width?: number
   style?: React.CSSProperties
+  text: string
+  type: 'normal' | 'primary'
+  width?: number
 }
 
 export const Button: FunctionComponent<ButtonProps> = ({

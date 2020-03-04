@@ -25,13 +25,13 @@ window.onresize = () => {
   store.dispatch(setCurrentWindowHeight({ height: window.innerHeight }))
 }
 
-// store.dispatch({
-//   type: 'FETCH_LOG_IN',
-//   payload: {
-//     user: 'jasonou122894@gmail.com',
-//     password: 'jasonou1',
-//   },
-// })
+store.dispatch({
+  type: 'FETCH_LOG_IN',
+  payload: {
+    user: 'jasonou122894@gmail.com',
+    password: 'jasonou1',
+  },
+})
 
 ReactDOM.render(
   <Provider store={store}>

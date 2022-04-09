@@ -53,7 +53,7 @@
     "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.19.5",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.13.1",
     "nodemailer": "^6.3.0",

@@ -52,7 +52,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "moment": "^2.24.0",
     "node-fetch": "^2.6.0",
     "node-sass": "^4.13.1",
